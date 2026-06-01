@@ -1,0 +1,80 @@
+# ---------------------------------------------------------------------------
+# Deploy PulsAkademin (public/) to one.com over SFTP
+#
+# WHY THIS EXISTS: Claude Code on the web runs in a sandbox whose only egress
+# is an HTTP/HTTPS proxy — raw TCP ports like 22 (SFTP) are blocked, so the
+# assistant cannot SFTP directly. GitHub's runners have full network access,
+# so this workflow does the SFTP upload for us. Push -> site goes live.
+#
+# ONE-TIME SETUP (do this in GitHub, NOT in chat — keeps secrets out of logs):
+#   Repo → Settings → Secrets and variables → Actions → "New repository secret"
+#     ONECOM_SFTP_HOST    e.g.  ssh.c1ticiyy7.service.one
+#     ONECOM_SFTP_USER    e.g.  c1ticiyy7_ssh
+#     ONECOM_SFTP_PASS    your one.com SFTP password  (rotate it first!)
+#     ONECOM_REMOTE_DIR   target web root, e.g.  /webroots/4e82917c
+#     ONECOM_SFTP_PORT    optional, defaults to 22
+#
+# Then either merge to main, click "Run workflow", or push any commit.
+# Until the secrets exist the job runs green and simply skips.
+# ---------------------------------------------------------------------------
+name: Deploy to one.com
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, claude/peaceful-cannon-h2R5N]
+    paths: ["public/**", ".github/workflows/deploy.yml"]
+
+concurrency:
+  group: deploy-onecom
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check that SFTP secrets are configured
+        id: cfg
+        env:
+          SFTP_HOST: ${{ secrets.ONECOM_SFTP_HOST }}
+        run: |
+          if [ -z "$SFTP_HOST" ]; then
+            echo "::warning::one.com SFTP secrets not set yet — skipping deploy. See this file's header for setup."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.cfg.outputs.ready == 'true'
+        uses: actions/checkout@v4
+
+      - name: Install lftp
+        if: steps.cfg.outputs.ready == 'true'
+        run: sudo apt-get update && sudo apt-get install -y lftp
+
+      - name: Upload public/ to one.com via SFTP
+        if: steps.cfg.outputs.ready == 'true'
+        env:
+          SFTP_HOST: ${{ secrets.ONECOM_SFTP_HOST }}
+          SFTP_USER: ${{ secrets.ONECOM_SFTP_USER }}
+          LFTP_PASSWORD: ${{ secrets.ONECOM_SFTP_PASS }}   # read via --env-password, never in argv
+          SFTP_PORT: ${{ secrets.ONECOM_SFTP_PORT }}
+          REMOTE_DIR: ${{ secrets.ONECOM_REMOTE_DIR }}
+        run: |
+          PORT="${SFTP_PORT:-22}"
+          echo "Mirroring ./public/ -> ${SFTP_HOST}:${REMOTE_DIR} (port ${PORT})"
+          lftp -u "$SFTP_USER" --env-password -p "$PORT" "sftp://$SFTP_HOST" -e "
+            set sftp:auto-confirm yes;
+            set net:timeout 20;
+            set net:max-retries 2;
+            set net:reconnect-interval-base 5;
+            mirror --reverse --verbose --parallel=4 public/ \"$REMOTE_DIR\";
+            bye
+          "
+          # To make the remote an exact copy (removes remote files not in public/),
+          # add  --delete  to the mirror line above — only after confirming
+          # ONECOM_REMOTE_DIR points at the dedicated subdomain folder.

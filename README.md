@@ -135,6 +135,24 @@ this site is fully static and needs no PHP).
 `robots.txt` ships with `Disallow: /` so the demo stays out of Google while it lives under
 `karimkhalil.se`. Remove or replace it when you go live (see below).
 
+### Automated deploy (GitHub Actions)
+
+A workflow at [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) uploads
+`public/` to one.com over SFTP on every push (GitHub's runners have the network access
+the web sandbox lacks). One-time setup, in **GitHub → Settings → Secrets and variables →
+Actions** (never paste credentials into chat):
+
+| Secret | Example |
+|---|---|
+| `ONECOM_SFTP_HOST` | `ssh.c1ticiyy7.service.one` |
+| `ONECOM_SFTP_USER` | `c1ticiyy7_ssh` |
+| `ONECOM_SFTP_PASS` | your one.com SFTP password *(rotate it first)* |
+| `ONECOM_REMOTE_DIR` | `/webroots/4e82917c` |
+| `ONECOM_SFTP_PORT` | `22` (optional) |
+
+Then merge to `main`, click **Run workflow**, or just push — the site deploys. Until the
+secrets exist the job runs green and skips.
+
 ### Going live on `pulsakademin.se`
 
 No code changes are required — every internal link is **relative** (`href="boka.html"`),
