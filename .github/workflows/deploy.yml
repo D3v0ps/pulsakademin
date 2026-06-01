@@ -23,7 +23,6 @@ on:
   workflow_dispatch:
   push:
     branches: [main, claude/peaceful-cannon-h2R5N]
-    paths: ["public/**", ".github/workflows/deploy.yml"]
 
 concurrency:
   group: deploy-onecom
