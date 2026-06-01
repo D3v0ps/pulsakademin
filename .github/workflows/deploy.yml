@@ -6,16 +6,17 @@
 # assistant cannot SFTP directly. GitHub's runners have full network access,
 # so this workflow does the SFTP upload for us. Push -> site goes live.
 #
-# ONE-TIME SETUP (do this in GitHub, NOT in chat — keeps secrets out of logs):
+# NOTE: one.com exposes each subdomain's webroot as a SYMLINK under /webroots.
+# We `cd` INTO it (trailing slash) so the symlink resolves to the real served
+# directory, then mirror into "." — otherwise files land beside the served dir.
+#
+# ONE-TIME SETUP (in GitHub, NOT in chat — keeps secrets out of logs):
 #   Repo → Settings → Secrets and variables → Actions → "New repository secret"
 #     ONECOM_SFTP_HOST    e.g.  ssh.c1ticiyy7.service.one
 #     ONECOM_SFTP_USER    e.g.  c1ticiyy7_ssh
 #     ONECOM_SFTP_PASS    your one.com SFTP password  (rotate it first!)
 #     ONECOM_REMOTE_DIR   target web root, e.g.  /webroots/4e82917c
 #     ONECOM_SFTP_PORT    optional, defaults to 22
-#
-# Then either merge to main, click "Run workflow", or push any commit.
-# Until the secrets exist the job runs green and simply skips.
 # ---------------------------------------------------------------------------
 name: Deploy to one.com
 
@@ -55,7 +56,7 @@ jobs:
         if: steps.cfg.outputs.ready == 'true'
         run: sudo apt-get update && sudo apt-get install -y lftp
 
-      - name: Upload public/ to one.com via SFTP
+      - name: Upload public/ into the served webroot and verify
         if: steps.cfg.outputs.ready == 'true'
         env:
           SFTP_HOST: ${{ secrets.ONECOM_SFTP_HOST }}
@@ -65,28 +66,5 @@ jobs:
           REMOTE_DIR: ${{ secrets.ONECOM_REMOTE_DIR }}
         run: |
           PORT="${SFTP_PORT:-22}"
-          echo "Mirroring ./public/ -> ${SFTP_HOST}:${REMOTE_DIR} (port ${PORT})"
-          lftp -u "$SFTP_USER" --env-password -p "$PORT" "sftp://$SFTP_HOST" -e "
-            set sftp:auto-confirm yes;
-            set net:timeout 20;
-            set net:max-retries 2;
-            set net:reconnect-interval-base 5;
-            mirror --reverse --verbose --parallel=4 public/ \"$REMOTE_DIR\";
-            bye
-          "
-          # To make the remote an exact copy (removes remote files not in public/),
-          # add  --delete  to the mirror line above — only after confirming
-          # ONECOM_REMOTE_DIR points at the dedicated subdomain folder.
-
-      - name: Verify upload (list the document root)
-        if: steps.cfg.outputs.ready == 'true'
-        env:
-          SFTP_HOST: ${{ secrets.ONECOM_SFTP_HOST }}
-          SFTP_USER: ${{ secrets.ONECOM_SFTP_USER }}
-          LFTP_PASSWORD: ${{ secrets.ONECOM_SFTP_PASS }}
-          SFTP_PORT: ${{ secrets.ONECOM_SFTP_PORT }}
-          REMOTE_DIR: ${{ secrets.ONECOM_REMOTE_DIR }}
-        run: |
-          PORT="${SFTP_PORT:-22}"
-          echo "Contents of document root after upload:"
-          lftp -u "$SFTP_USER" --env-password -p "$PORT" "sftp://$SFTP_HOST" -e "set sftp:auto-confirm yes; set net:timeout 20; cls -la \"$REMOTE_DIR/\"; bye"
+          echo "Deploying public/ into the document root (resolving the symlink) ..."
+          lftp -u "$SFTP_USER" --env-password -p "$PORT" "sftp://$SFTP_HOST" -e "set sftp:auto-confirm yes; set net:timeout 25; set net:max-retries 2; cd \"$REMOTE_DIR/\"; echo '--- resolved working dir: ---'; pwd; mirror --reverse --verbose --overwrite --parallel=4 public/ ./; echo '--- document root after upload: ---'; cls -la ./; bye"
