@@ -1,0 +1,10 @@
+# PulsAkademin — DEMO deployment (pulsakademin.karimkhalil.se)
+# This file keeps the customer demo OUT of search engines so it does not
+# get indexed under karimkhalil.se or compete with the real site.
+#
+# >>> WHEN GOING LIVE on pulsakademin.se: replace the two lines below with
+#     User-agent: *
+#     Allow: /
+#     Sitemap: https://www.pulsakademin.se/sitemap.xml
+User-agent: *
+Disallow: /

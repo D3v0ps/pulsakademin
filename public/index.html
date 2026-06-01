@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PulsAkademin – Vi utbildar för att rädda liv</title>
+<meta name="description" content="Praktiska HLR- och första hjälpen-utbildningar för företag, skolor, föreningar, vårdpersonal och privatpersoner. Köp hjärtstartare och tillbehör. Utbildning över hela Sverige.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero bg-bordeaux" data-screen-label="Hem – Hero">
+    <div class="container" style="padding-block: clamp(56px,8vw,104px); position:relative; z-index:2">
+      <div class="split" style="align-items:center">
+        <div>
+          <span class="eyebrow" style="color:var(--coral)">PulsAkademin · HLR &amp; hjärtstartare</span>
+          <h1 class="display" style="margin:18px 0 22px">Vi utbildar för att rädda liv</h1>
+          <p class="lead" style="max-width:46ch">Praktiska HLR- och första hjälpen-utbildningar för företag, skolor, föreningar, vårdpersonal och privatpersoner – och hjärtstartare för tryggare arbetsplatser.</p>
+          <div class="flex gap-12 wrap" style="margin-top:32px">
+            <a class="btn btn--primary btn--lg" href="boka.html">Boka kurs</a>
+            <a class="btn btn--light btn--lg" href="offert.html">Begär offert</a>
+            <a class="btn btn--lg" style="color:var(--cream);border:2px solid rgba(255,255,255,.3)" href="hjartstartare.html">Köp hjärtstartare</a>
+          </div>
+          <ul class="trustbar" style="margin-top:40px">
+            <li>✓ Certifierade instruktörer</li>
+            <li>✓ Utbildning i hela Sverige</li>
+            <li>✓ Kompetensbevis</li>
+            <li>✓ Faktura för företag</li>
+          </ul>
+        </div>
+        <div>
+          <div class="ph ph--4x3" style="border-radius:var(--r-xl); background-color:rgba(255,255,255,.06)"><span>Bild: Instruktör visar HLR på docka (16:9 / 4:3)</span></div>
+        </div>
+      </div>
+    </div>
+    <svg class="ecg" style="position:absolute;bottom:0;left:0;width:100%;height:60px;opacity:.18;color:var(--coral)" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30h420l20-22 30 44 26-58 22 36 18-10h150l20-22 30 44 26-58 22 36 18-10h360" stroke="currentColor" stroke-width="3" fill="none"/></svg>
+  </section>
+
+  <!-- QUICK CHOICE -->
+  <section class="section--tight bg-cream2" data-screen-label="Hem – Snabbval">
+    <div class="container">
+      <div class="grid cols-5" style="grid-template-columns:repeat(5,1fr)">
+        <a class="card card--hover" href="boka.html"><div class="card__body"><div class="qc-ic">🫀</div><b>Boka HLR-kurs</b><p class="muted" style="font-size:13.5px;margin-top:4px">Som privatperson</p></div></a>
+        <a class="card card--hover" href="foretag.html"><div class="card__body"><div class="qc-ic">🏢</div><b>Boka för företag</b><p class="muted" style="font-size:13.5px;margin-top:4px">Hela personalgruppen</p></div></a>
+        <a class="card card--hover" href="utbildningar.html"><div class="card__body"><div class="qc-ic">🩺</div><b>Jag jobbar i vården</b><p class="muted" style="font-size:13.5px;margin-top:4px">S-HLR &amp; specialist</p></div></a>
+        <a class="card card--hover" href="hjartstartare.html"><div class="card__body"><div class="qc-ic">⚡</div><b>Köp hjärtstartare</b><p class="muted" style="font-size:13.5px;margin-top:4px">Modeller &amp; tillbehör</p></div></a>
+        <a class="card card--hover" href="hyr.html"><div class="card__body"><div class="qc-ic">🔧</div><b>Hyr &amp; service</b><p class="muted" style="font-size:13.5px;margin-top:4px">Event &amp; underhåll</p></div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- POPULAR COURSES -->
+  <section class="section" data-screen-label="Hem – Populära utbildningar">
+    <div class="container">
+      <div class="sec-head">
+        <div class="sec-head__txt">
+          <span class="eyebrow">Populära utbildningar</span>
+          <h2 class="h2" style="margin-top:14px">Träning som sitter kvar när det gäller</h2>
+        </div>
+        <a class="tlink" href="utbildningar.html">Se alla utbildningar →</a>
+      </div>
+      <div class="grid cols-3" id="courseGrid"></div>
+    </div>
+  </section>
+
+  <!-- UPCOMING DATES -->
+  <section class="section bg-cream2" data-screen-label="Hem – Kommande kurstillfällen">
+    <div class="container">
+      <div class="sec-head">
+        <div class="sec-head__txt">
+          <span class="eyebrow">Kommande kurstillfällen</span>
+          <h2 class="h2" style="margin-top:14px">Boka en plats nära dig</h2>
+        </div>
+        <div class="pillrow">
+          <button class="chip chip--active">Alla städer</button>
+          <button class="chip">Stockholm</button>
+          <button class="chip">Uppsala</button>
+          <button class="chip">Tierp &amp; Gävle</button>
+          <button class="chip">Göteborg</button>
+        </div>
+      </div>
+      <div class="card"><div style="overflow-x:auto"><table class="table" id="datesTable"></table></div></div>
+      <div class="tac" style="margin-top:28px"><a class="btn btn--outline" href="boka.html">Se alla kurstillfällen</a></div>
+    </div>
+  </section>
+
+  <!-- FOR COMPANIES -->
+  <section class="section" data-screen-label="Hem – För företag">
+    <div class="container">
+      <div class="split">
+        <div class="ph ph--4x3" style="border-radius:var(--r-xl)"><span>Bild: Utbildning på arbetsplats</span></div>
+        <div>
+          <span class="eyebrow">För företag &amp; organisationer</span>
+          <h2 class="h2" style="margin:14px 0 18px">Vi kommer ut till er – var ni än finns</h2>
+          <p class="lead measure">Utbilda hela personalgruppen på plats hos er, i vår lokal eller på valfri ort. Anpassat upplägg, fast offert och samlad deltagarlista med kompetensbevis.</p>
+          <div class="tag-list" style="margin:24px 0">
+            <span class="chip">Kontor</span><span class="chip">Skolor</span><span class="chip">Idrottsföreningar</span><span class="chip">Hemtjänst</span><span class="chip">Vårdcentraler</span><span class="chip">Industri</span>
+          </div>
+          <div class="flex gap-12 wrap">
+            <a class="btn btn--bordeaux" href="offert.html">Begär offert</a>
+            <a class="btn btn--outline" href="foretag.html">Läs om företagsutbildning</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HJARTSTARTARE -->
+  <section class="section bg-ink" data-screen-label="Hem – Hjärtstartare">
+    <div class="container">
+      <div class="sec-head">
+        <div class="sec-head__txt">
+          <span class="eyebrow">Hjärtstartare &amp; tillbehör</span>
+          <h2 class="h2" style="margin-top:14px;color:var(--cream)">Rätt hjärtstartare för er miljö</h2>
+          <p class="lead" style="margin-top:14px">Halv- eller helautomatisk, för inom- eller utomhusbruk, med eller utan barnläge. Vi hjälper er välja och installera.</p>
+        </div>
+        <div class="flex gap-12 wrap">
+          <a class="btn btn--primary" href="hjartstartare.html">Gå till webbshop</a>
+          <a class="btn btn--light" href="hjartstartare.html">Få hjälp att välja</a>
+        </div>
+      </div>
+      <div class="grid cols-3" id="prodGrid"></div>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="section" data-screen-label="Hem – Varför PulsAkademin">
+    <div class="container">
+      <div class="sec-head"><div class="sec-head__txt"><span class="eyebrow">Varför PulsAkademin</span><h2 class="h2" style="margin-top:14px">Trygghet byggd på erfarenhet</h2></div></div>
+      <div class="grid cols-3">
+        <div class="feature"><div class="feature__ic">🎓</div><div><h3 class="h3">Certifierade instruktörer</h3><p class="muted" style="margin-top:8px">Erfarna instruktörer som följer HLR-rådets riktlinjer.</p></div></div>
+        <div class="feature"><div class="feature__ic">🤲</div><div><h3 class="h3">Praktisk träning</h3><p class="muted" style="margin-top:8px">Du tränar med händerna på dockor och riktig utrustning.</p></div></div>
+        <div class="feature"><div class="feature__ic">🎯</div><div><h3 class="h3">Verklighetsnära scenarier</h3><p class="muted" style="margin-top:8px">Realistiska övningar som förbereder dig för skarpt läge.</p></div></div>
+        <div class="feature"><div class="feature__ic">📍</div><div><h3 class="h3">Flexibel plats</h3><p class="muted" style="margin-top:8px">Hos er, i vår lokal eller på valfri ort i Sverige.</p></div></div>
+        <div class="feature"><div class="feature__ic">📜</div><div><h3 class="h3">Kompetensbevis</h3><p class="muted" style="margin-top:8px">Registrering och digitalt kompetensbevis efter genomförd kurs.</p></div></div>
+        <div class="feature"><div class="feature__ic">🔁</div><div><h3 class="h3">Repetition &amp; uppföljning</h3><p class="muted" style="margin-top:8px">Vi påminner er när det är dags att fräscha upp kunskapen.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS / TEAM TEASER -->
+  <section class="section--tight bg-bordeaux" data-screen-label="Hem – Förtroende">
+    <div class="container">
+      <div class="grid cols-4" style="text-align:center">
+        <div class="stat"><b>12 000+</b><span>Utbildade deltagare</span></div>
+        <div class="stat"><b>4,9/5</b><span>Snittbetyg från kunder</span></div>
+        <div class="stat"><b>20+</b><span>Hjärtstartarmodeller</span></div>
+        <div class="stat"><b>Hela Sverige</b><span>Vi reser till er</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" data-screen-label="Hem – FAQ">
+    <div class="container" style="max-width:880px">
+      <div class="tac" style="margin-bottom:40px"><span class="eyebrow" style="justify-content:center">Vanliga frågor</span><h2 class="h2" style="margin-top:14px">Bra att veta innan du bokar</h2></div>
+      <div class="acc" id="faq"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section bg-cream2" data-screen-label="Hem – Kontakt">
+    <div class="container">
+      <div class="split">
+        <div>
+          <span class="eyebrow">Kontakt</span>
+          <h2 class="h2" style="margin:14px 0 16px">Hjälp att hitta rätt?</h2>
+          <p class="lead measure-sm">Berätta vad ni behöver så återkommer vi – oftast inom ett par timmar.</p>
+          <div class="grid" style="gap:14px;margin-top:28px;max-width:420px">
+            <a class="card" href="tel:0293761011"><div class="card__body flex center gap-16"><span class="feature__ic">📞</span><div><b>0293-76 10 11</b><p class="muted" style="font-size:13.5px">Öppet alla dagar 08–22</p></div></div></a>
+            <a class="card" href="mailto:kontakt@pulsakademin.se"><div class="card__body flex center gap-16"><span class="feature__ic">✉️</span><div><b>kontakt@pulsakademin.se</b><p class="muted" style="font-size:13.5px">Svar inom ett par timmar</p></div></div></a>
+          </div>
+        </div>
+        <div class="card"><div class="card__body" style="padding:clamp(22px,3vw,34px)">
+          <h3 class="h3 mb-16">Skicka en förfrågan</h3>
+          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Namn</label><input class="input" placeholder="För- och efternamn"></div><div class="field"><label>Telefon</label><input class="input" placeholder="07X-XXX XX XX"></div></div>
+          <div class="field"><label>E-post</label><input class="input" type="email" placeholder="namn@exempel.se"></div>
+          <div class="field"><label>Ärende</label><select class="select"><option>Boka kurs</option><option>Begär offert</option><option>Fråga om hjärtstartare</option><option>Support på beställning</option><option>Övrigt</option></select></div>
+          <div class="field"><label>Meddelande</label><textarea class="textarea" placeholder="Berätta kort vad du behöver"></textarea></div>
+          <label class="checkbox mb-16"><input type="checkbox"> <span>Jag samtycker till att PulsAkademin behandlar mina personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
+          <button class="btn btn--primary btn--block">Skicka förfrågan</button>
+        </div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="mobile-action">
+  <a class="btn btn--outline" href="offert.html" style="flex:1">Offert</a>
+  <a class="btn btn--primary" href="boka.html" style="flex:2">Boka kurs</a>
+</div>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script src="data.js"></script>
+<script>
+  // Render shared content
+  const fmtSeats = (s) => s===0 ? '<span class="badge badge--danger"><span class="dot"></span>Fullbokad</span>' : s<=4 ? `<span class="badge badge--amber"><span class="dot"></span>${s} platser kvar</span>` : `<span class="badge badge--green"><span class="dot"></span>Platser kvar</span>`;
+
+  document.getElementById('courseGrid').innerHTML = PA_COURSES.slice(0,6).map(c => `
+    <a class="card card--hover" href="${c.slug==='hlr-vuxen'?'kurs-hlr-vuxen.html':'utbildningar.html'}">
+      <div class="ph ph--16x9"><span>${c.img}</span></div>
+      <div class="card__body">
+        <div class="coursecard__top"><h3 class="h3" style="font-size:1.25rem">${c.title}</h3><span class="badge badge--coral">${c.cat}</span></div>
+        <p class="muted" style="margin-top:10px;font-size:14.5px">${c.desc}</p>
+        <div class="coursecard__meta"><span>⏱ <b>${c.dur}</b></span><span>👥 <b>${c.aud}</b></span><span>📜 Kompetensbevis</span></div>
+        <div class="flex between center" style="margin-top:18px"><span class="price-from">${c.price}<small> ${c.priceUnit}</small></span><span class="tlink">Läs mer →</span></div>
+      </div>
+    </a>`).join('');
+
+  document.getElementById('datesTable').innerHTML = `<thead><tr><th>Kurs</th><th>Stad</th><th>Datum</th><th>Tid</th><th>Pris</th><th>Platser</th><th></th></tr></thead><tbody>${
+    PA_DATES.slice(0,6).map(d => `<tr><td><b>${d.course}</b></td><td>${d.city}</td><td>${d.date}</td><td>${d.time}</td><td>${d.price}</td><td>${fmtSeats(d.seats)}</td><td><a class="btn btn--sm ${d.seats===0?'btn--outline':'btn--primary'}" href="boka.html">${d.seats===0?'Väntelista':'Boka'}</a></td></tr>`).join('')
+  }</tbody>`;
+
+  document.getElementById('prodGrid').innerHTML = PA_PRODUCTS.slice(0,3).map(p => `
+    <a class="card prodcard card--hover" href="produkt.html">
+      <div class="ph"><div class="prodcard__badges">${p.badges.map(b=>`<span class="badge badge--coral">${b}</span>`).join('')}</div><span>${p.img}</span></div>
+      <div class="card__body">
+        <div class="prodcard__name">${p.name}</div>
+        <div class="prodcard__usp">${p.usp}</div>
+        <div class="flex between center"><span class="price"><b>${p.price}</b><small>inkl. moms</small></span><span class="badge badge--green"><span class="dot"></span>I lager</span></div>
+      </div>
+    </a>`).join('');
+
+  document.getElementById('faq').innerHTML = PA_FAQ.map(f => `<details class="acc__item"><summary class="acc__q">${f.q}<span class="pm">+</span></summary><div class="acc__a">${f.a}</div></details>`).join('');
+</script>
+</body>
+</html>

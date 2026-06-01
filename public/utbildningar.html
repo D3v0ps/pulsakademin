@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Utbildningar – HLR, S-HLR, första hjälpen & mer | PulsAkademin</title>
+<meta name="description" content="Hela vårt utbildningsutbud: HLR vuxen och barn, S-HLR, första hjälpen, brandskydd, krishantering och hot & våld. Filtrera på målgrupp, kategori, format och plats.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <section class="pagehead bg-cream2" data-screen-label="Utbildningar – Sidhuvud">
+    <div class="container">
+      <nav class="crumbs"><a href="index.html">Hem</a><span class="sep">/</span><span>Utbildningar</span></nav>
+      <div class="split" style="align-items:end">
+        <div>
+          <span class="eyebrow">Utbildningskatalog</span>
+          <h1 class="h1" style="margin:14px 0 16px">Hitta rätt utbildning</h1>
+          <p class="lead measure">Praktiska, certifierande kurser för privatpersoner, företag, skolor, föreningar och vårdpersonal – öppna tillfällen eller på plats hos er.</p>
+        </div>
+        <div class="flex gap-12 wrap"><a class="btn btn--bordeaux" href="boka.html">Kommande tillfällen</a><a class="btn btn--outline" href="offert.html">Begär offert</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- filter chips -->
+      <div class="card" style="padding:18px 20px;margin-bottom:32px">
+        <div class="flex between center wrap gap-16">
+          <div class="grid" style="grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;flex:1;min-width:280px">
+            <select class="select"><option>Målgrupp: alla</option><option>Privatperson</option><option>Företag</option><option>Skola</option><option>Vårdpersonal</option><option>Förening</option><option>Kommun</option></select>
+            <select class="select"><option>Kategori: alla</option><option>HLR</option><option>S-HLR</option><option>Första hjälpen</option><option>Brandskydd</option><option>Krisberedskap</option><option>Hot & våld</option></select>
+            <select class="select"><option>Format: alla</option><option>Öppen kurs</option><option>På plats hos kund</option><option>Repetition</option></select>
+            <select class="select"><option>Plats: hela Sverige</option><option>Stockholm</option><option>Uppsala</option><option>Tierp & Gävle</option><option>Göteborg</option><option>Hos kund</option></select>
+          </div>
+          <span class="muted" style="font-size:14px"><b id="ccount">8</b> utbildningar</span>
+        </div>
+      </div>
+      <div class="grid cols-3" id="catGrid"></div>
+    </div>
+  </section>
+
+  <section class="section bg-bordeaux" data-screen-label="Utbildningar – CTA företag">
+    <div class="container split center">
+      <div>
+        <span class="eyebrow">Utbilda flera samtidigt</span>
+        <h2 class="h2" style="margin:14px 0 14px;color:var(--cream)">Skräddarsydd utbildning för er grupp</h2>
+        <p class="lead">Vi anpassar innehåll, plats och tid efter er verksamhet. Fast offert, samlad deltagarlista och kompetensbevis.</p>
+      </div>
+      <div class="flex gap-12 wrap" style="justify-content:flex-end"><a class="btn btn--primary btn--lg" href="offert.html">Begär offert</a><a class="btn btn--light btn--lg" href="foretag.html">För företag</a></div>
+    </div>
+  </section>
+</main>
+
+<div class="mobile-action"><a class="btn btn--outline" href="offert.html" style="flex:1">Offert</a><a class="btn btn--primary" href="boka.html" style="flex:2">Boka kurs</a></div>
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script src="data.js"></script>
+<script>
+  document.getElementById('catGrid').innerHTML = PA_COURSES.map(c => `
+    <a class="card card--hover" href="${c.slug==='hlr-vuxen'?'kurs-hlr-vuxen.html':'kurs-hlr-vuxen.html'}">
+      <div class="ph ph--16x9"><span>${c.img}</span></div>
+      <div class="card__body">
+        <div class="coursecard__top"><h3 class="h3" style="font-size:1.25rem">${c.title}</h3><span class="badge badge--coral">${c.cat}</span></div>
+        <p class="muted" style="margin-top:10px;font-size:14.5px">${c.desc}</p>
+        <div class="coursecard__meta"><span>⏱ <b>${c.dur}</b></span><span>👥 <b>${c.aud}</b></span><span>📜 Bevis</span></div>
+        <div class="flex between center" style="margin-top:18px"><span class="price-from">${c.price}<small> ${c.priceUnit}</small></span><span class="tlink">Läs mer →</span></div>
+      </div>
+    </a>`).join('');
+  document.getElementById('ccount').textContent = PA_COURSES.length;
+</script>
+</body>
+</html>

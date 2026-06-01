@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logga in – Mina sidor | PulsAkademin</title>
+<meta name="description" content="Logga in på Mina sidor för att se dina kurser, kompetensbevis och beställningar.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .auth{ display:grid; grid-template-columns:1fr 1fr; gap:0; min-height:calc(100vh - 116px); }
+  @media (max-width:860px){ .auth{ grid-template-columns:1fr; } .auth__aside{ display:none; } }
+  .auth__form{ display:flex; align-items:center; justify-content:center; padding:clamp(28px,5vw,72px); }
+  .auth__aside{ background:var(--bordeaux-800); color:var(--cream); padding:clamp(36px,5vw,72px); display:flex; flex-direction:column; justify-content:center; }
+  .auth__aside li{ display:flex; gap:12px; padding:11px 0; font-size:15.5px; }
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <div class="auth" data-screen-label="Logga in">
+    <div class="auth__form">
+      <div style="width:100%;max-width:380px">
+        <div class="seg" style="display:inline-flex;background:var(--cream-300);border-radius:var(--r-pill);padding:4px;gap:4px;margin-bottom:24px"><button class="btn btn--sm btn--light" style="box-shadow:var(--sh-sm)">Logga in</button><button class="btn btn--sm" style="color:var(--muted)">Skapa konto</button></div>
+        <h1 class="h2 mb-8">Välkommen tillbaka</h1>
+        <p class="muted mb-24">Logga in för att se dina kurser, kompetensbevis och beställningar.</p>
+        <div class="field"><label>E-post</label><input class="input" type="email" placeholder="namn@exempel.se"></div>
+        <div class="field"><label>Lösenord</label><input class="input" type="password" placeholder="••••••••"></div>
+        <div class="flex between center mb-16"><label class="checkbox" style="margin:0"><input type="checkbox"> <span>Kom ihåg mig</span></label><a class="tlink" href="#" style="font-size:14px">Glömt lösenord?</a></div>
+        <a class="btn btn--primary btn--block btn--lg" href="portal.html">Logga in</a>
+        <p class="tac muted mt-24" style="font-size:14px">Har du inget konto? <a class="tlink" href="#">Skapa konto</a></p>
+        <p class="tac muted mt-16" style="font-size:13px">Företagskund? <a class="tlink" href="#">Logga in på företagskonto</a></p>
+      </div>
+    </div>
+    <aside class="auth__aside">
+      <span class="eyebrow" style="color:var(--coral)">Mina sidor</span>
+      <h2 class="h2 mt-16 mb-24" style="color:var(--cream)">Allt om dina utbildningar och köp – på ett ställe</h2>
+      <ul>
+        <li>✓ Se dina kommande kurser och förberedelsematerial</li>
+        <li>✓ Ladda ner kompetensbevis och kvitton</li>
+        <li>✓ Följ dina beställningar och leveranser</li>
+        <li>✓ Få påminnelser om batteri- och elektrodbyte</li>
+        <li>✓ Företag: hantera deltagare, intyg och fakturor</li>
+      </ul>
+    </aside>
+  </div>
+</main>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hjärtstartare – köp & jämför AED | PulsAkademin</title>
+<meta name="description" content="Köp hjärtstartare (AED) för arbetsplats, skola, förening och offentlig miljö. Filtrera på automatik, barnläge, IP-klass, garanti och pris. Jämför modeller.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <section class="pagehead bg-cream2" data-screen-label="Hjärtstartare – Sidhuvud">
+    <div class="container">
+      <nav class="crumbs mb-24"><a href="index.html">Hem</a><span class="sep">/</span><a href="webbshop.html">Webbshop</a><span class="sep">/</span><span>Hjärtstartare</span></nav>
+      <div class="split" style="align-items:end">
+        <div>
+          <span class="eyebrow">Hjärtstartare (AED)</span>
+          <h1 class="h1" style="margin:14px 0 14px">Rätt hjärtstartare för er miljö</h1>
+          <p class="lead measure">Välj hjärtstartare för arbetsplats, skola, förening eller offentlig miljö. Osäker? Använd vår guide eller få rådgivning.</p>
+        </div>
+        <a class="btn btn--bordeaux" href="#">⚖️ Jämför valda (0)</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container layout-shop">
+      <!-- filters -->
+      <aside class="filter-aside">
+        <div class="card"><div class="card__body" style="padding:8px 20px 16px">
+          <div class="fgroup"><h5>Automatik</h5><label class="fopt"><input type="checkbox"> Halvautomatisk <span class="cnt">9</span></label><label class="fopt"><input type="checkbox"> Helautomatisk <span class="cnt">7</span></label></div>
+          <div class="fgroup"><h5>Funktioner</h5><label class="fopt"><input type="checkbox"> Barnläge <span class="cnt">12</span></label><label class="fopt"><input type="checkbox"> Skärm <span class="cnt">5</span></label><label class="fopt"><input type="checkbox"> Röstguidning <span class="cnt">16</span></label></div>
+          <div class="fgroup"><h5>Miljö</h5><label class="fopt"><input type="checkbox"> Inomhus <span class="cnt">14</span></label><label class="fopt"><input type="checkbox"> Utomhus (IP55+) <span class="cnt">8</span></label></div>
+          <div class="fgroup"><h5>Varumärke</h5><label class="fopt"><input type="checkbox"> Philips <span class="cnt">3</span></label><label class="fopt"><input type="checkbox"> DefiSign <span class="cnt">4</span></label><label class="fopt"><input type="checkbox"> Primedic <span class="cnt">3</span></label><label class="fopt"><input type="checkbox"> CU Medical <span class="cnt">2</span></label></div>
+          <div class="fgroup" style="border:0"><h5>Garanti</h5><label class="fopt"><input type="checkbox"> 8 år <span class="cnt">6</span></label><label class="fopt"><input type="checkbox"> 10 år <span class="cnt">7</span></label></div>
+          <button class="btn btn--outline btn--block">Rensa filter</button>
+        </div></div>
+        <div class="callout mt-16"><span>💡</span><div><b>Osäker?</b> <a href="#" class="tlink">Få rådgivning</a> eller starta köpguiden.</div></div>
+      </aside>
+
+      <!-- grid -->
+      <div>
+        <div class="flex between center mb-24 wrap gap-12">
+          <span class="muted" style="font-size:14px"><b id="pcount">6</b> produkter</span>
+          <select class="select" style="width:auto"><option>Sortera: rekommenderad</option><option>Pris: lågt–högt</option><option>Pris: högt–lågt</option><option>Populärast</option><option>Nyast</option></select>
+        </div>
+        <div class="grid cols-3" id="prodCat"></div>
+
+        <!-- recommendation banner -->
+        <div class="card bg-bordeaux mt-48" style="border:0"><div class="card__body split center" style="padding:clamp(24px,3vw,40px)">
+          <div><h3 class="h3" style="color:var(--cream)">Komplett trygghetspaket</h3><p style="color:rgba(251,246,240,.8);margin-top:8px">Hjärtstartare + skåp + skylt + HLR-utbildning. Vi sätter ihop allt och hjälper med installation.</p></div>
+          <a class="btn btn--primary" href="produkt.html" style="white-space:nowrap">Se paket →</a>
+        </div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section bg-cream2" data-screen-label="Hjärtstartare – FAQ">
+    <div class="container" style="max-width:880px"><h2 class="h2 tac mb-32">Vanliga frågor om hjärtstartare</h2><div class="acc" id="aedFaq"></div></div>
+  </section>
+</main>
+
+<div class="mobile-action"><a class="btn btn--outline" href="#" style="flex:1">Filter</a><a class="btn btn--primary" href="#" style="flex:1">Få rådgivning</a></div>
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script src="data.js"></script>
+<script>
+  document.getElementById('prodCat').innerHTML = PA_PRODUCTS.map(p=>`
+    <div class="card prodcard card--hover">
+      <a href="produkt.html"><div class="ph"><div class="prodcard__badges">${p.badges.map(b=>`<span class="badge badge--coral">${b}</span>`).join('')}</div><span>${p.img}</span></div></a>
+      <div class="card__body">
+        <div class="muted" style="font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">${p.brand}</div>
+        <a href="produkt.html"><div class="prodcard__name">${p.name}</div></a>
+        <div class="prodcard__usp">${p.usp}</div>
+        <div class="price mb-16"><b>${p.price}</b><small>${p.priceEx} exkl. moms</small></div>
+        <div class="flex gap-8">
+          <a class="btn btn--primary" href="kundvagn.html" style="flex:1">Lägg i kundvagn</a>
+          <label class="chip" style="padding:10px"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--bordeaux-700)"> Jämför</label>
+        </div>
+      </div>
+    </div>`).join('');
+  const af=[
+    {q:"Vad är skillnaden mellan hel- och halvautomatisk?",a:"En halvautomatisk hjärtstartare uppmanar dig att trycka på en knapp för att ge stöt. En helautomatisk ger stöten automatiskt när den behövs. Båda är säkra och röststyrda."},
+    {q:"Behöver vi barnläge?",a:"Om barn vistas på platsen rekommenderas barnläge eller barnelektroder, som anpassar energin för små kroppar. Många moderna modeller har en barnknapp."},
+    {q:"Var ska hjärtstartaren placeras?",a:"Centralt, synligt och tillgängligt dygnet runt om möjligt. Ett skåp med skylt gör den lätt att hitta. Utomhus krävs ett uppvärmt, larmat skåp."},
+    {q:"Hur ofta byter man batteri och elektroder?",a:"Elektroder håller oftast 2–4 år och batterier 4–7 år beroende på modell. Vi erbjuder påminnelsetjänst så ni aldrig missar ett byte."},
+  ];
+  document.getElementById('aedFaq').innerHTML = af.map(f=>`<details class="acc__item"><summary class="acc__q">${f.q}<span class="pm">+</span></summary><div class="acc__a">${f.a}</div></details>`).join('');
+</script>
+</body>
+</html>

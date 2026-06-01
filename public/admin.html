@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin – Dashboard | PulsAkademin</title>
+<meta name="description" content="Adminpanel för PulsAkademin.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  body{ background:var(--cream-200); }
+  .admin{ display:grid; grid-template-columns:248px 1fr; min-height:100vh; }
+  .asidebar{ background:var(--ink); color:var(--cream); padding:20px 16px; position:sticky; top:0; height:100vh; overflow-y:auto; }
+  .asidebar .logo{ color:var(--cream); margin-bottom:24px; padding:0 8px; }
+  .asidebar .logo b{ color:var(--coral); }
+  .asidebar a{ display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:var(--r-sm); color:rgba(251,246,240,.72); font-weight:500; font-size:14.5px; margin-bottom:2px; }
+  .asidebar a.on{ background:var(--bordeaux-700); color:#fff; }
+  .asidebar a:not(.on):hover{ background:rgba(255,255,255,.07); color:#fff; }
+  .asidebar h6{ font-family:var(--font-mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:rgba(251,246,240,.4); margin:18px 12px 8px; }
+  .amain{ padding:clamp(20px,3vw,38px); }
+  .atop{ display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:28px; flex-wrap:wrap; }
+  .kpi4{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:28px; }
+  @media (max-width:1100px){ .kpi4{ grid-template-columns:repeat(2,1fr); } }
+  .kpi4 .card__body b{ font-family:var(--font-display); font-size:2rem; font-weight:800; line-height:1; display:block; }
+  .kpi4 .delta{ font-size:12.5px; font-weight:600; }
+  .acols{ display:grid; grid-template-columns:1.5fr 1fr; gap:20px; }
+  @media (max-width:1000px){ .acols{ grid-template-columns:1fr; } }
+  .arow{ display:flex; justify-content:space-between; align-items:center; gap:14px; padding:13px 0; border-bottom:1px solid var(--line); }
+  .arow:last-child{ border:0; }
+  @media (max-width:860px){ .admin{ grid-template-columns:1fr; } .asidebar{ position:static; height:auto; display:flex; flex-wrap:wrap; gap:4px; } .asidebar .logo,.asidebar h6{ width:100%; } .asidebar a{ margin:0; } }
+</style>
+</head>
+<body>
+<div class="admin" data-screen-label="Admin – Dashboard">
+  <!-- sidebar -->
+  <aside class="asidebar">
+    <a href="index.html" class="logo"><span class="mark" style="width:34px;height:34px"><svg width="20" height="20" viewBox="0 0 60 24"><path d="M0 12h12l4-9 6 18 5-13 4 8h20" fill="none" stroke="#FBF6F0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Puls<b>Admin</b></a>
+    <nav>
+      <a class="on" href="#">📊 Dashboard</a>
+      <h6>Utbildning</h6>
+      <a href="#">🎓 Kurser</a>
+      <a href="#">📅 Kurstillfällen</a>
+      <a href="#">👥 Deltagare</a>
+      <a href="#">📜 Intyg</a>
+      <a href="#">🧑‍🏫 Instruktörer</a>
+      <h6>Försäljning</h6>
+      <a href="#">📝 Offertförfrågningar</a>
+      <a href="#">🛒 Ordrar</a>
+      <a href="#">📦 Produkter</a>
+      <a href="#">🏷️ Lager & rabatt</a>
+      <h6>Övrigt</h6>
+      <a href="#">👤 Kunder</a>
+      <a href="#">📰 Innehåll & SEO</a>
+      <a href="#">⚙️ Inställningar</a>
+    </nav>
+  </aside>
+
+  <!-- main -->
+  <main class="amain">
+    <div class="atop">
+      <div><h1 class="h2" style="font-size:1.7rem">Dashboard</h1><p class="muted" style="font-size:14px">Måndag 1 juni 2026</p></div>
+      <div class="flex gap-8 center"><input class="input" placeholder="Sök…" style="width:200px"><a class="btn btn--primary btn--sm" href="#">+ Nytt kurstillfälle</a><span class="feature__ic">AD</span></div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi4">
+      <div class="card"><div class="card__body"><span class="muted" style="font-size:13px">Nya bokningar (7 d)</span><b>34</b><span class="delta" style="color:var(--green)">▲ 12%</span></div></div>
+      <div class="card"><div class="card__body"><span class="muted" style="font-size:13px">Offertförfrågningar</span><b>9</b><span class="delta" style="color:var(--green)">▲ 3 nya</span></div></div>
+      <div class="card"><div class="card__body"><span class="muted" style="font-size:13px">Ordrar (7 d)</span><b>21</b><span class="delta" style="color:var(--green)">▲ 8%</span></div></div>
+      <div class="card"><div class="card__body"><span class="muted" style="font-size:13px">Omsättning (mån)</span><b>284k</b><span class="delta muted">kr</span></div></div>
+    </div>
+
+    <div class="acols mb-24">
+      <!-- recent bookings -->
+      <div class="card"><div class="card__body">
+        <div class="flex between center mb-8"><h2 class="h3" style="font-size:1.15rem">Senaste bokningar</h2><a class="tlink" href="#" style="font-size:14px">Visa alla →</a></div>
+        <div style="overflow-x:auto"><table class="table">
+          <thead><tr><th>Kund</th><th>Kurs</th><th>Datum</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td><b>Anna Lindqvist</b></td><td>HLR vuxen</td><td>12 jun</td><td><span class="badge badge--green"><span class="dot"></span>Betald</span></td></tr>
+            <tr><td><b>Tierps kommun</b></td><td>S-HLR ×12</td><td>18 jun</td><td><span class="badge badge--amber"><span class="dot"></span>Faktura</span></td></tr>
+            <tr><td><b>IF Gnistan</b></td><td>Första hjälpen</td><td>20 jun</td><td><span class="badge badge--info"><span class="dot"></span>Väntar</span></td></tr>
+            <tr><td><b>Erik Holm</b></td><td>HLR barn</td><td>14 jun</td><td><span class="badge badge--green"><span class="dot"></span>Betald</span></td></tr>
+          </tbody>
+        </table></div>
+      </div></div>
+
+      <!-- quote pipeline -->
+      <div class="card"><div class="card__body">
+        <h2 class="h3 mb-16" style="font-size:1.15rem">Offert-pipeline</h2>
+        <div class="arow"><div><b>Ny</b><div class="muted" style="font-size:13px">Inkomna förfrågningar</div></div><span class="badge badge--info">5</span></div>
+        <div class="arow"><div><b>Kontaktad</b><div class="muted" style="font-size:13px">Dialog pågår</div></div><span class="badge badge--amber">3</span></div>
+        <div class="arow"><div><b>Offert skickad</b><div class="muted" style="font-size:13px">Inväntar svar</div></div><span class="badge badge--coral">4</span></div>
+        <div class="arow"><div><b>Vunnen</b><div class="muted" style="font-size:13px">Den här månaden</div></div><span class="badge badge--green">7</span></div>
+      </div></div>
+    </div>
+
+    <div class="acols">
+      <!-- upcoming courses -->
+      <div class="card"><div class="card__body">
+        <div class="flex between center mb-8"><h2 class="h3" style="font-size:1.15rem">Kommande kurser</h2><a class="tlink" href="#" style="font-size:14px">Hantera →</a></div>
+        <div class="arow"><div><b>HLR vuxen</b><div class="muted" style="font-size:13px">Stockholm · 12 jun</div></div><span class="badge badge--green">8/16 platser</span></div>
+        <div class="arow"><div><b>HLR barn</b><div class="muted" style="font-size:13px">Uppsala · 14 jun</div></div><span class="badge badge--amber">13/16 platser</span></div>
+        <div class="arow"><div><b>Första hjälpen</b><div class="muted" style="font-size:13px">Göteborg · 20 jun</div></div><span class="badge badge--danger">Fullbokad</span></div>
+      </div></div>
+
+      <!-- low stock -->
+      <div class="card"><div class="card__body">
+        <div class="flex between center mb-8"><h2 class="h3" style="font-size:1.15rem">Lågt lager</h2><a class="tlink" href="#" style="font-size:14px">Lager →</a></div>
+        <div class="arow"><div><b>Elektroder vuxen</b><div class="muted" style="font-size:13px">SKU 30221</div></div><span class="badge badge--danger">3 kvar</span></div>
+        <div class="arow"><div><b>Batteri Philips HS1</b><div class="muted" style="font-size:13px">SKU 30188</div></div><span class="badge badge--amber">6 kvar</span></div>
+        <div class="arow"><div><b>Utomhusskåp larm</b><div class="muted" style="font-size:13px">SKU 20188</div></div><span class="badge badge--amber">4 kvar</span></div>
+      </div></div>
+    </div>
+  </main>
+</div>
+<script src="site.js"></script>
+</body>
+</html>

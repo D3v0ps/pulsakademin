@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HLR vuxen – grundkurs i hjärt-lungräddning | PulsAkademin</title>
+<meta name="description" content="HLR vuxen: 2 timmars praktisk grundkurs i hjärt-lungräddning med träning på docka och hjärtstartare. 699 kr/person. Kompetensbevis ingår.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .course-layout { display:grid; grid-template-columns: 1fr 360px; gap:48px; align-items:start; }
+  @media (max-width:980px){ .course-layout{ grid-template-columns:1fr; } .bookbox{ position:static !important; } }
+  .bookbox { position:sticky; top:96px; }
+  .infogrid { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--r-md); overflow:hidden; }
+  .infogrid div { background:var(--paper); padding:16px 18px; }
+  .infogrid b { display:block; font-size:13px; color:var(--muted); font-weight:500; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px; }
+  .learn-list li { display:flex; gap:12px; padding:11px 0; border-bottom:1px solid var(--line); }
+  .learn-list .ck { color:var(--green); flex:0 0 auto; }
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <section class="pagehead" data-screen-label="Kursdetalj – Hero">
+    <div class="container">
+      <nav class="crumbs mb-24"><a href="index.html">Hem</a><span class="sep">/</span><a href="utbildningar.html">Utbildningar</a><span class="sep">/</span><span>HLR vuxen</span></nav>
+      <div class="course-layout">
+        <div>
+          <span class="badge badge--coral mb-16">HLR · Grundkurs</span>
+          <h1 class="h1" style="margin:10px 0 16px">HLR vuxen</h1>
+          <p class="lead measure">Lär dig livräddande hjärt-lungräddning på vuxna. En praktisk kurs där du tränar bröstkompressioner, inblåsningar och användning av hjärtstartare på docka – under ledning av en certifierad instruktör.</p>
+          <div class="ph ph--16x9 mt-24" style="border-radius:var(--r-lg)"><span>Bild: Deltagare tränar HLR på docka</span></div>
+
+          <h2 class="h2 mt-48 mb-16">Vad du lär dig</h2>
+          <ul class="learn-list">
+            <li><span class="ck">✓</span> Känna igen hjärtstopp och larma 112 korrekt</li>
+            <li><span class="ck">✓</span> Utföra effektiva bröstkompressioner och inblåsningar</li>
+            <li><span class="ck">✓</span> Använda en hjärtstartare (AED) tryggt och säkert</li>
+            <li><span class="ck">✓</span> Hantera luftvägsstopp och stabilt sidoläge</li>
+            <li><span class="ck">✓</span> Samarbeta och växla vid längre insatser</li>
+          </ul>
+
+          <h2 class="h2 mt-48 mb-16">Kursinnehåll</h2>
+          <div class="grid cols-2">
+            <div class="feature"><div class="feature__ic">📖</div><div><b>Kort teori</b><p class="muted mt-8" style="font-size:14.5px">Kedjan som räddar liv och varför varje minut räknas.</p></div></div>
+            <div class="feature"><div class="feature__ic">🤲</div><div><b>Praktisk träning</b><p class="muted mt-8" style="font-size:14.5px">Hands-on på docka tills tekniken sitter.</p></div></div>
+            <div class="feature"><div class="feature__ic">⚡</div><div><b>Hjärtstartare</b><p class="muted mt-8" style="font-size:14.5px">Praktisk användning av AED steg för steg.</p></div></div>
+            <div class="feature"><div class="feature__ic">🎯</div><div><b>Scenarier</b><p class="muted mt-8" style="font-size:14.5px">Realistiska övningar för skarpt läge.</p></div></div>
+          </div>
+
+          <h2 class="h2 mt-48 mb-16">Praktisk information</h2>
+          <div class="infogrid">
+            <div><b>Längd</b>2 timmar</div>
+            <div><b>Antal deltagare</b>4–12 per grupp</div>
+            <div><b>Plats</b>Hos er eller i vår lokal</div>
+            <div><b>Språk</b>Svenska / engelska</div>
+            <div><b>Förkunskaper</b>Inga krävs</div>
+            <div><b>Kompetensbevis</b>Digitalt, enl. HLR-rådet</div>
+            <div><b>Giltighet</b>Repetition rekommenderas årligen</div>
+            <div><b>Utrustning</b>Vi tar med allt material</div>
+          </div>
+
+          <h2 class="h2 mt-48 mb-16">Kommande datum</h2>
+          <div class="card"><div style="overflow-x:auto"><table class="table" id="courseDates"></table></div></div>
+
+          <h2 class="h2 mt-48 mb-16">Vanliga frågor</h2>
+          <div class="acc" id="courseFaq"></div>
+        </div>
+
+        <!-- booking box -->
+        <aside class="bookbox">
+          <div class="card"><div class="card__body">
+            <div class="flex between center"><span class="price-from" style="font-size:2rem">699 kr</span><span class="badge badge--green"><span class="dot"></span>Bokningsbar</span></div>
+            <p class="muted" style="font-size:13.5px;margin-top:2px">per person · inkl. moms</p>
+            <hr class="rule" style="margin:18px 0">
+            <div class="grid" style="gap:10px;font-size:14.5px">
+              <div class="flex between"><span class="muted">Längd</span><b>2 timmar</b></div>
+              <div class="flex between"><span class="muted">Målgrupp</span><b>Alla</b></div>
+              <div class="flex between"><span class="muted">Kompetensbevis</span><b>Ingår</b></div>
+            </div>
+            <a class="btn btn--primary btn--block btn--lg" href="boka.html" style="margin-top:20px">Boka plats</a>
+            <a class="btn btn--outline btn--block" href="offert.html" style="margin-top:10px">Begär offert (företag)</a>
+            <p class="muted tac" style="font-size:13px;margin-top:14px">Eller ring <a class="tlink" href="tel:0293761011">0293-76 10 11</a></p>
+          </div></div>
+          <div class="callout mt-16"><span>💡</span><div>Boka 8+ deltagare? Företagspris och utbildning på plats – <a href="offert.html" class="tlink">begär offert</a>.</div></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- related -->
+  <section class="section bg-cream2" data-screen-label="Kursdetalj – Relaterat">
+    <div class="container">
+      <div class="sec-head"><div class="sec-head__txt"><span class="eyebrow">Relaterade utbildningar</span><h2 class="h2" style="margin-top:14px">Fortsätt utvecklas</h2></div><a class="tlink" href="utbildningar.html">Alla utbildningar →</a></div>
+      <div class="grid cols-3" id="relGrid"></div>
+    </div>
+  </section>
+</main>
+
+<div class="mobile-action"><div style="flex:1"><span class="price-from">699 kr</span><span class="muted" style="font-size:12px;display:block">per person</span></div><a class="btn btn--primary" href="boka.html" style="flex:1">Boka plats</a></div>
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script src="data.js"></script>
+<script>
+  const fmtSeats = (s) => s===0 ? '<span class="badge badge--danger"><span class="dot"></span>Fullbokad</span>' : s<=4 ? `<span class="badge badge--amber"><span class="dot"></span>${s} kvar</span>` : `<span class="badge badge--green"><span class="dot"></span>Platser kvar</span>`;
+  document.getElementById('courseDates').innerHTML = `<thead><tr><th>Stad</th><th>Lokal</th><th>Datum</th><th>Tid</th><th>Instruktör</th><th>Platser</th><th></th></tr></thead><tbody>${
+    PA_DATES.filter(d=>d.course.includes('HLR vuxen')||d.course==='HLR vuxen').concat(PA_DATES.slice(0,2)).slice(0,4).map(d=>`<tr><td><b>${d.city}</b></td><td>${d.venue}</td><td>${d.date}</td><td>${d.time}</td><td>${d.instr}</td><td>${fmtSeats(d.seats)}</td><td><a class="btn btn--sm ${d.seats===0?'btn--outline':'btn--primary'}" href="boka.html">${d.seats===0?'Väntelista':'Boka'}</a></td></tr>`).join('')
+  }</tbody>`;
+  document.getElementById('courseFaq').innerHTML = PA_FAQ.slice(0,4).map(f=>`<details class="acc__item"><summary class="acc__q">${f.q}<span class="pm">+</span></summary><div class="acc__a">${f.a}</div></details>`).join('');
+  document.getElementById('relGrid').innerHTML = PA_COURSES.slice(1,4).map(c=>`
+    <a class="card card--hover" href="utbildningar.html"><div class="ph ph--16x9"><span>${c.img}</span></div><div class="card__body"><div class="coursecard__top"><h3 class="h3" style="font-size:1.2rem">${c.title}</h3><span class="badge badge--coral">${c.cat}</span></div><p class="muted" style="margin-top:10px;font-size:14px">${c.desc}</p><div class="flex between center" style="margin-top:16px"><span class="price-from">${c.price}<small> ${c.priceUnit}</small></span><span class="tlink">Läs mer →</span></div></div></a>`).join('');
+</script>
+</body>
+</html>

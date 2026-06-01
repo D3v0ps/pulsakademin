@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Begär offert – företagsutbildning & hjärtstartare | PulsAkademin</title>
+<meta name="description" content="Begär en kostnadsfri offert för HLR-utbildning, första hjälpen eller hjärtstartare. Vi återkommer oftast inom ett par timmar.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .offert{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:48px; align-items:start; }
+  @media (max-width:920px){ .offert{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <section class="pagehead bg-cream2"><div class="container"><nav class="crumbs mb-16"><a href="index.html">Hem</a><span class="sep">/</span><span>Begär offert</span></nav><h1 class="h1">Begär offert</h1><p class="lead measure mt-16">Berätta vad ni behöver så återkommer vi med ett konkret förslag – oftast inom ett par timmar.</p></div></section>
+
+  <section class="section" style="padding-top:8px" data-screen-label="Begär offert">
+    <div class="container offert">
+      <aside>
+        <div class="card"><div class="card__body">
+          <h3 class="h3 mb-16" style="font-size:1.15rem">Varför begära offert?</h3>
+          <ul style="display:grid;gap:14px">
+            <li class="feature"><div class="feature__ic" style="width:38px;height:38px">✓</div><div><b>Fast pris</b><p class="muted" style="font-size:13.5px">Inga överraskningar – allt ingår.</p></div></li>
+            <li class="feature"><div class="feature__ic" style="width:38px;height:38px">📍</div><div><b>Hos er eller hos oss</b><p class="muted" style="font-size:13.5px">Var som helst i Sverige.</p></div></li>
+            <li class="feature"><div class="feature__ic" style="width:38px;height:38px">🧾</div><div><b>Faktura</b><p class="muted" style="font-size:13.5px">30 dagar för företag.</p></div></li>
+            <li class="feature"><div class="feature__ic" style="width:38px;height:38px">⚡</div><div><b>Snabbt svar</b><p class="muted" style="font-size:13.5px">Oftast inom ett par timmar.</p></div></li>
+          </ul>
+          <hr class="rule" style="margin:20px 0">
+          <p class="muted" style="font-size:14px">Hellre prata direkt?</p>
+          <a class="btn btn--outline btn--block mt-8" href="tel:0293761011">📞 0293-76 10 11</a>
+        </div></div>
+      </aside>
+
+      <div class="card"><div class="card__body" style="padding:clamp(22px,3vw,36px)">
+        <h2 class="h3 mb-24">Din förfrågan</h2>
+        <div class="grid cols-2" style="gap:14px"><div class="field"><label>Företagsnamn</label><input class="input"></div><div class="field"><label>Organisationsnummer</label><input class="input" placeholder="XXXXXX-XXXX"></div></div>
+        <div class="grid cols-2" style="gap:14px"><div class="field"><label>Kontaktperson</label><input class="input"></div><div class="field"><label>Telefon</label><input class="input"></div></div>
+        <div class="field"><label>E-post</label><input class="input" type="email"></div>
+        <hr class="rule" style="margin:8px 0 22px">
+        <div class="grid cols-2" style="gap:14px">
+          <div class="field"><label>Utbildning</label><select class="select"><option>HLR vuxen</option><option>HLR barn</option><option>HLR barn & vuxen</option><option>S-HLR</option><option>Första hjälpen & HLR</option><option>Brandskydd</option><option>Krishantering</option><option>Hot, våld & aggressivt beteende</option><option>Hjärtstartare</option></select></div>
+          <div class="field"><label>Antal deltagare</label><input class="input" type="number" placeholder="t.ex. 12"></div>
+        </div>
+        <div class="grid cols-2" style="gap:14px">
+          <div class="field"><label>Önskad ort</label><input class="input" placeholder="Stad"></div>
+          <div class="field"><label>Önskat datum</label><input class="input" type="date"></div>
+        </div>
+        <div class="field"><label>Plats för utbildning</label><div class="pillrow"><label class="chip"><input type="radio" name="loc" checked style="width:15px;height:15px"> Hos oss</label><label class="chip"><input type="radio" name="loc" style="width:15px;height:15px"> I er lokal</label><label class="chip"><input type="radio" name="loc" style="width:15px;height:15px"> Annan ort</label></div></div>
+        <div class="field"><label>Faktureringsuppgifter (valfritt)</label><input class="input" placeholder="Fakturaadress / referens"></div>
+        <div class="field"><label>Meddelande</label><textarea class="textarea" placeholder="Berätta gärna mer om era behov"></textarea></div>
+        <label class="checkbox mb-16"><input type="checkbox"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
+        <button class="btn btn--primary btn--block btn--lg">Skicka offertförfrågan</button>
+      </div></div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+</body>
+</html>

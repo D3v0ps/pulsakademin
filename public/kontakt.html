@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kontakta PulsAkademin</title>
+<meta name="description" content="Kontakta PulsAkademin för bokning, offert eller frågor om hjärtstartare. Telefon 0293-76 10 11, kontakt@pulsakademin.se. Öppet alla dagar 08–22.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .kontakt{ display:grid; grid-template-columns:0.8fr 1.2fr; gap:48px; align-items:start; }
+  @media (max-width:920px){ .kontakt{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <section class="pagehead bg-cream2"><div class="container"><nav class="crumbs mb-16"><a href="index.html">Hem</a><span class="sep">/</span><span>Kontakt</span></nav>
+    <span class="eyebrow">Kontakt</span>
+    <h1 class="h1" style="margin:14px 0 16px">Kontakta PulsAkademin</h1>
+    <p class="lead measure">Vi hjälper dig boka rätt utbildning eller välja rätt hjärtstartare. Vi svarar oftast inom ett par timmar.</p>
+  </div></section>
+
+  <section class="section" style="padding-top:8px" data-screen-label="Kontakt">
+    <div class="container kontakt">
+      <aside>
+        <div class="grid" style="gap:14px">
+          <a class="card" href="tel:0293761011"><div class="card__body flex center gap-16"><span class="feature__ic">📞</span><div><b>0293-76 10 11</b><p class="muted" style="font-size:13.5px">Öppet alla dagar 08–22</p></div></div></a>
+          <a class="card" href="mailto:kontakt@pulsakademin.se"><div class="card__body flex center gap-16"><span class="feature__ic">✉️</span><div><b>kontakt@pulsakademin.se</b><p class="muted" style="font-size:13.5px">Svar inom ett par timmar</p></div></div></a>
+          <div class="card"><div class="card__body flex center gap-16"><span class="feature__ic">📍</span><div><b>Centralgatan 14</b><p class="muted" style="font-size:13.5px">815 38 Tierp</p></div></div></div>
+          <div class="card"><div class="card__body flex center gap-16"><span class="feature__ic">🕐</span><div><b>Öppettider</b><p class="muted" style="font-size:13.5px">Måndag–söndag 08:00–22:00</p></div></div></div>
+        </div>
+        <div class="card mt-16"><div class="ph ph--16x9" style="border-radius:var(--r-lg) var(--r-lg) 0 0"><span>Karta: Centralgatan 14, Tierp</span></div><div class="card__body"><p class="muted" style="font-size:13.5px">📍 Karta verifieras innan publicering – kontaktuppgifter och adress harmoniseras i hela webbplatsen.</p></div></div>
+      </aside>
+
+      <div>
+        <div class="card"><div class="card__body" style="padding:clamp(22px,3vw,36px)">
+          <h2 class="h3 mb-24">Skicka en förfrågan</h2>
+          <div class="field"><label>Ärendetyp</label><select class="select"><option>Boka kurs</option><option>Begär offert</option><option>Fråga om hjärtstartare</option><option>Support på beställning</option><option>Fakturafråga</option><option>Övrigt</option></select></div>
+          <div class="field"><label>Jag är</label><div class="pillrow"><label class="chip"><input type="radio" name="typ" checked style="width:15px;height:15px"> Privatperson</label><label class="chip"><input type="radio" name="typ" style="width:15px;height:15px"> Företag</label></div></div>
+          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Namn</label><input class="input"></div><div class="field"><label>Telefon</label><input class="input"></div></div>
+          <div class="field"><label>E-post</label><input class="input" type="email"></div>
+          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Företag (valfritt)</label><input class="input"></div><div class="field"><label>Antal deltagare (valfritt)</label><input class="input" type="number"></div></div>
+          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Önskad utbildning</label><select class="select"><option>Ingen särskild</option><option>HLR vuxen</option><option>HLR barn</option><option>S-HLR</option><option>Första hjälpen</option><option>Brandskydd</option></select></div><div class="field"><label>Önskad stad</label><input class="input"></div></div>
+          <div class="field"><label>Meddelande</label><textarea class="textarea"></textarea></div>
+          <label class="checkbox mb-16"><input type="checkbox"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
+          <button class="btn btn--primary btn--block btn--lg">Skicka</button>
+        </div></div>
+
+        <h2 class="h3 mt-48 mb-16">Innan du hör av dig</h2>
+        <div class="acc" id="kFaq"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script>
+  const kf=[
+    {q:"Behöver du offert?",a:"För grupper och företag ger vi en fast offert utan förpliktelser. Använd vårt offertformulär så återkommer vi snabbt."},
+    {q:"Kan ni komma till vår arbetsplats?",a:"Ja, vi utbildar gärna på plats hos er i hela Sverige och tar med all utrustning."},
+    {q:"Hur snabbt svarar ni?",a:"Vi svarar oftast inom ett par timmar under våra öppettider, alla dagar 08–22."},
+  ];
+  document.getElementById('kFaq').innerHTML = kf.map(f=>`<details class="acc__item"><summary class="acc__q">${f.q}<span class="pm">+</span></summary><div class="acc__a">${f.a}</div></details>`).join('');
+</script>
+</body>
+</html>

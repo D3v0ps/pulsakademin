@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kommande kurstillfällen – boka HLR-kurs | PulsAkademin</title>
+<meta name="description" content="Se alla kommande HLR- och första hjälpen-kurser med datum, plats, lediga platser och pris. Boka direkt eller begär företagsoffert.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .booklayout{ display:grid; grid-template-columns:260px 1fr; gap:40px; align-items:start; }
+  @media (max-width:900px){ .booklayout{ grid-template-columns:1fr; } .book-aside{ position:static; } }
+  .book-aside{ position:sticky; top:96px; }
+  .courserow{ display:grid; grid-template-columns:1.4fr 1fr 1fr auto; gap:18px; align-items:center; padding:20px; }
+  @media (max-width:720px){ .courserow{ grid-template-columns:1fr; gap:12px; } }
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <section class="pagehead bg-cream2" data-screen-label="Boka – Sidhuvud">
+    <div class="container">
+      <nav class="crumbs mb-24"><a href="index.html">Hem</a><span class="sep">/</span><span>Boka kurs</span></nav>
+      <span class="eyebrow">Kommande kurstillfällen</span>
+      <h1 class="h1" style="margin:14px 0 16px">Boka en plats</h1>
+      <p class="lead measure">Välj ett öppet tillfälle nedan eller <a href="offert.html" class="tlink">begär offert</a> för utbildning på plats hos er.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container booklayout">
+      <aside class="book-aside">
+        <div class="card"><div class="card__body">
+          <h3 class="h3 mb-16" style="font-size:1.1rem">Filtrera</h3>
+          <div class="field"><label>Stad</label><select class="select"><option>Alla städer</option><option>Stockholm</option><option>Uppsala</option><option>Tierp</option><option>Gävle</option><option>Göteborg</option></select></div>
+          <div class="field"><label>Kurs</label><select class="select"><option>Alla kurser</option><option>HLR vuxen</option><option>HLR barn</option><option>S-HLR</option><option>Första hjälpen</option><option>Repetition</option></select></div>
+          <div class="field"><label>Från datum</label><input class="input" type="date" value="2026-06-01"></div>
+          <label class="checkbox mb-16"><input type="checkbox" checked> <span>Endast lediga platser</span></label>
+          <label class="checkbox mb-16"><input type="checkbox"> <span>Företagsbokning</span></label>
+          <button class="btn btn--outline btn--block">Återställ filter</button>
+        </div></div>
+        <div class="callout mt-16"><span>📞</span><div>Hittar du inget som passar? Ring <a href="tel:0293761011" class="tlink">0293-76 10 11</a> så ordnar vi ett tillfälle.</div></div>
+      </aside>
+
+      <div>
+        <div class="flex between center mb-16 wrap gap-12">
+          <span class="muted" style="font-size:14px"><b id="dcount">8</b> kurstillfällen</span>
+          <select class="select" style="width:auto"><option>Sortera: datum (närmast)</option><option>Pris (lägst)</option><option>Lediga platser</option></select>
+        </div>
+        <div class="grid" style="gap:14px" id="bookList"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight bg-bordeaux" data-screen-label="Boka – Företag CTA">
+    <div class="container split center">
+      <div><span class="eyebrow">Hela gruppen samtidigt</span><h2 class="h2" style="margin:14px 0;color:var(--cream)">Boka företagsutbildning</h2><p class="lead">Vi kommer till er med all utrustning. Fast offert och samlad deltagarlista.</p></div>
+      <div class="flex gap-12 wrap" style="justify-content:flex-end"><a class="btn btn--primary btn--lg" href="offert.html">Begär offert</a><a class="btn btn--light btn--lg" href="foretag.html">För företag</a></div>
+    </div>
+  </section>
+</main>
+
+<div class="mobile-action"><a class="btn btn--outline" href="offert.html" style="flex:1">Offert</a><a class="btn btn--primary" href="boka-flode.html" style="flex:2">Boka plats</a></div>
+<div id="site-footer"></div>
+<script src="site.js"></script>
+<script src="data.js"></script>
+<script>
+  const stat = (s) => s===0 ? ['badge--danger','Fullbokad'] : s<=4 ? ['badge--amber',`${s} platser kvar`] : ['badge--green','Platser kvar'];
+  document.getElementById('bookList').innerHTML = PA_DATES.map(d=>{
+    const [cls,txt]=stat(d.seats);
+    return `<div class="card courserow">
+      <div><div class="flex gap-8 center wrap" style="margin-bottom:6px"><span class="badge ${cls}"><span class="dot"></span>${txt}</span></div><h3 class="h3" style="font-size:1.2rem">${d.course}</h3><p class="muted" style="font-size:13.5px;margin-top:2px">👤 ${d.instr} · 🌐 Svenska</p></div>
+      <div><div class="muted" style="font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em">Plats & tid</div><b>${d.city}</b> · ${d.venue}<br><span class="muted" style="font-size:14px">${d.date}, ${d.time}</span></div>
+      <div><div class="muted" style="font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em">Pris</div><span class="price-from" style="font-size:1.4rem">${d.price}</span></div>
+      <div><a class="btn ${d.seats===0?'btn--outline':'btn--primary'} btn--block" href="${d.seats===0?'#':'boka-flode.html'}">${d.seats===0?'Väntelista':'Boka plats'}</a></div>
+    </div>`;
+  }).join('');
+  document.getElementById('dcount').textContent = PA_DATES.length;
+</script>
+</body>
+</html>

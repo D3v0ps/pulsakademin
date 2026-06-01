@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Boka kurs – steg för steg | PulsAkademin</title>
+<meta name="description" content="Boka din HLR-kurs i fem enkla steg: välj kurs, datum, deltagare, betalning och bekräftelse.">
+<link rel="stylesheet" href="styles.css">
+<style>
+  .flow{ display:grid; grid-template-columns:1fr 340px; gap:40px; align-items:start; }
+  @media (max-width:920px){ .flow{ grid-template-columns:1fr; } .flow-aside{ position:static; } }
+  .flow-aside{ position:sticky; top:96px; }
+  .partrow{ display:grid; grid-template-columns:1fr 1fr auto; gap:14px; align-items:end; padding:14px; background:var(--cream); border:1px solid var(--line); border-radius:var(--r-md); margin-bottom:12px; }
+  @media (max-width:560px){ .partrow{ grid-template-columns:1fr; } .steps li::after{ display:none } }
+  .pay-opt{ display:flex; align-items:center; gap:14px; padding:16px; border:1.5px solid var(--line-strong); border-radius:var(--r-md); cursor:pointer; }
+  .pay-opt.sel{ border-color:var(--bordeaux-700); background:var(--cream); box-shadow:0 0 0 3px rgba(142,27,46,.1); }
+  .pay-opt .tag{ margin-left:auto; }
+</style>
+</head>
+<body>
+<div id="site-header"></div>
+
+<main>
+  <section class="pagehead">
+    <div class="container">
+      <nav class="crumbs mb-24"><a href="index.html">Hem</a><span class="sep">/</span><a href="boka.html">Boka kurs</a><span class="sep">/</span><span>Bokning</span></nav>
+      <ol class="steps mb-24">
+        <li class="done"><span class="n">✓</span> Välj kurs</li>
+        <li class="done"><span class="n">✓</span> Datum & plats</li>
+        <li class="active"><span class="n">3</span> Deltagare</li>
+        <li><span class="n">4</span> Betalning</li>
+        <li><span class="n">5</span> Bekräftelse</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0" data-screen-label="Bokningsflöde – Deltagare">
+    <div class="container flow">
+      <div>
+        <h1 class="h2 mb-8">Vem ska gå kursen?</h1>
+        <p class="muted mb-24">Lägg till deltagarnas uppgifter. Kompetensbevis skickas till respektive e-post.</p>
+
+        <div class="card"><div class="card__body">
+          <div class="flex between center mb-16"><h3 class="h3" style="font-size:1.15rem">Deltagare (2)</h3><span class="badge">Av max 8</span></div>
+          <div class="partrow">
+            <div class="field" style="margin:0"><label>Förnamn</label><input class="input" value="Anna"></div>
+            <div class="field" style="margin:0"><label>Efternamn</label><input class="input" value="Lindqvist"></div>
+            <button class="icon-btn" aria-label="Ta bort" style="background:var(--danger-bg);color:var(--danger)">✕</button>
+          </div>
+          <div class="field"><label>E-post (för kompetensbevis)</label><input class="input" type="email" value="anna.lindqvist@exempel.se"></div>
+          <hr class="rule" style="margin:8px 0 16px">
+          <div class="partrow">
+            <div class="field" style="margin:0"><label>Förnamn</label><input class="input" placeholder="Förnamn"></div>
+            <div class="field" style="margin:0"><label>Efternamn</label><input class="input" placeholder="Efternamn"></div>
+            <button class="icon-btn" aria-label="Ta bort" style="background:var(--danger-bg);color:var(--danger)">✕</button>
+          </div>
+          <div class="field"><label>E-post (för kompetensbevis)</label><input class="input" type="email" placeholder="namn@exempel.se"></div>
+          <button class="btn btn--outline" style="margin-top:6px">+ Lägg till deltagare</button>
+        </div></div>
+
+        <div class="card mt-24"><div class="card__body">
+          <h3 class="h3 mb-16" style="font-size:1.15rem">Beställare</h3>
+          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Namn</label><input class="input" placeholder="För- och efternamn"></div><div class="field"><label>Telefon</label><input class="input" placeholder="07X-XXX XX XX"></div></div>
+          <div class="field"><label>E-post</label><input class="input" type="email" placeholder="namn@exempel.se"></div>
+          <label class="checkbox"><input type="checkbox"> <span>Jag bokar för ett företag (faktura & org.nr)</span></label>
+        </div></div>
+
+        <div class="flex between center mt-32 wrap gap-12">
+          <a class="btn btn--ghost" href="boka.html">← Tillbaka</a>
+          <a class="btn btn--primary btn--lg" href="#">Fortsätt till betalning →</a>
+        </div>
+      </div>
+
+      <aside class="flow-aside">
+        <div class="card"><div class="card__body">
+          <h3 class="h3 mb-16" style="font-size:1.1rem">Din bokning</h3>
+          <div class="ph ph--16x9 mb-16" style="border-radius:var(--r-md)"><span>HLR vuxen</span></div>
+          <b>HLR vuxen</b>
+          <p class="muted" style="font-size:14px;margin:4px 0 14px">Stockholm · Kungsgatan 12<br>12 jun 2026, 09:00–11:00</p>
+          <hr class="rule" style="margin:14px 0">
+          <div class="grid" style="gap:10px;font-size:14.5px">
+            <div class="flex between"><span class="muted">699 kr × 2 deltagare</span><b>1 398 kr</b></div>
+            <div class="flex between"><span class="muted">Varav moms (25%)</span><span class="muted">279,60 kr</span></div>
+          </div>
+          <div class="field mt-16" style="margin-bottom:8px"><label>Rabattkod</label><div class="flex gap-8"><input class="input" placeholder="Ange kod"><button class="btn btn--outline">Använd</button></div></div>
+          <hr class="rule" style="margin:14px 0">
+          <div class="flex between center"><b style="font-size:1.05rem">Totalt</b><span class="price-from" style="font-size:1.6rem">1 398 kr</span></div>
+        </div></div>
+        <div class="callout mt-16"><span>🔒</span><div>Platsen är reserverad i <b>15 minuter</b> medan du slutför bokningen.</div></div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div id="site-footer"></div>
+<script src="site.js"></script>
+</body>
+</html>
