@@ -44,21 +44,11 @@
 </main>
 
 <div id="site-footer"></div>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/db.js"></script>
 <script src="site.js"></script>
-<script>
-  const arts=[
-    {t:"Vad är HLR – och varför varje minut räknas",c:"HLR",d:"Grunderna i hjärt-lungräddning och varför tidiga insatser räddar liv.",img:"HLR-grunder"},
-    {t:"Helautomatisk vs halvautomatisk AED",c:"Hjärtstartare",d:"Vilken passar er? Vi reder ut skillnaderna.",img:"AED-jämförelse"},
-    {t:"Så ofta ska elektroder bytas",c:"Hjärtstartare",d:"Hållbarhet, utgångsdatum och vad som händer efter användning.",img:"Elektroder"},
-    {t:"HLR på barn vs vuxna",c:"HLR",d:"De viktigaste skillnaderna i teknik och kraft.",img:"Barn-HLR"},
-    {t:"Första hjälpen på arbetsplatsen",c:"Arbetsplats",d:"Vad varje arbetsplats bör ha och kunna.",img:"Första hjälpen"},
-    {t:"Checklista: hjärtstartare på arbetsplatsen",c:"Arbetsplats",d:"En praktisk checklista för placering, skyltning och underhåll.",img:"Checklista"},
-    {t:"Vanliga frågor om kompetensbevis",c:"Kompetensbevis",d:"Hur det fungerar, giltighet och repetition.",img:"Kompetensbevis"},
-    {t:"Var ska hjärtstartaren placeras?",c:"Hjärtstartare",d:"Synlighet, tillgänglighet och skyltning.",img:"Placering"},
-    {t:"Stabilt sidoläge – så gör du",c:"Första hjälpen",d:"Steg för steg för en medvetslös som andas.",img:"Sidoläge"},
-  ];
-  document.getElementById('artGrid').innerHTML = arts.map(a=>`
-    <a class="card card--hover" href="artikel.html"><div class="ph ph--16x9"><span>Bild: ${a.img}</span></div><div class="card__body"><span class="badge mb-8">${a.c}</span><h3 class="h3" style="font-size:1.2rem">${a.t}</h3><p class="muted mt-8" style="font-size:14px">${a.d}</p><span class="tlink mt-16" style="font-size:14.5px">Läs mer →</span></div></a>`).join('');
-</script>
+<script src="app/features/content.js"></script>
 </body>
 </html>

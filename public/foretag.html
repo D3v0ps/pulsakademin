@@ -3,9 +3,136 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Företagsutbildning – HLR & första hjälpen på plats | PulsAkademin</title>
+<title>Företagsutbildning – HLR &amp; första hjälpen på plats | PulsAkademin</title>
 <meta name="description" content="Utbilda hela personalgruppen i HLR och första hjälpen – på plats hos er. Branschanpassade paket, volympris och faktura. Begär offert idag.">
 <link rel="stylesheet" href="styles.css">
+<style>
+  /* package card selection */
+  .pkg-card--selected {
+    border-color: var(--bordeaux-700) !important;
+    box-shadow: 0 0 0 3px rgba(142,27,46,.14), var(--sh-md);
+    position: relative;
+  }
+  .pkg-card--selected::before {
+    content: "Vald";
+    position: absolute;
+    top: -1px; right: 16px;
+    background: var(--bordeaux-700);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 0 0 var(--r-sm) var(--r-sm);
+  }
+  .pkg-card--selectable { cursor: pointer; transition: transform .15s ease, box-shadow .2s ease, border-color .15s ease; }
+  .pkg-card--selectable:hover { transform: translateY(-3px); box-shadow: var(--sh-md); }
+
+  /* inline quote form section */
+  #offert-inline {
+    scroll-margin-top: 90px;
+  }
+  .foretag-offert-grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: 48px;
+    align-items: start;
+  }
+  @media (max-width: 920px) {
+    .foretag-offert-grid { grid-template-columns: 1fr; }
+  }
+
+  /* field error state */
+  .field--error .input,
+  .field--error .select,
+  .field--error .textarea {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+  }
+  .field__err {
+    font-size: 13px;
+    color: var(--danger);
+    font-weight: 500;
+  }
+  .form-error-banner {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1.5px solid var(--danger);
+    border-radius: var(--r-sm);
+    padding: 14px 16px;
+    font-size: 14.5px;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+
+  /* inline confirmation */
+  .quote-confirm {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 12px 0;
+  }
+  .quote-confirm__icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--green-bg);
+    color: var(--green);
+    display: grid; place-items: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    flex: 0 0 auto;
+  }
+  .quote-confirm__title {
+    color: var(--ink);
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+  }
+  .quote-confirm__sub {
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 52ch;
+  }
+  .quote-confirm__summary {
+    width: 100%;
+    background: var(--cream-200);
+    border: 1px solid var(--line);
+    border-radius: var(--r-md);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .quote-confirm__ref {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .quote-confirm__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .quote-confirm__table th {
+    text-align: left;
+    padding: 6px 12px 6px 0;
+    color: var(--muted);
+    font-weight: 500;
+    width: 40%;
+    vertical-align: top;
+  }
+  .quote-confirm__table td {
+    padding: 6px 0;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .quote-confirm__table tr + tr th,
+  .quote-confirm__table tr + tr td {
+    border-top: 1px solid var(--line);
+  }
+</style>
 </head>
 <body>
 <div id="site-header"></div>
@@ -18,7 +145,7 @@
           <span class="eyebrow">För företag &amp; organisationer</span>
           <h1 class="display" style="font-size:clamp(2.3rem,5vw,4rem);margin:16px 0 18px">Utbilda hela gruppen – på plats hos er</h1>
           <p class="lead">Vi kommer ut med all utrustning och anpassar upplägget efter er verksamhet. Fast offert, samlad deltagarlista och kompetensbevis till alla.</p>
-          <div class="flex gap-12 wrap mt-32"><a class="btn btn--primary btn--lg" href="offert.html">Begär offert</a><a class="btn btn--light btn--lg" href="tel:0293761011">Ring 0293-76 10 11</a></div>
+          <div class="flex gap-12 wrap mt-32"><a class="btn btn--primary btn--lg" href="#offert-inline">Begär offert</a><a class="btn btn--light btn--lg" href="tel:0293761011">Ring 0293-76 10 11</a></div>
         </div>
         <div class="ph ph--4x3" style="border-radius:var(--r-xl);background-color:rgba(255,255,255,.06)"><span>Bild: Utbildning på arbetsplats</span></div>
       </div>
@@ -30,28 +157,30 @@
     <div class="container">
       <div class="sec-head"><div class="sec-head__txt"><span class="eyebrow">Branschlösningar</span><h2 class="h2" style="margin-top:14px">Anpassat efter er vardag</h2></div></div>
       <div class="grid cols-4">
-        <div class="card"><div class="card__body"><div class="qc-ic">🏢</div><b>Kontor</b><p class="muted" style="font-size:13.5px;margin-top:4px">HLR & första hjälpen för medarbetare.</p></div></div>
-        <div class="card"><div class="card__body"><div class="qc-ic">🏫</div><b>Skola & förskola</b><p class="muted" style="font-size:13.5px;margin-top:4px">Barn-HLR för personal och ledare.</p></div></div>
-        <div class="card"><div class="card__body"><div class="qc-ic">🏭</div><b>Industri & lager</b><p class="muted" style="font-size:13.5px;margin-top:4px">Första hjälpen vid olycksrisk.</p></div></div>
-        <div class="card"><div class="card__body"><div class="qc-ic">🏃</div><b>Idrottsförening</b><p class="muted" style="font-size:13.5px;margin-top:4px">HLR & hjärtstartare på anläggningen.</p></div></div>
+        <div class="card"><div class="card__body"><div class="qc-ic">🏢</div><b>Kontor</b><p class="muted" style="font-size:13.5px;margin-top:4px">HLR &amp; första hjälpen för medarbetare.</p></div></div>
+        <div class="card"><div class="card__body"><div class="qc-ic">🏫</div><b>Skola &amp; förskola</b><p class="muted" style="font-size:13.5px;margin-top:4px">Barn-HLR för personal och ledare.</p></div></div>
+        <div class="card"><div class="card__body"><div class="qc-ic">🏭</div><b>Industri &amp; lager</b><p class="muted" style="font-size:13.5px;margin-top:4px">Första hjälpen vid olycksrisk.</p></div></div>
+        <div class="card"><div class="card__body"><div class="qc-ic">🏃</div><b>Idrottsförening</b><p class="muted" style="font-size:13.5px;margin-top:4px">HLR &amp; hjärtstartare på anläggningen.</p></div></div>
         <div class="card"><div class="card__body"><div class="qc-ic">🏠</div><b>Hemtjänst</b><p class="muted" style="font-size:13.5px;margin-top:4px">HLR i hemmiljö.</p></div></div>
         <div class="card"><div class="card__body"><div class="qc-ic">🩺</div><b>Vårdcentral</b><p class="muted" style="font-size:13.5px;margin-top:4px">S-HLR och teamträning.</p></div></div>
-        <div class="card"><div class="card__body"><div class="qc-ic">🛍️</div><b>Butik & handel</b><p class="muted" style="font-size:13.5px;margin-top:4px">Snabb grundkurs för team.</p></div></div>
-        <div class="card"><div class="card__body"><div class="qc-ic">🏛️</div><b>Kommun & offentligt</b><p class="muted" style="font-size:13.5px;margin-top:4px">Volymupplägg & ramavtal.</p></div></div>
+        <div class="card"><div class="card__body"><div class="qc-ic">🛍️</div><b>Butik &amp; handel</b><p class="muted" style="font-size:13.5px;margin-top:4px">Snabb grundkurs för team.</p></div></div>
+        <div class="card"><div class="card__body"><div class="qc-ic">🏛️</div><b>Kommun &amp; offentligt</b><p class="muted" style="font-size:13.5px;margin-top:4px">Volymupplägg &amp; ramavtal.</p></div></div>
       </div>
     </div>
   </section>
 
   <!-- packages -->
-  <section class="section bg-cream2" data-screen-label="Företag – Paket">
+  <section class="section bg-cream2" data-screen-label="Företag – Paket" id="paket">
     <div class="container">
-      <div class="sec-head"><div class="sec-head__txt"><span class="eyebrow">Utbildningspaket</span><h2 class="h2" style="margin-top:14px">Välj en startpunkt</h2></div></div>
-      <div class="grid cols-3">
-        <div class="card"><div class="card__body"><span class="badge mb-8">Bas</span><h3 class="h3" style="font-size:1.25rem">HLR Bas</h3><p class="muted" style="font-size:14px;margin:8px 0 14px">2 tim HLR vuxen med hjärtstartare för en grupp.</p><div class="price-from">Från 4 900 kr</div><a class="btn btn--outline btn--block mt-16" href="offert.html">Begär offert</a></div></div>
-        <div class="card" style="border:2px solid var(--bordeaux-700)"><div class="card__body"><span class="badge badge--coral mb-8">Populärast</span><h3 class="h3" style="font-size:1.25rem">HLR + Första hjälpen</h3><p class="muted" style="font-size:14px;margin:8px 0 14px">Halvdag som täcker HLR, AED och första hjälpen-åtgärder.</p><div class="price-from">Från 7 900 kr</div><a class="btn btn--primary btn--block mt-16" href="offert.html">Begär offert</a></div></div>
-        <div class="card"><div class="card__body"><span class="badge mb-8">Komplett</span><h3 class="h3" style="font-size:1.25rem">HLR + AED-paket</h3><p class="muted" style="font-size:14px;margin:8px 0 14px">Utbildning + hjärtstartare, skåp och serviceavtal.</p><div class="price-from">Offert</div><a class="btn btn--outline btn--block mt-16" href="offert.html">Begär offert</a></div></div>
+      <div class="sec-head"><div class="sec-head__txt"><span class="eyebrow">Utbildningspaket</span><h2 class="h2" style="margin-top:14px">Välj en startpunkt</h2><p class="muted mt-8" style="font-size:15px">Klicka på ett paket för att förhandsvälja det i offertformuläret nedan.</p></div></div>
+      <div class="grid cols-3" id="pkg-cards">
+        <div class="card pkg-card--selectable" data-package="HLR Bas"><div class="card__body"><span class="badge mb-8">Bas</span><h3 class="h3" style="font-size:1.25rem">HLR Bas</h3><p class="muted" style="font-size:14px;margin:8px 0 14px">2 tim HLR vuxen med hjärtstartare för en grupp.</p><div class="price-from">Från 4 900 kr</div><button type="button" class="btn btn--outline btn--block mt-16" data-pkg-select>Välj &amp; begär offert</button></div></div>
+        <div class="card pkg-card--selectable" style="border:2px solid var(--bordeaux-700)" data-package="HLR + Första hjälpen"><div class="card__body"><span class="badge badge--coral mb-8">Populärast</span><h3 class="h3" style="font-size:1.25rem">HLR + Första hjälpen</h3><p class="muted" style="font-size:14px;margin:8px 0 14px">Halvdag som täcker HLR, AED och första hjälpen-åtgärder.</p><div class="price-from">Från 7 900 kr</div><button type="button" class="btn btn--primary btn--block mt-16" data-pkg-select>Välj &amp; begär offert</button></div></div>
+        <div class="card pkg-card--selectable" data-package="HLR + AED-paket"><div class="card__body"><span class="badge mb-8">Komplett</span><h3 class="h3" style="font-size:1.25rem">HLR + AED-paket</h3><p class="muted" style="font-size:14px;margin:8px 0 14px">Utbildning + hjärtstartare, skåp och serviceavtal.</p><div class="price-from">Offert</div><button type="button" class="btn btn--outline btn--block mt-16" data-pkg-select>Välj &amp; begär offert</button></div></div>
+        <div class="card pkg-card--selectable" data-package="Brandskydd"><div class="card__body"><span class="badge mb-8">Säkerhet</span><h3 class="h3" style="font-size:1.25rem">Brandskydd</h3><p class="muted" style="font-size:14px;margin:8px 0 14px">Grundläggande brandskyddsutbildning för hela arbetsplatsen.</p><div class="price-from">Offert</div><button type="button" class="btn btn--outline btn--block mt-16" data-pkg-select>Välj &amp; begär offert</button></div></div>
+        <div class="card pkg-card--selectable" data-package="Krisberedskap"><div class="card__body"><span class="badge mb-8">Beredskap</span><h3 class="h3" style="font-size:1.25rem">Krisberedskap</h3><p class="muted" style="font-size:14px;margin:8px 0 14px">Hantera störningar och kriser – för ledare och team.</p><div class="price-from">Offert</div><button type="button" class="btn btn--outline btn--block mt-16" data-pkg-select>Välj &amp; begär offert</button></div></div>
       </div>
-      <p class="muted tac mt-24" style="font-size:14px">Vi erbjuder även brandskydd, krisberedskap och hot &amp; våld – <a href="utbildningar.html" class="tlink">se alla utbildningar</a>.</p>
+      <p class="muted tac mt-24" style="font-size:14px">Vi erbjuder även hot &amp; våld och andra specialkurser – <a href="utbildningar.html" class="tlink">se alla utbildningar</a>.</p>
     </div>
   </section>
 
@@ -63,7 +192,7 @@
         <div><div class="stat"><b>1</b></div><h3 class="h3" style="font-size:1.15rem;margin-top:8px">Begär offert</h3><p class="muted" style="font-size:14px;margin-top:6px">Berätta antal, plats och behov.</p></div>
         <div><div class="stat"><b>2</b></div><h3 class="h3" style="font-size:1.15rem;margin-top:8px">Planering</h3><p class="muted" style="font-size:14px;margin-top:6px">Vi bokar datum och instruktör.</p></div>
         <div><div class="stat"><b>3</b></div><h3 class="h3" style="font-size:1.15rem;margin-top:8px">Utbildning</h3><p class="muted" style="font-size:14px;margin-top:6px">Praktisk träning hos er.</p></div>
-        <div><div class="stat"><b>4</b></div><h3 class="h3" style="font-size:1.15rem;margin-top:8px">Bevis & uppföljning</h3><p class="muted" style="font-size:14px;margin-top:6px">Deltagarlista, intyg och påminnelse.</p></div>
+        <div><div class="stat"><b>4</b></div><h3 class="h3" style="font-size:1.15rem;margin-top:8px">Bevis &amp; uppföljning</h3><p class="muted" style="font-size:14px;margin-top:6px">Deltagarlista, intyg och påminnelse.</p></div>
       </div>
     </div>
   </section>
@@ -77,17 +206,119 @@
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="section bg-bordeaux" data-screen-label="Företag – CTA">
-    <div class="container split center">
-      <div><h2 class="h2" style="color:var(--cream)">Redo att utbilda er grupp?</h2><p class="lead mt-16">Få en offert utan förpliktelser – oftast inom ett par timmar.</p></div>
-      <div class="flex gap-12 wrap" style="justify-content:flex-end"><a class="btn btn--primary btn--lg" href="offert.html">Begär offert</a><a class="btn btn--light btn--lg" href="kontakt.html">Kontakta oss</a></div>
+  <!-- inline quote form -->
+  <section class="section bg-cream2" id="offert-inline" data-screen-label="Företag – Begär offert">
+    <div class="container">
+      <div class="sec-head" style="margin-bottom:40px"><div class="sec-head__txt"><span class="eyebrow">Offertförfrågan</span><h2 class="h2" style="margin-top:14px">Begär offert direkt</h2><p class="muted mt-8" style="font-size:15px">Fyll i formuläret så återkommer vi med ett konkret förslag – oftast inom ett par timmar.</p></div></div>
+      <div class="foretag-offert-grid">
+        <aside>
+          <div class="card"><div class="card__body">
+            <h3 class="h3 mb-16" style="font-size:1.15rem">Varför begära offert?</h3>
+            <ul style="display:grid;gap:14px">
+              <li class="feature"><div class="feature__ic" style="width:38px;height:38px">✓</div><div><b>Fast pris</b><p class="muted" style="font-size:13.5px">Inga överraskningar – allt ingår.</p></div></li>
+              <li class="feature"><div class="feature__ic" style="width:38px;height:38px">📍</div><div><b>Hos er eller hos oss</b><p class="muted" style="font-size:13.5px">Var som helst i Sverige.</p></div></li>
+              <li class="feature"><div class="feature__ic" style="width:38px;height:38px">🧾</div><div><b>Faktura</b><p class="muted" style="font-size:13.5px">30 dagar för företag.</p></div></li>
+              <li class="feature"><div class="feature__ic" style="width:38px;height:38px">⚡</div><div><b>Snabbt svar</b><p class="muted" style="font-size:13.5px">Oftast inom ett par timmar.</p></div></li>
+            </ul>
+            <hr class="rule" style="margin:20px 0">
+            <p class="muted" style="font-size:14px">Hellre prata direkt?</p>
+            <a class="btn btn--outline btn--block mt-8" href="tel:0293761011">📞 0293-76 10 11</a>
+          </div></div>
+        </aside>
+
+        <div class="card"><div class="card__body" style="padding:clamp(22px,3vw,36px)">
+          <h2 class="h3 mb-24">Din förfrågan</h2>
+          <form id="foretag-offert-form" novalidate>
+            <div class="grid cols-2" style="gap:14px">
+              <div class="field"><label for="fq-company">Företagsnamn</label><input id="fq-company" class="input" name="company_name" autocomplete="organization"></div>
+              <div class="field"><label for="fq-org">Organisationsnummer</label><input id="fq-org" class="input" name="org_number" placeholder="XXXXXX-XXXX"></div>
+            </div>
+            <div class="grid cols-2" style="gap:14px">
+              <div class="field"><label for="fq-contact">Kontaktperson</label><input id="fq-contact" class="input" name="contact_name" autocomplete="name"></div>
+              <div class="field"><label for="fq-phone">Telefon</label><input id="fq-phone" class="input" name="phone" type="tel" autocomplete="tel"></div>
+            </div>
+            <div class="field"><label for="fq-email">E-post</label><input id="fq-email" class="input" name="email" type="email" autocomplete="email"></div>
+            <hr class="rule" style="margin:8px 0 22px">
+            <div class="grid cols-2" style="gap:14px">
+              <div class="field"><label for="fq-course">Utbildning</label><select id="fq-course" class="select" name="course_interest"><option value="">– Välj utbildning –</option><option>HLR vuxen</option><option>HLR barn</option><option>HLR barn &amp; vuxen</option><option>S-HLR</option><option>Första hjälpen &amp; HLR</option><option>Brandskydd</option><option>Krishantering</option><option>Hot, våld &amp; aggressivt beteende</option><option>Hjärtstartare</option></select></div>
+              <div class="field"><label for="fq-count">Antal deltagare</label><input id="fq-count" class="input" name="participant_count" type="number" min="1" placeholder="t.ex. 12"></div>
+            </div>
+            <div class="grid cols-2" style="gap:14px">
+              <div class="field"><label for="fq-city">Önskad ort</label><input id="fq-city" class="input" name="city" placeholder="Stad" autocomplete="address-level2"></div>
+              <div class="field"><label for="fq-date">Önskat datum</label><input id="fq-date" class="input" name="preferred_date" type="date"></div>
+            </div>
+            <div class="field"><label>Plats för utbildning</label><div class="pillrow"><label class="chip"><input type="radio" name="floc" value="hos-oss" checked style="width:15px;height:15px"> Hos oss</label><label class="chip"><input type="radio" name="floc" value="er-lokal" style="width:15px;height:15px"> I er lokal</label><label class="chip"><input type="radio" name="floc" value="annan" style="width:15px;height:15px"> Annan ort</label></div></div>
+            <div class="field"><label for="fq-msg">Meddelande</label><textarea id="fq-msg" class="textarea" name="message" placeholder="Berätta gärna mer om era behov"></textarea></div>
+            <div class="field"><label class="checkbox"><input type="checkbox" name="consent"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label></div>
+            <button type="submit" class="btn btn--primary btn--block btn--lg">Skicka offertförfrågan</button>
+          </form>
+        </div></div>
+      </div>
     </div>
   </section>
 </main>
 
-<div class="mobile-action"><a class="btn btn--outline" href="tel:0293761011" style="flex:1">Ring oss</a><a class="btn btn--primary" href="offert.html" style="flex:2">Begär offert</a></div>
+<div class="mobile-action"><a class="btn btn--outline" href="tel:0293761011" style="flex:1">Ring oss</a><a class="btn btn--primary" href="#offert-inline" style="flex:2">Begär offert</a></div>
 <div id="site-footer"></div>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/db.js"></script>
+<script src="app/features/quote.js"></script>
 <script src="site.js"></script>
+<script>
+(function () {
+  /* wire quote form */
+  var form = document.getElementById('foretag-offert-form');
+  if (form && window.PA && PA.quote) {
+    /* The radio name on this page is "floc" — patch quote.js expectation */
+    PA.quote.init(form, {});
+
+    /* package card selection — must run after init so select is available */
+    var pkgCards = document.getElementById('pkg-cards');
+    if (pkgCards) {
+      var cards = pkgCards.querySelectorAll('[data-package]');
+      var courseSelect = form.querySelector('select#fq-course');
+
+      cards.forEach(function (card) {
+        var btns = card.querySelectorAll('[data-pkg-select]');
+        btns.forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            /* mark active */
+            cards.forEach(function (c) { c.classList.remove('pkg-card--selected'); });
+            card.classList.add('pkg-card--selected');
+
+            /* preselect course in form */
+            var pkgName = card.getAttribute('data-package');
+            if (courseSelect && pkgName) {
+              var found = false;
+              Array.prototype.slice.call(courseSelect.options).forEach(function (opt) {
+                if (opt.value === pkgName || opt.textContent.trim() === pkgName) {
+                  opt.selected = true;
+                  found = true;
+                }
+              });
+              if (!found) {
+                var extra = document.createElement('option');
+                extra.value = pkgName;
+                extra.textContent = pkgName;
+                extra.selected = true;
+                courseSelect.appendChild(extra);
+              }
+            }
+
+            /* scroll to form */
+            var formSection = document.getElementById('offert-inline');
+            if (formSection) {
+              formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          });
+        });
+      });
+    }
+  }
+})();
+</script>
 </body>
 </html>

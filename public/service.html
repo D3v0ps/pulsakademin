@@ -55,19 +55,41 @@
     <div class="container" style="max-width:720px">
       <div class="card"><div class="card__body" style="padding:clamp(22px,3vw,36px)">
         <h2 class="h3 mb-24">Teckna serviceavtal</h2>
-        <div class="grid cols-2" style="gap:14px"><div class="field"><label>Företag</label><input class="input"></div><div class="field"><label>Kontaktperson</label><input class="input"></div></div>
-        <div class="grid cols-2" style="gap:14px"><div class="field"><label>E-post</label><input class="input" type="email"></div><div class="field"><label>Telefon</label><input class="input"></div></div>
-        <div class="grid cols-2" style="gap:14px"><div class="field"><label>Antal hjärtstartare</label><input class="input" type="number" placeholder="1"></div><div class="field"><label>Modell(er)</label><input class="input" placeholder="t.ex. Smarty Saver"></div></div>
-        <div class="field"><label>Önskat avtal</label><select class="select"><option>Full service</option><option>Påminnelse (Bas)</option><option>Företag (flera enheter)</option></select></div>
-        <label class="checkbox mb-16"><input type="checkbox"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
-        <button class="btn btn--primary btn--block btn--lg">Skicka förfrågan</button>
+        <form id="serviceForm" novalidate>
+          <div class="grid cols-2" style="gap:14px">
+            <div class="field"><label for="svc-company">Företag</label><input id="svc-company" class="input" name="company_name" autocomplete="organization"></div>
+            <div class="field"><label for="svc-contact">Kontaktperson</label><input id="svc-contact" class="input" name="contact_name" autocomplete="name"></div>
+          </div>
+          <div class="grid cols-2" style="gap:14px">
+            <div class="field"><label for="svc-email">E-post</label><input id="svc-email" class="input" name="email" type="email" autocomplete="email"></div>
+            <div class="field"><label for="svc-phone">Telefon</label><input id="svc-phone" class="input" name="phone" type="tel" autocomplete="tel"></div>
+          </div>
+          <div class="grid cols-2" style="gap:14px">
+            <div class="field"><label for="svc-units">Antal hjärtstartare</label><input id="svc-units" class="input" name="units" type="number" min="1" placeholder="1"></div>
+            <div class="field"><label for="svc-model">Modell(er)</label><input id="svc-model" class="input" name="model" placeholder="t.ex. Smarty Saver"></div>
+          </div>
+          <div class="field"><label for="svc-plan">Önskat avtal</label><select id="svc-plan" class="select" name="plan"><option>Full service</option><option>Påminnelse (Bas)</option><option>Företag (flera enheter)</option></select></div>
+          <p id="serviceError" class="inline-error" hidden style="display:none;color:var(--danger,#c0392b);margin-bottom:14px;font-size:14.5px"></p>
+          <label class="checkbox mb-16"><input type="checkbox"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
+          <button class="btn btn--primary btn--block btn--lg" type="submit">Skicka förfrågan</button>
+        </form>
       </div></div>
     </div>
   </section>
 </main>
 
+<style>
+  .conf-box{ display:flex; gap:20px; align-items:flex-start; padding:clamp(22px,3vw,36px); }
+  .conf-icon{ flex:0 0 auto; width:48px; height:48px; border-radius:50%; background:var(--green-bg,#d4edda); color:var(--green,#1a7a3c); display:grid; place-items:center; font-size:1.5rem; font-weight:700; }
+</style>
+
 <div class="mobile-action"><a class="btn btn--outline" href="#paket" style="flex:1">Se paket</a><a class="btn btn--primary" href="#serviceform" style="flex:2">Teckna avtal</a></div>
 <div id="site-footer"></div>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/db.js"></script>
 <script src="site.js"></script>
+<script src="app/features/content.js"></script>
 </body>
 </html>

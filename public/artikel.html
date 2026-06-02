@@ -14,61 +14,27 @@
   .article ol li{ counter-increment:s; display:flex; gap:14px; }
   .article ol li::before{ content:counter(s); flex:0 0 auto; width:30px; height:30px; border-radius:50%; background:var(--coral); color:#fff; font-family:var(--font-display); font-weight:700; display:grid; place-items:center; }
   .toc{ position:sticky; top:96px; }
+  .article-body p{ margin-bottom:18px; font-size:1.08rem; }
+  .article-body h2{ margin:36px 0 14px; }
+  .article-body ul{ margin:8px 0 24px; padding-left:1.4em; display:grid; gap:8px; }
+  .article-body ol{ counter-reset:s; display:grid; gap:14px; margin:8px 0 24px; padding:0; list-style:none; }
+  .article-body ol li{ counter-increment:s; display:flex; gap:14px; }
+  .article-body ol li::before{ content:counter(s); flex:0 0 auto; width:30px; height:30px; border-radius:50%; background:var(--coral); color:#fff; font-family:var(--font-display); font-weight:700; display:grid; place-items:center; }
 </style>
 </head>
 <body>
 <div id="site-header"></div>
 
-<main>
-  <section class="pagehead"><div class="container article">
-    <nav class="crumbs mb-24"><a href="index.html">Hem</a><span class="sep">/</span><a href="kunskapsbank.html">Kunskapsbank</a><span class="sep">/</span><span>Hjärtstartare</span></nav>
-    <span class="badge badge--coral mb-16">Hjärtstartare</span>
-    <h1 class="h1" style="margin:8px 0 18px">Så använder du en hjärtstartare – steg för steg</h1>
-    <div class="flex gap-16 center muted" style="font-size:14px"><span>Av Hamza Samara</span><span>·</span><span>6 min läsning</span><span>·</span><span>Uppdaterad maj 2026</span></div>
-  </div></section>
-
-  <section class="section" style="padding-top:8px" data-screen-label="Artikel">
-    <div class="container article">
-      <div class="ph ph--16x9 mb-32" style="border-radius:var(--r-lg)"><span>Bild: Hjärtstartare öppnas vid en person</span></div>
-      <p class="lead">En hjärtstartare (AED) är gjord för att vem som helst ska kunna använda den. Den talar om exakt vad du ska göra. Här går vi igenom hur en insats ser ut – men kom ihåg: ingen text ersätter praktisk träning.</p>
-
-      <h2 class="h2">Innan du börjar</h2>
-      <p>Om någon plötsligt blir medvetslös och inte andas normalt – larma 112, be någon hämta närmaste hjärtstartare och starta HLR direkt. Varje minut utan insats minskar chansen att överleva.</p>
-
-      <h2 class="h2">Steg för steg</h2>
-      <ol>
-        <li>Slå på hjärtstartaren. Den börjar genast ge röstinstruktioner.</li>
-        <li>Blotta bröstkorgen och sätt elektroderna enligt bilderna på dynorna.</li>
-        <li>Se till att ingen rör personen medan AED:n analyserar hjärtrytmen.</li>
-        <li>Ge stöt om enheten uppmanar det (halvautomatisk) – eller invänta automatisk stöt.</li>
-        <li>Fortsätt med HLR direkt efteråt och följ enhetens instruktioner tills hjälp anländer.</li>
-      </ol>
-
-      <div class="callout"><span>💡</span><div>Har ni barn på platsen? Använd barnläge eller barnelektroder om de finns. Saknas de – använd vuxenelektroder, det är bättre än ingenting.</div></div>
-
-      <h2 class="h2">Efter insatsen</h2>
-      <p>Kontrollera elektroder och batteri efter användning – elektroderna är oftast förbrukade. Med ett <a href="service.html" class="tlink">serviceavtal</a> får ni hjälp att hålla utrustningen redo inför nästa gång.</p>
-
-      <div class="card bg-bordeaux mt-48" style="border:0"><div class="card__body split center" style="padding:clamp(24px,3vw,40px)">
-        <div><h3 class="h3" style="color:var(--cream)">Vill ni lära er på riktigt?</h3><p style="color:rgba(251,246,240,.8);margin-top:8px">Boka en praktisk HLR-kurs med hjärtstartare – för er grupp eller arbetsplats.</p></div>
-        <a class="btn btn--primary" href="boka.html" style="white-space:nowrap">Boka kurs →</a>
-      </div></div>
-    </div>
-  </section>
-
-  <section class="section bg-cream2" data-screen-label="Artikel – Relaterat">
-    <div class="container">
-      <div class="sec-head"><div class="sec-head__txt"><h2 class="h2">Läs vidare</h2></div><a class="tlink" href="kunskapsbank.html">Till kunskapsbanken →</a></div>
-      <div class="grid cols-3">
-        <a class="card card--hover" href="artikel.html"><div class="ph ph--16x9"><span>Bild: AED-jämförelse</span></div><div class="card__body"><span class="badge mb-8">Hjärtstartare</span><h3 class="h3" style="font-size:1.2rem">Helautomatisk vs halvautomatisk</h3></div></a>
-        <a class="card card--hover" href="artikel.html"><div class="ph ph--16x9"><span>Bild: Elektroder</span></div><div class="card__body"><span class="badge mb-8">Hjärtstartare</span><h3 class="h3" style="font-size:1.2rem">Så ofta ska elektroder bytas</h3></div></a>
-        <a class="card card--hover" href="artikel.html"><div class="ph ph--16x9"><span>Bild: Checklista</span></div><div class="card__body"><span class="badge mb-8">Arbetsplats</span><h3 class="h3" style="font-size:1.2rem">Checklista för arbetsplatsen</h3></div></a>
-      </div>
-    </div>
-  </section>
+<main id="articleRoot">
+  <!-- Populated by app/features/content.js -->
 </main>
 
 <div id="site-footer"></div>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/db.js"></script>
 <script src="site.js"></script>
+<script src="app/features/content.js"></script>
 </body>
 </html>

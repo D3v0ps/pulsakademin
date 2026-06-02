@@ -16,20 +16,54 @@
   const need = () => { if (!ready()) throw new Error("Backend ej konfigurerad – lägg in Supabase URL och anon-nyckel i app/config.js för att aktivera bokningar, ordrar och offerter."); };
   const num = (v) => (typeof v === "number" ? v : parseFloat(String(v ?? "").replace(/[^\d.,]/g, "").replace(",", ".")) || 0);
 
+  /* Embedded demo dataset — self-contained so the site renders on every page
+     even before Supabase is connected and regardless of whether data.js loaded.
+     (window.PA_* from data.js, if present, takes precedence.) */
+  const DEMO = {
+    courses: (window.PA_COURSES) || [
+      { title:"HLR vuxen", slug:"hlr-vuxen", cat:"HLR", desc:"Grundläggande hjärt-lungräddning på vuxna med träning på docka och hjärtstartare.", dur:"2 timmar", aud:"Alla", price:"699 kr", priceUnit:"/person", img:"Bild: HLR vuxen" },
+      { title:"HLR barn", slug:"hlr-barn", cat:"HLR", desc:"HLR anpassad för spädbarn och barn – för föräldrar, förskola och skola.", dur:"2 timmar", aud:"Alla", price:"699 kr", priceUnit:"/person", img:"Bild: HLR barn" },
+      { title:"S-HLR vuxen", slug:"s-hlr-vuxen", cat:"S-HLR", desc:"Sjukvårds-HLR med hjärtstartare och teamarbete för vårdpersonal.", dur:"3 timmar", aud:"Vårdpersonal", price:"Offert", priceUnit:"", img:"Bild: S-HLR" },
+      { title:"Första hjälpen & HLR", slug:"forsta-hjalpen", cat:"Första hjälpen", desc:"Första hjälpen-åtgärder kombinerat med HLR och hjärtstartare.", dur:"Halvdag", aud:"Företag", price:"Från 995 kr", priceUnit:"/person", img:"Bild: Första hjälpen" },
+      { title:"Grundläggande brandskydd", slug:"brandskydd", cat:"Brandskydd", desc:"Förebyggande brandskydd, släckutrustning och utrymning i praktiken.", dur:"Halvdag", aud:"Företag", price:"Offert", priceUnit:"", img:"Bild: Brandskydd" },
+      { title:"Krishantering & beredskap", slug:"krishantering", cat:"Kris", desc:"Krisberedskap och första psykologiska hjälpen för arbetsplatsen.", dur:"Halvdag", aud:"Företag", price:"Offert", priceUnit:"", img:"Bild: Krishantering" },
+      { title:"Hot, våld & aggressivt beteende", slug:"hot-vald", cat:"Säkerhet", desc:"Förebygga och hantera hotfulla situationer och aggressivt beteende.", dur:"Halvdag", aud:"Företag", price:"Offert", priceUnit:"", img:"Bild: Hot & våld" },
+      { title:"Repetition HLR vuxen & barn", slug:"repetition", cat:"Repetition", desc:"Kort uppdateringskurs för att hålla kompetensbeviset aktuellt.", dur:"1 timme", aud:"Alla", price:"499 kr", priceUnit:"/person", img:"Bild: Repetition" },
+    ],
+    dates: (window.PA_DATES) || [
+      { course:"HLR vuxen", city:"Stockholm", venue:"Kungsgatan 12", date:"12 jun 2026", time:"09:00–11:00", price:"699 kr", seats:8, instr:"Hamza Samara" },
+      { course:"HLR barn", city:"Uppsala", venue:"Dragarbrunnsg. 3", date:"14 jun 2026", time:"13:00–15:00", price:"699 kr", seats:3, instr:"Sara Mahmud" },
+      { course:"S-HLR vuxen", city:"Tierp", venue:"Centralgatan 14", date:"18 jun 2026", time:"09:00–12:00", price:"Offert", seats:6, instr:"Hamza Samara" },
+      { course:"Första hjälpen & HLR", city:"Göteborg", venue:"Avenyn 21", date:"20 jun 2026", time:"09:00–13:00", price:"995 kr", seats:0, instr:"Sara Mahmud" },
+      { course:"HLR vuxen", city:"Gävle", venue:"Norra Kungsg. 5", date:"24 jun 2026", time:"17:00–19:00", price:"699 kr", seats:12, instr:"Hamza Samara" },
+      { course:"Repetition HLR", city:"Stockholm", venue:"Kungsgatan 12", date:"27 jun 2026", time:"12:00–13:00", price:"499 kr", seats:2, instr:"Sara Mahmud" },
+      { course:"HLR barn", city:"Göteborg", venue:"Avenyn 21", date:"2 jul 2026", time:"09:00–11:00", price:"699 kr", seats:9, instr:"Sara Mahmud" },
+      { course:"S-HLR barn", city:"Uppsala", venue:"Dragarbrunnsg. 3", date:"5 jul 2026", time:"13:00–16:00", price:"Offert", seats:5, instr:"Hamza Samara" },
+    ],
+    products: (window.PA_PRODUCTS) || [
+      { name:"Smarty Saver Halvautomatisk", usp:"Barnläge · IP56 · 10 års garanti", price:"11 999 kr", priceEx:"9 599 kr", badges:["Populär","Barnläge"], stock:"I lager", brand:"Smarty Saver", img:"Bild: Smarty Saver" },
+      { name:"DefiSign LIFE AED", usp:"Pekskärm med guidning · Hel-/halvautomatisk", price:"18 499 kr", priceEx:"14 799 kr", badges:["Skärm"], stock:"I lager", brand:"DefiSign", img:"Bild: DefiSign LIFE" },
+      { name:"Philips HeartStart HS1", usp:"Marknadsledande · Enkel & pålitlig", price:"19 999 kr", priceEx:"15 999 kr", badges:["Bästsäljare"], stock:"Få i lager", brand:"Philips", img:"Bild: Philips HS1" },
+      { name:"Primedic HeartSave AED", usp:"Robust · För utomhusbruk", price:"14 999 kr", priceEx:"11 999 kr", badges:["Utomhus"], stock:"I lager", brand:"Primedic", img:"Bild: Primedic" },
+      { name:"CU Medical iPAD SP1", usp:"Automatisk barn-/vuxenläge", price:"13 499 kr", priceEx:"10 799 kr", badges:["Barnläge"], stock:"I lager", brand:"CU Medical", img:"Bild: CU Medical SP1" },
+      { name:"Mindray BeneHeart C1A", usp:"Kompakt · QR-guidning i realtid", price:"15 999 kr", priceEx:"12 799 kr", badges:["Nyhet"], stock:"I lager", brand:"Mindray", img:"Bild: Mindray C1A" },
+    ],
+  };
+
   /* ---------------- READS (with demo fallback) ---------------- */
   async function listCourses() {
     if (ready()) {
       const { data, error } = await sb().from("courses").select("*").eq("active", true).order("sort", { ascending: true });
       if (!error && data && data.length) return data;
     }
-    return (window.PA_COURSES || []).map((c, i) => ({
+    return DEMO.courses.map((c, i) => ({
       id: c.slug, sort: i, title: c.title, slug: c.slug, category: c.cat, audience: c.aud,
       description: c.desc, duration: c.dur, price_label: c.price, price_unit: c.priceUnit, img: c.img, active: true,
     }));
   }
   async function getCourse(slug) {
     if (ready()) { const { data } = await sb().from("courses").select("*").eq("slug", slug).maybeSingle(); if (data) return data; }
-    const c = (window.PA_COURSES || []).find((x) => x.slug === slug);
+    const c = DEMO.courses.find((x) => x.slug === slug);
     return c ? { id: c.slug, title: c.title, slug: c.slug, category: c.cat, audience: c.aud, description: c.desc, duration: c.dur, price_label: c.price, price_unit: c.priceUnit, img: c.img } : null;
   }
   async function listInstances(opts = {}) {
@@ -39,7 +73,7 @@
       const { data, error } = await q;
       if (!error && data) return data;
     }
-    let rows = (window.PA_DATES || []).map((d, i) => ({
+    let rows = DEMO.dates.map((d, i) => ({
       id: "demo-" + i, course: { title: d.course }, course_title: d.course, city: d.city, venue: d.venue,
       date_label: d.date, time_label: d.time, price_label: d.price, seats_left: d.seats, instructor: d.instr,
     }));
@@ -52,7 +86,7 @@
       const { data, error } = await sb().from("products").select("*").eq("active", true);
       list = (!error && data && data.length) ? data : null;
     }
-    if (!list) list = (window.PA_PRODUCTS || []).map((p, i) => ({
+    if (!list) list = DEMO.products.map((p, i) => ({
       id: "demo-" + i, name: p.name, slug: "demo-" + i, usp: p.usp, price_incl_vat: num(p.price),
       price_excl_vat: num(p.priceEx), brand: p.brand, badges: p.badges, stock_status: p.stock, img: p.img, active: true,
     }));

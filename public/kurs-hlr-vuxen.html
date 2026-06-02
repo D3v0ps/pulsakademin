@@ -88,6 +88,50 @@
     </div>
   </section>
 
+  <!-- company quote form -->
+  <section class="section" id="foretagsbokning" data-screen-label="Kursdetalj – Företagsbokning">
+    <div class="container">
+      <div style="max-width:720px;margin:0 auto">
+        <span class="eyebrow">Utbildning på plats</span>
+        <h2 class="h2" style="margin:14px 0 10px">Boka för företag</h2>
+        <p class="muted mb-32">Fyll i formuläret så återkommer vi med fast pris och förslag på datum. Vi kan komma till er eller utbilda i vår lokal.</p>
+        <div id="quoteOk" style="display:none"></div>
+        <form class="card" id="courseQuoteForm" novalidate>
+          <div class="card__body">
+            <div class="grid cols-2" style="gap:14px">
+              <div class="field"><label>Företagsnamn *</label><input class="input" name="company_name" required placeholder="AB Exempelföretaget"></div>
+              <div class="field"><label>Organisationsnummer *</label><input class="input" name="org_number" required placeholder="556XXX-XXXX"></div>
+            </div>
+            <div class="grid cols-2" style="gap:14px">
+              <div class="field"><label>Kontaktperson *</label><input class="input" name="contact_name" required placeholder="För- och efternamn"></div>
+              <div class="field"><label>Telefon</label><input class="input" name="phone" placeholder="07X-XXX XX XX"></div>
+            </div>
+            <div class="field"><label>E-post *</label><input class="input" name="email" type="email" required placeholder="namn@foretaget.se"></div>
+            <div class="grid cols-2" style="gap:14px">
+              <div class="field"><label>Antal deltagare</label><input class="input" name="participant_count" type="number" min="1" placeholder="t.ex. 12"></div>
+              <div class="field"><label>Önskad stad</label><input class="input" name="city" placeholder="t.ex. Stockholm"></div>
+            </div>
+            <div class="grid cols-2" style="gap:14px">
+              <div class="field"><label>Önskat datum</label><input class="input" name="preferred_date" type="date"></div>
+              <div class="field"><label>Plats</label>
+                <select class="select" name="location_pref">
+                  <option value="">Välj plats</option>
+                  <option value="hos_oss">Hos oss (vi kommer till er)</option>
+                  <option value="er_lokal">Er lokal</option>
+                  <option value="var_lokal">PulsAkademin:s lokal</option>
+                </select>
+              </div>
+            </div>
+            <div class="field"><label>Övriga önskemål</label><textarea class="textarea" name="message" placeholder="Berätta gärna om eventuella önskemål, schema-krav eller frågor."></textarea></div>
+            <div id="quoteErr" class="muted" style="display:none;color:var(--danger);font-size:14px;margin-bottom:12px"></div>
+            <button class="btn btn--primary btn--block btn--lg" type="submit">Skicka förfrågan</button>
+            <p class="muted tac" style="font-size:13px;margin-top:12px">Vi svarar inom 1 arbetsdag. Frågor? Ring <a class="tlink" href="tel:0293761011">0293-76 10 11</a>.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- related -->
   <section class="section bg-cream2" data-screen-label="Kursdetalj – Relaterat">
     <div class="container">
@@ -102,13 +146,17 @@
 <script src="site.js"></script>
 <script src="data.js"></script>
 <script>
-  const fmtSeats = (s) => s===0 ? '<span class="badge badge--danger"><span class="dot"></span>Fullbokad</span>' : s<=4 ? `<span class="badge badge--amber"><span class="dot"></span>${s} kvar</span>` : `<span class="badge badge--green"><span class="dot"></span>Platser kvar</span>`;
-  document.getElementById('courseDates').innerHTML = `<thead><tr><th>Stad</th><th>Lokal</th><th>Datum</th><th>Tid</th><th>Instruktör</th><th>Platser</th><th></th></tr></thead><tbody>${
-    PA_DATES.filter(d=>d.course.includes('HLR vuxen')||d.course==='HLR vuxen').concat(PA_DATES.slice(0,2)).slice(0,4).map(d=>`<tr><td><b>${d.city}</b></td><td>${d.venue}</td><td>${d.date}</td><td>${d.time}</td><td>${d.instr}</td><td>${fmtSeats(d.seats)}</td><td><a class="btn btn--sm ${d.seats===0?'btn--outline':'btn--primary'}" href="boka.html">${d.seats===0?'Väntelista':'Boka'}</a></td></tr>`).join('')
-  }</tbody>`;
+  /* FAQ and related grid use only static demo data — no API needed */
   document.getElementById('courseFaq').innerHTML = PA_FAQ.slice(0,4).map(f=>`<details class="acc__item"><summary class="acc__q">${f.q}<span class="pm">+</span></summary><div class="acc__a">${f.a}</div></details>`).join('');
   document.getElementById('relGrid').innerHTML = PA_COURSES.slice(1,4).map(c=>`
     <a class="card card--hover" href="utbildningar.html"><div class="ph ph--16x9"><span>${c.img}</span></div><div class="card__body"><div class="coursecard__top"><h3 class="h3" style="font-size:1.2rem">${c.title}</h3><span class="badge badge--coral">${c.cat}</span></div><p class="muted" style="margin-top:10px;font-size:14px">${c.desc}</p><div class="flex between center" style="margin-top:16px"><span class="price-from">${c.price}<small> ${c.priceUnit}</small></span><span class="tlink">Läs mer →</span></div></div></a>`).join('');
 </script>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/cart.js"></script>
+<script src="app/auth.js"></script>
+<script src="app/db.js"></script>
+<script src="app/features/booking.js"></script>
 </body>
 </html>

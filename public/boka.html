@@ -32,7 +32,7 @@
       <aside class="book-aside">
         <div class="card"><div class="card__body">
           <h3 class="h3 mb-16" style="font-size:1.1rem">Filtrera</h3>
-          <div class="field"><label>Stad</label><select class="select"><option>Alla städer</option><option>Stockholm</option><option>Uppsala</option><option>Tierp</option><option>Gävle</option><option>Göteborg</option></select></div>
+          <div class="field"><label>Stad</label><select class="select" id="filterCity"><option value="Alla städer">Alla städer</option><option value="Stockholm">Stockholm</option><option value="Uppsala">Uppsala</option><option value="Tierp & Gävle">Tierp &amp; Gävle</option><option value="Göteborg">Göteborg</option></select></div>
           <div class="field"><label>Kurs</label><select class="select"><option>Alla kurser</option><option>HLR vuxen</option><option>HLR barn</option><option>S-HLR</option><option>Första hjälpen</option><option>Repetition</option></select></div>
           <div class="field"><label>Från datum</label><input class="input" type="date" value="2026-06-01"></div>
           <label class="checkbox mb-16"><input type="checkbox" checked> <span>Endast lediga platser</span></label>
@@ -43,9 +43,9 @@
       </aside>
 
       <div>
+        <div class="pillrow mb-16" id="cityChips" aria-label="Filtrera efter stad"></div>
         <div class="flex between center mb-16 wrap gap-12">
-          <span class="muted" style="font-size:14px"><b id="dcount">8</b> kurstillfällen</span>
-          <select class="select" style="width:auto"><option>Sortera: datum (närmast)</option><option>Pris (lägst)</option><option>Lediga platser</option></select>
+          <span class="muted" style="font-size:14px"><b id="dcount">…</b> kurstillfällen</span>
         </div>
         <div class="grid" style="gap:14px" id="bookList"></div>
       </div>
@@ -64,18 +64,12 @@
 <div id="site-footer"></div>
 <script src="site.js"></script>
 <script src="data.js"></script>
-<script>
-  const stat = (s) => s===0 ? ['badge--danger','Fullbokad'] : s<=4 ? ['badge--amber',`${s} platser kvar`] : ['badge--green','Platser kvar'];
-  document.getElementById('bookList').innerHTML = PA_DATES.map(d=>{
-    const [cls,txt]=stat(d.seats);
-    return `<div class="card courserow">
-      <div><div class="flex gap-8 center wrap" style="margin-bottom:6px"><span class="badge ${cls}"><span class="dot"></span>${txt}</span></div><h3 class="h3" style="font-size:1.2rem">${d.course}</h3><p class="muted" style="font-size:13.5px;margin-top:2px">👤 ${d.instr} · 🌐 Svenska</p></div>
-      <div><div class="muted" style="font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em">Plats & tid</div><b>${d.city}</b> · ${d.venue}<br><span class="muted" style="font-size:14px">${d.date}, ${d.time}</span></div>
-      <div><div class="muted" style="font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em">Pris</div><span class="price-from" style="font-size:1.4rem">${d.price}</span></div>
-      <div><a class="btn ${d.seats===0?'btn--outline':'btn--primary'} btn--block" href="${d.seats===0?'#':'boka-flode.html'}">${d.seats===0?'Väntelista':'Boka plats'}</a></div>
-    </div>`;
-  }).join('');
-  document.getElementById('dcount').textContent = PA_DATES.length;
-</script>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/cart.js"></script>
+<script src="app/auth.js"></script>
+<script src="app/db.js"></script>
+<script src="app/features/booking.js"></script>
 </body>
 </html>

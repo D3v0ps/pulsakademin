@@ -6,6 +6,49 @@
 <title>Hjärtstartare – köp & jämför AED | PulsAkademin</title>
 <meta name="description" content="Köp hjärtstartare (AED) för arbetsplats, skola, förening och offentlig miljö. Filtrera på automatik, barnläge, IP-klass, garanti och pris. Jämför modeller.">
 <link rel="stylesheet" href="styles.css">
+<style>
+  /* compare bar */
+  #compare-bar{
+    position:fixed;bottom:0;left:0;right:0;
+    background:var(--ink);color:var(--cream);
+    padding:14px clamp(16px,4vw,40px);
+    display:none;
+    z-index:200;
+    box-shadow:0 -4px 20px rgba(0,0,0,.25);
+  }
+  #compare-bar .inner{display:flex;align-items:center;gap:16px;flex-wrap:wrap;max-width:1200px;margin:0 auto;}
+  #compare-slots{display:flex;gap:8px;flex-wrap:wrap;flex:1;}
+  #compare-bar .chip{color:var(--cream);border-color:rgba(251,246,240,.3);}
+
+  /* compare modal */
+  #compare-modal{
+    display:none;position:fixed;inset:0;
+    background:rgba(0,0,0,.55);
+    z-index:300;
+    align-items:center;justify-content:center;
+  }
+  .compare-modal__box{
+    background:#fff;border-radius:var(--r-lg);
+    max-width:860px;width:calc(100% - 32px);
+    max-height:80vh;overflow:auto;
+    padding:clamp(20px,3vw,40px);
+    position:relative;
+  }
+  .compare-modal__close{
+    position:absolute;top:16px;right:16px;
+    background:none;border:none;font-size:22px;cursor:pointer;
+    color:var(--muted);
+  }
+
+  /* search input inside filter */
+  #prod-search{
+    width:100%;padding:9px 12px;
+    border:1.5px solid var(--line-strong);border-radius:var(--r-sm);
+    font-size:14px;font-family:var(--font-sans);
+    background:#fff;
+  }
+  #prod-search:focus{outline:2px solid var(--coral);outline-offset:-1px;}
+</style>
 </head>
 <body>
 <div id="site-header"></div>
@@ -20,7 +63,7 @@
           <h1 class="h1" style="margin:14px 0 14px">Rätt hjärtstartare för er miljö</h1>
           <p class="lead measure">Välj hjärtstartare för arbetsplats, skola, förening eller offentlig miljö. Osäker? Använd vår guide eller få rådgivning.</p>
         </div>
-        <a class="btn btn--bordeaux" href="#">⚖️ Jämför valda (0)</a>
+        <button class="btn btn--bordeaux" id="compare-bar-btn">⚖️ Jämför valda (<span id="compare-count">0</span>)</button>
       </div>
     </div>
   </section>
@@ -30,28 +73,48 @@
       <!-- filters -->
       <aside class="filter-aside">
         <div class="card"><div class="card__body" style="padding:8px 20px 16px">
-          <div class="fgroup"><h5>Automatik</h5><label class="fopt"><input type="checkbox"> Halvautomatisk <span class="cnt">9</span></label><label class="fopt"><input type="checkbox"> Helautomatisk <span class="cnt">7</span></label></div>
-          <div class="fgroup"><h5>Funktioner</h5><label class="fopt"><input type="checkbox"> Barnläge <span class="cnt">12</span></label><label class="fopt"><input type="checkbox"> Skärm <span class="cnt">5</span></label><label class="fopt"><input type="checkbox"> Röstguidning <span class="cnt">16</span></label></div>
-          <div class="fgroup"><h5>Miljö</h5><label class="fopt"><input type="checkbox"> Inomhus <span class="cnt">14</span></label><label class="fopt"><input type="checkbox"> Utomhus (IP55+) <span class="cnt">8</span></label></div>
-          <div class="fgroup"><h5>Varumärke</h5><label class="fopt"><input type="checkbox"> Philips <span class="cnt">3</span></label><label class="fopt"><input type="checkbox"> DefiSign <span class="cnt">4</span></label><label class="fopt"><input type="checkbox"> Primedic <span class="cnt">3</span></label><label class="fopt"><input type="checkbox"> CU Medical <span class="cnt">2</span></label></div>
-          <div class="fgroup" style="border:0"><h5>Garanti</h5><label class="fopt"><input type="checkbox"> 8 år <span class="cnt">6</span></label><label class="fopt"><input type="checkbox"> 10 år <span class="cnt">7</span></label></div>
-          <button class="btn btn--outline btn--block">Rensa filter</button>
+
+          <div class="fgroup">
+            <h5>Sök</h5>
+            <input type="search" id="prod-search" placeholder="Sök produkt…" autocomplete="off">
+          </div>
+
+          <div class="fgroup">
+            <h5>Varumärke</h5>
+            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Smarty Saver"> Smarty Saver</label>
+            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="DefiSign"> DefiSign</label>
+            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Philips"> Philips</label>
+            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Primedic"> Primedic</label>
+            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="CU Medical"> CU Medical</label>
+            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Mindray"> Mindray</label>
+          </div>
+
+          <div class="fgroup" style="border:0">
+            <h5>Tillgänglighet</h5>
+            <label class="fopt"><input type="checkbox" id="filter-instock"> Endast i lager</label>
+          </div>
+
+          <button class="btn btn--outline btn--block" id="clear-filters">Rensa filter</button>
         </div></div>
-        <div class="callout mt-16"><span>💡</span><div><b>Osäker?</b> <a href="#" class="tlink">Få rådgivning</a> eller starta köpguiden.</div></div>
+        <div class="callout mt-16"><span>💡</span><div><b>Osäker?</b> <a href="kontakt.html" class="tlink">Få rådgivning</a> eller starta köpguiden.</div></div>
       </aside>
 
       <!-- grid -->
       <div>
         <div class="flex between center mb-24 wrap gap-12">
-          <span class="muted" style="font-size:14px"><b id="pcount">6</b> produkter</span>
-          <select class="select" style="width:auto"><option>Sortera: rekommenderad</option><option>Pris: lågt–högt</option><option>Pris: högt–lågt</option><option>Populärast</option><option>Nyast</option></select>
+          <span class="muted" style="font-size:14px"><b id="pcount">–</b> produkter</span>
+          <select class="select" style="width:auto">
+            <option value="recommended">Sortera: rekommenderad</option>
+            <option value="price-asc">Pris: lågt–högt</option>
+            <option value="price-desc">Pris: högt–lågt</option>
+          </select>
         </div>
         <div class="grid cols-3" id="prodCat"></div>
 
         <!-- recommendation banner -->
         <div class="card bg-bordeaux mt-48" style="border:0"><div class="card__body split center" style="padding:clamp(24px,3vw,40px)">
           <div><h3 class="h3" style="color:var(--cream)">Komplett trygghetspaket</h3><p style="color:rgba(251,246,240,.8);margin-top:8px">Hjärtstartare + skåp + skylt + HLR-utbildning. Vi sätter ihop allt och hjälper med installation.</p></div>
-          <a class="btn btn--primary" href="produkt.html" style="white-space:nowrap">Se paket →</a>
+          <a class="btn btn--primary" href="offert.html" style="white-space:nowrap">Se paket →</a>
         </div></div>
       </div>
     </div>
@@ -62,32 +125,63 @@
   </section>
 </main>
 
-<div class="mobile-action"><a class="btn btn--outline" href="#" style="flex:1">Filter</a><a class="btn btn--primary" href="#" style="flex:1">Få rådgivning</a></div>
+<!-- compare sticky bar -->
+<div id="compare-bar">
+  <div class="inner">
+    <div id="compare-slots"></div>
+    <div class="flex gap-8">
+      <button class="btn btn--outline btn--sm js-compare-clear" style="color:var(--cream);border-color:rgba(251,246,240,.4)">Rensa</button>
+      <button class="btn btn--primary btn--sm" id="compare-bar-btn2">Jämför →</button>
+    </div>
+  </div>
+</div>
+
+<!-- compare modal -->
+<div id="compare-modal" role="dialog" aria-modal="true" aria-label="Jämför produkter">
+  <div class="compare-modal__box">
+    <button class="compare-modal__close js-modal-close" aria-label="Stäng">✕</button>
+    <h2 class="h3 mb-24">Jämför produkter</h2>
+    <div class="compare-modal__body"></div>
+    <div class="flex gap-8 mt-24">
+      <button class="btn btn--outline btn--sm js-compare-clear">Rensa jämförelse</button>
+    </div>
+  </div>
+</div>
+
+<div class="mobile-action"><a class="btn btn--outline" href="kontakt.html" style="flex:1">Filter / rådgivning</a><a class="btn btn--primary" href="offert.html" style="flex:1">Få offert</a></div>
 <div id="site-footer"></div>
-<script src="site.js"></script>
+
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/cart.js"></script>
+<script src="app/db.js"></script>
 <script src="data.js"></script>
+<script src="app/features/shop.js"></script>
+<script src="site.js"></script>
 <script>
-  document.getElementById('prodCat').innerHTML = PA_PRODUCTS.map(p=>`
-    <div class="card prodcard card--hover">
-      <a href="produkt.html"><div class="ph"><div class="prodcard__badges">${p.badges.map(b=>`<span class="badge badge--coral">${b}</span>`).join('')}</div><span>${p.img}</span></div></a>
-      <div class="card__body">
-        <div class="muted" style="font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">${p.brand}</div>
-        <a href="produkt.html"><div class="prodcard__name">${p.name}</div></a>
-        <div class="prodcard__usp">${p.usp}</div>
-        <div class="price mb-16"><b>${p.price}</b><small>${p.priceEx} exkl. moms</small></div>
-        <div class="flex gap-8">
-          <a class="btn btn--primary" href="kundvagn.html" style="flex:1">Lägg i kundvagn</a>
-          <label class="chip" style="padding:10px"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--bordeaux-700)"> Jämför</label>
-        </div>
-      </div>
-    </div>`).join('');
-  const af=[
+  // FAQ
+  var af = [
     {q:"Vad är skillnaden mellan hel- och halvautomatisk?",a:"En halvautomatisk hjärtstartare uppmanar dig att trycka på en knapp för att ge stöt. En helautomatisk ger stöten automatiskt när den behövs. Båda är säkra och röststyrda."},
     {q:"Behöver vi barnläge?",a:"Om barn vistas på platsen rekommenderas barnläge eller barnelektroder, som anpassar energin för små kroppar. Många moderna modeller har en barnknapp."},
     {q:"Var ska hjärtstartaren placeras?",a:"Centralt, synligt och tillgängligt dygnet runt om möjligt. Ett skåp med skylt gör den lätt att hitta. Utomhus krävs ett uppvärmt, larmat skåp."},
     {q:"Hur ofta byter man batteri och elektroder?",a:"Elektroder håller oftast 2–4 år och batterier 4–7 år beroende på modell. Vi erbjuder påminnelsetjänst så ni aldrig missar ett byte."},
   ];
-  document.getElementById('aedFaq').innerHTML = af.map(f=>`<details class="acc__item"><summary class="acc__q">${f.q}<span class="pm">+</span></summary><div class="acc__a">${f.a}</div></details>`).join('');
+  document.getElementById('aedFaq').innerHTML = af.map(function(f){
+    return '<details class="acc__item"><summary class="acc__q">'+f.q+'<span class="pm">+</span></summary><div class="acc__a">'+f.a+'</div></details>';
+  }).join('');
+
+  document.addEventListener('DOMContentLoaded', function(){
+    PA.shop.initHjartstartare();
+
+    // header compare button
+    var hdrBtn = document.getElementById('compare-bar-btn');
+    if (hdrBtn) hdrBtn.addEventListener('click', function(){ PA.shop.compare.showTable(); });
+
+    // bottom bar compare button
+    var btn2 = document.getElementById('compare-bar-btn2');
+    if (btn2) btn2.addEventListener('click', function(){ PA.shop.compare.showTable(); });
+  });
 </script>
 </body>
 </html>

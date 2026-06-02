@@ -6,6 +6,15 @@
 <title>Utbildningar – HLR, S-HLR, första hjälpen & mer | PulsAkademin</title>
 <meta name="description" content="Hela vårt utbildningsutbud: HLR vuxen och barn, S-HLR, första hjälpen, brandskydd, krishantering och hot & våld. Filtrera på målgrupp, kategori, format och plats.">
 <link rel="stylesheet" href="styles.css">
+<style>
+  .catalog-card { display: flex; flex-direction: column; }
+  .catalog-card .card__body { flex: 1; }
+  .catalog-card .price-row { flex-wrap: wrap; }
+  .btn--sm { padding: 7px 14px; font-size: 13.5px; }
+  @media (max-width: 600px) {
+    .catalog-card .coursecard__meta { font-size: 13px; }
+  }
+</style>
 </head>
 <body>
 <div id="site-header"></div>
@@ -36,10 +45,10 @@
             <select class="select"><option>Format: alla</option><option>Öppen kurs</option><option>På plats hos kund</option><option>Repetition</option></select>
             <select class="select"><option>Plats: hela Sverige</option><option>Stockholm</option><option>Uppsala</option><option>Tierp & Gävle</option><option>Göteborg</option><option>Hos kund</option></select>
           </div>
-          <span class="muted" style="font-size:14px"><b id="ccount">8</b> utbildningar</span>
+          <span class="muted" style="font-size:14px"><b id="ccount">…</b> utbildningar</span>
         </div>
       </div>
-      <div class="grid cols-3" id="catGrid"></div>
+      <div class="grid cols-3" id="catGrid"><p class="muted" style="grid-column:1/-1;padding:40px 0;text-align:center">Laddar utbildningar…</p></div>
     </div>
   </section>
 
@@ -57,20 +66,12 @@
 
 <div class="mobile-action"><a class="btn btn--outline" href="offert.html" style="flex:1">Offert</a><a class="btn btn--primary" href="boka.html" style="flex:2">Boka kurs</a></div>
 <div id="site-footer"></div>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/db.js"></script>
 <script src="site.js"></script>
 <script src="data.js"></script>
-<script>
-  document.getElementById('catGrid').innerHTML = PA_COURSES.map(c => `
-    <a class="card card--hover" href="${c.slug==='hlr-vuxen'?'kurs-hlr-vuxen.html':'kurs-hlr-vuxen.html'}">
-      <div class="ph ph--16x9"><span>${c.img}</span></div>
-      <div class="card__body">
-        <div class="coursecard__top"><h3 class="h3" style="font-size:1.25rem">${c.title}</h3><span class="badge badge--coral">${c.cat}</span></div>
-        <p class="muted" style="margin-top:10px;font-size:14.5px">${c.desc}</p>
-        <div class="coursecard__meta"><span>⏱ <b>${c.dur}</b></span><span>👥 <b>${c.aud}</b></span><span>📜 Bevis</span></div>
-        <div class="flex between center" style="margin-top:18px"><span class="price-from">${c.price}<small> ${c.priceUnit}</small></span><span class="tlink">Läs mer →</span></div>
-      </div>
-    </a>`).join('');
-  document.getElementById('ccount').textContent = PA_COURSES.length;
-</script>
+<script src="app/features/catalog.js"></script>
 </body>
 </html>

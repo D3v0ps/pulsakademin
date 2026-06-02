@@ -12,6 +12,13 @@
   .auth__form{ display:flex; align-items:center; justify-content:center; padding:clamp(28px,5vw,72px); }
   .auth__aside{ background:var(--bordeaux-800); color:var(--cream); padding:clamp(36px,5vw,72px); display:flex; flex-direction:column; justify-content:center; }
   .auth__aside li{ display:flex; gap:12px; padding:11px 0; font-size:15.5px; }
+  /* inline error / notice styles */
+  .pa-field-err{ font-size:13px; color:var(--danger,#c0392b); margin-top:2px; display:block; }
+  .pa-notice{
+    background:var(--danger-bg,#fdf0ef); color:var(--danger,#c0392b);
+    border:1px solid var(--danger,#c0392b); border-radius:var(--r-sm);
+    padding:12px 16px; font-size:14px; margin-bottom:18px; border-radius:8px;
+  }
 </style>
 </head>
 <body>
@@ -20,16 +27,9 @@
 <main>
   <div class="auth" data-screen-label="Logga in">
     <div class="auth__form">
-      <div style="width:100%;max-width:380px">
-        <div class="seg" style="display:inline-flex;background:var(--cream-300);border-radius:var(--r-pill);padding:4px;gap:4px;margin-bottom:24px"><button class="btn btn--sm btn--light" style="box-shadow:var(--sh-sm)">Logga in</button><button class="btn btn--sm" style="color:var(--muted)">Skapa konto</button></div>
-        <h1 class="h2 mb-8">Välkommen tillbaka</h1>
-        <p class="muted mb-24">Logga in för att se dina kurser, kompetensbevis och beställningar.</p>
-        <div class="field"><label>E-post</label><input class="input" type="email" placeholder="namn@exempel.se"></div>
-        <div class="field"><label>Lösenord</label><input class="input" type="password" placeholder="••••••••"></div>
-        <div class="flex between center mb-16"><label class="checkbox" style="margin:0"><input type="checkbox"> <span>Kom ihåg mig</span></label><a class="tlink" href="#" style="font-size:14px">Glömt lösenord?</a></div>
-        <a class="btn btn--primary btn--block btn--lg" href="portal.html">Logga in</a>
-        <p class="tac muted mt-24" style="font-size:14px">Har du inget konto? <a class="tlink" href="#">Skapa konto</a></p>
-        <p class="tac muted mt-16" style="font-size:13px">Företagskund? <a class="tlink" href="#">Logga in på företagskonto</a></p>
+      <div style="width:100%;max-width:380px" id="pa-auth-root">
+        <!-- Filled by account.js -->
+        <div style="padding:40px 0;text-align:center;color:var(--muted)">Laddar…</div>
       </div>
     </div>
     <aside class="auth__aside">
@@ -47,6 +47,12 @@
 </main>
 
 <div id="site-footer"></div>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/auth.js"></script>
+<script src="app/db.js"></script>
+<script src="app/features/account.js"></script>
 <script src="site.js"></script>
 </body>
 </html>

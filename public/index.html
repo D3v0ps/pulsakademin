@@ -176,12 +176,15 @@
         </div>
         <div class="card"><div class="card__body" style="padding:clamp(22px,3vw,34px)">
           <h3 class="h3 mb-16">Skicka en förfrågan</h3>
-          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Namn</label><input class="input" placeholder="För- och efternamn"></div><div class="field"><label>Telefon</label><input class="input" placeholder="07X-XXX XX XX"></div></div>
-          <div class="field"><label>E-post</label><input class="input" type="email" placeholder="namn@exempel.se"></div>
-          <div class="field"><label>Ärende</label><select class="select"><option>Boka kurs</option><option>Begär offert</option><option>Fråga om hjärtstartare</option><option>Support på beställning</option><option>Övrigt</option></select></div>
-          <div class="field"><label>Meddelande</label><textarea class="textarea" placeholder="Berätta kort vad du behöver"></textarea></div>
-          <label class="checkbox mb-16"><input type="checkbox"> <span>Jag samtycker till att PulsAkademin behandlar mina personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
-          <button class="btn btn--primary btn--block">Skicka förfrågan</button>
+          <div id="homeContactForm">
+            <div class="grid cols-2" style="gap:14px"><div class="field"><label>Namn</label><input class="input" name="name" placeholder="För- och efternamn"></div><div class="field"><label>Telefon</label><input class="input" name="phone" placeholder="07X-XXX XX XX"></div></div>
+            <div class="field"><label>E-post</label><input class="input" name="email" type="email" placeholder="namn@exempel.se"></div>
+            <div class="field"><label>Ärende</label><select class="select" name="subject"><option>Boka kurs</option><option>Begär offert</option><option>Fråga om hjärtstartare</option><option>Support på beställning</option><option>Övrigt</option></select></div>
+            <div class="field"><label>Meddelande</label><textarea class="textarea" name="message" placeholder="Berätta kort vad du behöver"></textarea></div>
+            <label class="checkbox mb-16"><input type="checkbox" name="consent"> <span>Jag samtycker till att PulsAkademin behandlar mina personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
+            <div id="homeContactStatus" style="display:none;margin-bottom:14px;padding:12px 16px;border-radius:8px;font-size:14.5px;font-weight:500" role="alert" aria-live="polite"></div>
+            <button class="btn btn--primary btn--block">Skicka förfrågan</button>
+          </div>
         </div></div>
       </div>
     </div>
@@ -196,36 +199,17 @@
 <div id="site-footer"></div>
 <script src="site.js"></script>
 <script src="data.js"></script>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/cart.js"></script>
+<script src="app/db.js"></script>
 <script>
-  // Render shared content
-  const fmtSeats = (s) => s===0 ? '<span class="badge badge--danger"><span class="dot"></span>Fullbokad</span>' : s<=4 ? `<span class="badge badge--amber"><span class="dot"></span>${s} platser kvar</span>` : `<span class="badge badge--green"><span class="dot"></span>Platser kvar</span>`;
-
-  document.getElementById('courseGrid').innerHTML = PA_COURSES.slice(0,6).map(c => `
-    <a class="card card--hover" href="${c.slug==='hlr-vuxen'?'kurs-hlr-vuxen.html':'utbildningar.html'}">
-      <div class="ph ph--16x9"><span>${c.img}</span></div>
-      <div class="card__body">
-        <div class="coursecard__top"><h3 class="h3" style="font-size:1.25rem">${c.title}</h3><span class="badge badge--coral">${c.cat}</span></div>
-        <p class="muted" style="margin-top:10px;font-size:14.5px">${c.desc}</p>
-        <div class="coursecard__meta"><span>⏱ <b>${c.dur}</b></span><span>👥 <b>${c.aud}</b></span><span>📜 Kompetensbevis</span></div>
-        <div class="flex between center" style="margin-top:18px"><span class="price-from">${c.price}<small> ${c.priceUnit}</small></span><span class="tlink">Läs mer →</span></div>
-      </div>
-    </a>`).join('');
-
-  document.getElementById('datesTable').innerHTML = `<thead><tr><th>Kurs</th><th>Stad</th><th>Datum</th><th>Tid</th><th>Pris</th><th>Platser</th><th></th></tr></thead><tbody>${
-    PA_DATES.slice(0,6).map(d => `<tr><td><b>${d.course}</b></td><td>${d.city}</td><td>${d.date}</td><td>${d.time}</td><td>${d.price}</td><td>${fmtSeats(d.seats)}</td><td><a class="btn btn--sm ${d.seats===0?'btn--outline':'btn--primary'}" href="boka.html">${d.seats===0?'Väntelista':'Boka'}</a></td></tr>`).join('')
-  }</tbody>`;
-
-  document.getElementById('prodGrid').innerHTML = PA_PRODUCTS.slice(0,3).map(p => `
-    <a class="card prodcard card--hover" href="produkt.html">
-      <div class="ph"><div class="prodcard__badges">${p.badges.map(b=>`<span class="badge badge--coral">${b}</span>`).join('')}</div><span>${p.img}</span></div>
-      <div class="card__body">
-        <div class="prodcard__name">${p.name}</div>
-        <div class="prodcard__usp">${p.usp}</div>
-        <div class="flex between center"><span class="price"><b>${p.price}</b><small>inkl. moms</small></span><span class="badge badge--green"><span class="dot"></span>I lager</span></div>
-      </div>
-    </a>`).join('');
-
-  document.getElementById('faq').innerHTML = PA_FAQ.map(f => `<details class="acc__item"><summary class="acc__q">${f.q}<span class="pm">+</span></summary><div class="acc__a">${f.a}</div></details>`).join('');
+  // FAQ is static — render immediately from PA_FAQ
+  document.getElementById('faq').innerHTML = (window.PA_FAQ || []).map(function(f) {
+    return '<details class="acc__item"><summary class="acc__q">' + f.q + '<span class="pm">+</span></summary><div class="acc__a">' + f.a + '</div></details>';
+  }).join('');
 </script>
+<script src="app/features/home.js"></script>
 </body>
 </html>

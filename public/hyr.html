@@ -52,20 +52,42 @@
     <div class="container" style="max-width:760px">
       <div class="card"><div class="card__body" style="padding:clamp(22px,3vw,36px)">
         <h2 class="h3 mb-24">Begär hyresförslag</h2>
-        <div class="grid cols-2" style="gap:14px"><div class="field"><label>Namn / företag</label><input class="input"></div><div class="field"><label>Telefon</label><input class="input"></div></div>
-        <div class="field"><label>E-post</label><input class="input" type="email"></div>
-        <div class="grid cols-2" style="gap:14px"><div class="field"><label>Från datum</label><input class="input" type="date"></div><div class="field"><label>Till datum</label><input class="input" type="date"></div></div>
-        <div class="grid cols-2" style="gap:14px"><div class="field"><label>Antal enheter</label><input class="input" type="number" placeholder="1"></div><div class="field"><label>Leveransort</label><input class="input"></div></div>
-        <div class="field"><label>Ändamål</label><textarea class="textarea" placeholder="t.ex. fotbollsturnering, byggprojekt"></textarea></div>
-        <label class="checkbox mb-16"><input type="checkbox"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
-        <button class="btn btn--primary btn--block btn--lg">Skicka förfrågan</button>
+        <form id="hyrForm" novalidate>
+          <div class="grid cols-2" style="gap:14px">
+            <div class="field"><label for="hyr-name">Namn / företag</label><input id="hyr-name" class="input" name="contact_name" autocomplete="name"></div>
+            <div class="field"><label for="hyr-phone">Telefon</label><input id="hyr-phone" class="input" name="phone" type="tel" autocomplete="tel"></div>
+          </div>
+          <div class="field"><label for="hyr-email">E-post</label><input id="hyr-email" class="input" name="email" type="email" autocomplete="email"></div>
+          <div class="grid cols-2" style="gap:14px">
+            <div class="field"><label for="hyr-start">Från datum</label><input id="hyr-start" class="input" name="start_date" type="date"></div>
+            <div class="field"><label for="hyr-end">Till datum</label><input id="hyr-end" class="input" name="end_date" type="date"></div>
+          </div>
+          <div class="grid cols-2" style="gap:14px">
+            <div class="field"><label for="hyr-units">Antal enheter</label><input id="hyr-units" class="input" name="units" type="number" min="1" placeholder="1"></div>
+            <div class="field"><label for="hyr-city">Leveransort</label><input id="hyr-city" class="input" name="city" autocomplete="address-level2"></div>
+          </div>
+          <div class="field"><label for="hyr-msg">Ändamål</label><textarea id="hyr-msg" class="textarea" name="message" placeholder="t.ex. fotbollsturnering, byggprojekt"></textarea></div>
+          <p id="hyrError" class="inline-error" hidden style="display:none;color:var(--danger,#c0392b);margin-bottom:14px;font-size:14.5px"></p>
+          <label class="checkbox mb-16"><input type="checkbox"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
+          <button class="btn btn--primary btn--block btn--lg" type="submit">Skicka förfrågan</button>
+        </form>
       </div></div>
     </div>
   </section>
 </main>
 
+<style>
+  .conf-box{ display:flex; gap:20px; align-items:flex-start; padding:clamp(22px,3vw,36px); }
+  .conf-icon{ flex:0 0 auto; width:48px; height:48px; border-radius:50%; background:var(--green-bg,#d4edda); color:var(--green,#1a7a3c); display:grid; place-items:center; font-size:1.5rem; font-weight:700; }
+</style>
+
 <div class="mobile-action"><a class="btn btn--outline" href="tel:0293761011" style="flex:1">Ring</a><a class="btn btn--primary" href="#hyrform" style="flex:2">Begär förslag</a></div>
 <div id="site-footer"></div>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/db.js"></script>
 <script src="site.js"></script>
+<script src="app/features/content.js"></script>
 </body>
 </html>

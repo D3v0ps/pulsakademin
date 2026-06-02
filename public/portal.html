@@ -10,88 +10,43 @@
   .portal{ display:grid; grid-template-columns:250px 1fr; gap:36px; align-items:start; }
   @media (max-width:860px){ .portal{ grid-template-columns:1fr; } .portal-nav{ position:static; } }
   .portal-nav{ position:sticky; top:96px; }
-  .portal-nav a{ display:flex; align-items:center; gap:11px; padding:11px 14px; border-radius:var(--r-sm); font-weight:600; font-size:15px; color:var(--ink-700); }
+  .portal-nav a{ display:flex; align-items:center; gap:11px; padding:11px 14px; border-radius:var(--r-sm); font-weight:600; font-size:15px; color:var(--ink-700); text-decoration:none; }
   .portal-nav a.on{ background:var(--bordeaux-700); color:#fff; }
   .portal-nav a:not(.on):hover{ background:var(--cream-200); }
-  .kpi{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .kpi{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
   @media (max-width:560px){ .kpi{ grid-template-columns:1fr; } }
   .kpi .card__body b{ font-family:var(--font-display); font-size:1.9rem; font-weight:800; display:block; line-height:1; }
   .listrow{ display:flex; justify-content:space-between; align-items:center; gap:16px; padding:16px; border-bottom:1px solid var(--line); }
   .listrow:last-child{ border:0; }
+  /* account feature helpers */
+  .pa-loading-row{ padding:24px; text-align:center; color:var(--muted); font-size:14px; }
+  .pa-logout-link:hover{ background:var(--cream-200) !important; color:var(--ink) !important; }
+  .pa-notice{
+    background:var(--danger-bg,#fdf0ef); color:var(--danger,#c0392b);
+    border:1px solid var(--danger,#c0392b); border-radius:var(--r-sm);
+    padding:12px 16px; font-size:14px; margin-bottom:18px;
+  }
 </style>
 </head>
 <body>
 <div id="site-header"></div>
 
 <main>
-  <section class="section" style="padding-block:clamp(28px,4vw,48px)" data-screen-label="Medlemsportal">
-    <div class="container portal">
-      <!-- nav -->
-      <aside class="portal-nav">
-        <div class="card"><div class="card__body" style="padding:14px">
-          <div class="flex center gap-12 mb-16" style="padding:6px 8px"><div class="feature__ic" style="background:var(--cream-300);color:var(--ink)">AL</div><div><b style="font-size:14.5px">Anna Lindqvist</b><div class="muted" style="font-size:12.5px">Privatkund</div></div></div>
-          <nav style="display:grid;gap:2px">
-            <a class="on" href="#">📊 Översikt</a>
-            <a href="#">🎓 Mina kurser</a>
-            <a href="#">📜 Mina intyg</a>
-            <a href="#">📦 Mina beställningar</a>
-            <a href="#">🔔 Påminnelser</a>
-            <a href="#">⚙️ Inställningar</a>
-          </nav>
-          <hr class="rule" style="margin:14px 0">
-          <a class="portal-nav" href="logga-in.html" style="display:flex;align-items:center;gap:11px;padding:11px 14px;color:var(--muted);font-size:15px;font-weight:600">↩︎ Logga ut</a>
-        </div></div>
-        <div class="card mt-16" style="background:var(--bordeaux-800);color:var(--cream);border:0"><div class="card__body"><b style="font-family:var(--font-display);font-size:1.1rem">Företagskonto?</b><p style="color:rgba(251,246,240,.8);font-size:13.5px;margin:8px 0 14px">Hantera deltagare, intyg och fakturor samlat.</p><a class="btn btn--primary btn--sm" href="#">Läs mer</a></div></div>
-      </aside>
-
-      <!-- main -->
-      <div>
-        <h1 class="h2 mb-8">Hej Anna! 👋</h1>
-        <p class="muted mb-24">Här är en överblick över dina kurser och köp.</p>
-
-        <div class="kpi mb-32">
-          <div class="card"><div class="card__body"><b>1</b><span class="muted" style="font-size:14px">Kommande kurs</span></div></div>
-          <div class="card"><div class="card__body"><b>3</b><span class="muted" style="font-size:14px">Kompetensbevis</span></div></div>
-          <div class="card"><div class="card__body"><b>2</b><span class="muted" style="font-size:14px">Beställningar</span></div></div>
-        </div>
-
-        <!-- next course -->
-        <div class="card mb-24"><div class="card__body">
-          <div class="flex between center mb-16"><h2 class="h3" style="font-size:1.2rem">Nästa kurs</h2><span class="badge badge--green"><span class="dot"></span>Bokad</span></div>
-          <div class="flex between center wrap gap-16">
-            <div class="flex gap-16 center"><div class="ph" style="width:64px;height:64px;border-radius:var(--r-md);flex:0 0 auto"><span></span></div><div><b>HLR vuxen</b><p class="muted" style="font-size:14px">12 jun 2026, 09:00–11:00<br>Stockholm · Kungsgatan 12</p></div></div>
-            <div class="flex gap-8"><a class="btn btn--outline btn--sm" href="#">Förberedelse</a><a class="btn btn--primary btn--sm" href="#">📅 Lägg i kalender</a></div>
-          </div>
-        </div></div>
-
-        <!-- certificates -->
-        <div class="card mb-24"><div class="card__body" style="padding-bottom:6px">
-          <h2 class="h3 mb-8" style="font-size:1.2rem">Mina kompetensbevis</h2>
-          <div class="listrow"><div><b>Första hjälpen & HLR</b><div class="muted" style="font-size:13.5px">Utfärdat 14 mar 2025 · giltigt t.o.m. mar 2026</div></div><a class="btn btn--outline btn--sm" href="#">⬇ Ladda ner</a></div>
-          <div class="listrow"><div><b>HLR vuxen</b><div class="muted" style="font-size:13.5px">Utfärdat 2 feb 2024</div></div><a class="btn btn--outline btn--sm" href="#">⬇ Ladda ner</a></div>
-          <div class="listrow"><div><b>Brandskydd grund</b><div class="muted" style="font-size:13.5px">Utfärdat 8 nov 2023</div></div><a class="btn btn--outline btn--sm" href="#">⬇ Ladda ner</a></div>
-        </div></div>
-
-        <div class="grid cols-2">
-          <!-- orders -->
-          <div class="card"><div class="card__body" style="padding-bottom:6px">
-            <h2 class="h3 mb-8" style="font-size:1.15rem">Beställningar</h2>
-            <div class="listrow"><div><b>#10231</b><div class="muted" style="font-size:13px">Smarty Saver + skåp</div></div><span class="badge badge--info"><span class="dot"></span>Skickad</span></div>
-            <div class="listrow"><div><b>#10180</b><div class="muted" style="font-size:13px">Elektroder vuxen</div></div><span class="badge badge--green"><span class="dot"></span>Levererad</span></div>
-          </div></div>
-          <!-- reminders -->
-          <div class="card"><div class="card__body" style="padding-bottom:6px">
-            <h2 class="h3 mb-8" style="font-size:1.15rem">Påminnelser</h2>
-            <div class="listrow"><div><b>Repetition HLR</b><div class="muted" style="font-size:13px">Rekommenderas mar 2026</div></div><a class="btn btn--primary btn--sm" href="boka.html">Boka</a></div>
-            <div class="listrow"><div><b>Byt elektroder</b><div class="muted" style="font-size:13px">Utgår sep 2026</div></div><a class="btn btn--outline btn--sm" href="webbshop.html">Köp</a></div>
-          </div></div>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div id="pa-portal-root">
+    <!-- Filled by account.js: either gated state or full portal dashboard -->
+    <section class="section" style="padding-block:clamp(28px,4vw,48px)">
+      <div class="container" style="text-align:center;color:var(--muted)">Laddar…</div>
+    </section>
+  </div>
 </main>
 
 <div id="site-footer"></div>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/auth.js"></script>
+<script src="app/db.js"></script>
+<script src="app/features/account.js"></script>
 <script src="site.js"></script>
 </body>
 </html>

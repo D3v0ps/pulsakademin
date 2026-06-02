@@ -38,11 +38,11 @@
           <span class="badge mb-16">Privatpersoner</span>
           <h2 class="h3">Öppna kurser</h2>
           <p class="muted" style="font-size:14px;margin:6px 0 18px">Boka enskild plats på ett öppet tillfälle.</p>
-          <ul class="pl-list" style="flex:1">
-            <li><span class="ck">✓</span> HLR vuxen — <b style="margin-left:auto">699 kr</b></li>
-            <li><span class="ck">✓</span> HLR barn — <b style="margin-left:auto">699 kr</b></li>
-            <li><span class="ck">✓</span> HLR barn &amp; vuxen — <b style="margin-left:auto">899 kr</b></li>
-            <li><span class="ck">✓</span> Repetition HLR — <b style="margin-left:auto">499 kr</b></li>
+          <ul class="pl-list" id="pricePrivList" style="flex:1">
+            <li><span class="ck">✓</span> HLR vuxen — <b style="margin-left:auto" data-price-incl="699" data-price-excl="559">699 kr inkl. moms</b></li>
+            <li><span class="ck">✓</span> HLR barn — <b style="margin-left:auto" data-price-incl="699" data-price-excl="559">699 kr inkl. moms</b></li>
+            <li><span class="ck">✓</span> HLR barn &amp; vuxen — <b style="margin-left:auto" data-price-incl="899" data-price-excl="719">899 kr inkl. moms</b></li>
+            <li><span class="ck">✓</span> Repetition HLR — <b style="margin-left:auto" data-price-incl="499" data-price-excl="399">499 kr inkl. moms</b></li>
             <li><span class="ck">✓</span> Kompetensbevis ingår</li>
           </ul>
           <a class="btn btn--bordeaux btn--block mt-16" href="boka.html">Boka kurs</a>
@@ -67,7 +67,7 @@
           <span class="badge mb-16">Sjukvård</span>
           <h2 class="h3">S-HLR &amp; specialist</h2>
           <p class="muted" style="font-size:14px;margin:6px 0 18px">Anpassat för vårdpersonal och team.</p>
-          <ul class="pl-list" style="flex:1">
+          <ul class="pl-list" id="priceShlrList" style="flex:1">
             <li><span class="ck">✓</span> S-HLR vuxen — <b style="margin-left:auto">Offert</b></li>
             <li><span class="ck">✓</span> S-HLR barn — <b style="margin-left:auto">Offert</b></li>
             <li><span class="ck">✓</span> Repetition S-HLR — <b style="margin-left:auto">Offert</b></li>
@@ -104,16 +104,49 @@
 
 <div class="mobile-action"><a class="btn btn--outline" href="offert.html" style="flex:1">Offert</a><a class="btn btn--primary" href="boka.html" style="flex:1">Boka kurs</a></div>
 <div id="site-footer"></div>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/db.js"></script>
 <script src="site.js"></script>
+<script src="app/features/catalog.js"></script>
 <script>
-  const pf=[
-    {q:"Är priserna inklusive moms?",a:"Priserna för privatpersoner visas inkl. moms (25%). Du kan växla till exkl. moms högst upp på sidan. Företag faktureras exkl. moms."},
-    {q:"Kan företag betala mot faktura?",a:"Ja. Företag och organisationer kan betala mot faktura med 30 dagars betalningsvillkor. Ange org.nr vid bokning."},
-    {q:"Kan ni utbilda på plats hos oss?",a:"Absolut – det är vår vanligaste lösning för företag. Vi tar med all utrustning. Priset baseras på antal grupper och plats."},
-    {q:"Hur många deltagare per grupp?",a:"Vi rekommenderar 4–12 deltagare per grupp för bästa praktiska träning. Fler deltagare löser vi med flera grupper samma dag."},
-    {q:"Vad händer vid avbokning?",a:"Avbokning enligt våra villkor. Privatpersoner kan oftast omboka kostnadsfritt fram till några dagar före kursstart. Se villkoren för detaljer."},
-  ];
-  document.getElementById('priceFaq').innerHTML = pf.map(f=>`<details class="acc__item"><summary class="acc__q">${f.q}<span class="pm">+</span></summary><div class="acc__a">${f.a}</div></details>`).join('');
+  /* ---- FAQ accordion (static content, rendered immediately) ---- */
+  (function () {
+    var pf = [
+      {q:"Är priserna inklusive moms?", a:"Priserna för privatpersoner visas inkl. moms (25%). Du kan växla till exkl. moms högst upp på sidan. Företag faktureras exkl. moms."},
+      {q:"Kan företag betala mot faktura?", a:"Ja. Företag och organisationer kan betala mot faktura med 30 dagars betalningsvillkor. Ange org.nr vid bokning."},
+      {q:"Kan ni utbilda på plats hos oss?", a:"Absolut – det är vår vanligaste lösning för företag. Vi tar med all utrustning. Priset baseras på antal grupper och plats."},
+      {q:"Hur många deltagare per grupp?", a:"Vi rekommenderar 4–12 deltagare per grupp för bästa praktiska träning. Fler deltagare löser vi med flera grupper samma dag."},
+      {q:"Vad händer vid avbokning?", a:"Avbokning enligt våra villkor. Privatpersoner kan oftast omboka kostnadsfritt fram till några dagar före kursstart. Se villkoren för detaljer."},
+    ];
+    var faqEl = document.getElementById('priceFaq');
+    if (faqEl) {
+      faqEl.innerHTML = pf.map(function (f) {
+        return '<details class="acc__item"><summary class="acc__q">' + f.q + '<span class="pm">+</span></summary><div class="acc__a">' + f.a + '</div></details>';
+      }).join('');
+    }
+  })();
+
+  /* ---- VAT toggle wiring (buttons toggle .on class) ---- */
+  (function () {
+    var btns = document.querySelectorAll('.toggle button');
+    if (!btns.length) return;
+    btns.forEach(function (btn, i) {
+      btn.addEventListener('click', function () {
+        btns.forEach(function (b) { b.classList.remove('on'); });
+        btn.classList.add('on');
+        var inclMoms = (i === 0);
+        document.querySelectorAll('[data-price-incl]').forEach(function (el) {
+          var incl = parseFloat(el.getAttribute('data-price-incl')) || 0;
+          var excl = parseFloat(el.getAttribute('data-price-excl')) || 0;
+          el.textContent = inclMoms
+            ? incl + ' kr inkl. moms'
+            : excl + ' kr exkl. moms';
+        });
+      });
+    });
+  })();
 </script>
 </body>
 </html>

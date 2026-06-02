@@ -14,8 +14,17 @@
   .seg button{ padding:9px 18px; border-radius:var(--r-pill); font-weight:600; font-size:14px; }
   .seg button.on{ background:var(--paper); box-shadow:var(--sh-sm); }
   .pay-opt{ display:flex; align-items:center; gap:14px; padding:15px; border:1.5px solid var(--line-strong); border-radius:var(--r-md); cursor:pointer; margin-bottom:10px; }
+  .pay-opt:last-child{ margin-bottom:0; }
   .pay-opt.sel{ border-color:var(--bordeaux-700); background:var(--cream); box-shadow:0 0 0 3px rgba(142,27,46,.1); }
   .pay-opt .logo-tag{ margin-left:auto; font-family:var(--font-mono); font-size:11px; letter-spacing:.05em; padding:4px 9px; border:1px solid var(--line-strong); border-radius:6px; }
+  .error-box{ background:var(--danger-bg); color:var(--danger); border:1.5px solid var(--danger); border-radius:var(--r-sm); padding:14px 18px; font-size:14.5px; margin-bottom:18px; }
+  .tac{ text-align:center; }
+  .tar{ text-align:right; }
+  .mb-24{ margin-bottom:24px; }
+  .mb-16{ margin-bottom:16px; }
+  .mb-8{ margin-bottom:8px; }
+  .mt-24{ margin-top:24px; }
+  .mt-32{ margin-top:32px; }
 </style>
 </head>
 <body>
@@ -24,65 +33,122 @@
 <main>
   <section class="pagehead"><div class="container">
     <nav class="crumbs mb-24"><a href="index.html">Hem</a><span class="sep">/</span><a href="kundvagn.html">Kundvagn</a><span class="sep">/</span><span>Kassa</span></nav>
-    <ol class="steps"><li class="active"><span class="n">1</span> Uppgifter</li><li><span class="n">2</span> Leverans & betalning</li><li><span class="n">3</span> Bekräftelse</li></ol>
+    <ol class="steps" id="checkoutSteps">
+      <li class="active"><span class="n">1</span> Uppgifter</li>
+      <li><span class="n">2</span> Leverans &amp; betalning</li>
+      <li><span class="n">3</span> Bekräftelse</li>
+    </ol>
   </div></section>
 
   <section class="section" style="padding-top:8px" data-screen-label="Kassa">
     <div class="container checkout">
-      <div>
+
+      <!-- Main checkout column -->
+      <div id="kassaRoot">
+
+        <!-- 1. Kunduppgifter -->
         <div class="card mb-24"><div class="card__body">
-          <div class="flex between center mb-16"><h2 class="h3" style="font-size:1.2rem">Kunduppgifter</h2><div class="seg"><button class="on">Privatperson</button><button>Företag</button></div></div>
-          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Förnamn</label><input class="input"></div><div class="field"><label>Efternamn</label><input class="input"></div></div>
-          <div class="grid cols-2" style="gap:14px"><div class="field"><label>E-post</label><input class="input" type="email"></div><div class="field"><label>Telefon</label><input class="input"></div></div>
-          <div class="field" style="margin:0"><label>Org.nr (för företag/faktura)</label><input class="input" placeholder="XXXXXX-XXXX"></div>
+          <div class="flex between center mb-16">
+            <h2 class="h3" style="font-size:1.2rem">Kunduppgifter</h2>
+            <div class="seg">
+              <button class="on" data-type="private">Privatperson</button>
+              <button data-type="company">Företag</button>
+            </div>
+          </div>
+
+          <div class="grid cols-2" style="gap:14px">
+            <div class="field"><label for="firstName">Förnamn *</label><input class="input" id="firstName" autocomplete="given-name"></div>
+            <div class="field"><label for="lastName">Efternamn *</label><input class="input" id="lastName" autocomplete="family-name"></div>
+          </div>
+          <div class="grid cols-2" style="gap:14px">
+            <div class="field"><label for="email">E-post *</label><input class="input" id="email" type="email" autocomplete="email"></div>
+            <div class="field"><label for="phone">Telefon *</label><input class="input" id="phone" type="tel" autocomplete="tel"></div>
+          </div>
+
+          <!-- Company fields (hidden by default) -->
+          <div id="companyFields" style="display:none">
+            <div class="field"><label for="companyName">Företagsnamn *</label><input class="input" id="companyName" autocomplete="organization"></div>
+            <div class="field" style="margin-bottom:0"><label for="orgNr">Org.nr *</label><input class="input" id="orgNr" placeholder="XXXXXX-XXXX"></div>
+          </div>
         </div></div>
 
+        <!-- 2. Leveransadress -->
         <div class="card mb-24"><div class="card__body">
           <h2 class="h3 mb-16" style="font-size:1.2rem">Leveransadress</h2>
-          <div class="field"><label>Adress</label><input class="input"></div>
-          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Postnummer</label><input class="input"></div><div class="field"><label>Ort</label><input class="input"></div></div>
-          <label class="checkbox" style="margin:0"><input type="checkbox" checked> <span>Fakturaadress samma som leveransadress</span></label>
+          <div class="field"><label for="address">Adress *</label><input class="input" id="address" autocomplete="street-address"></div>
+          <div class="grid cols-2" style="gap:14px">
+            <div class="field"><label for="zip">Postnummer *</label><input class="input" id="zip" autocomplete="postal-code"></div>
+            <div class="field"><label for="city">Ort *</label><input class="input" id="city" autocomplete="address-level2"></div>
+          </div>
+          <label class="checkbox" style="margin:0"><input type="checkbox" id="sameBilling" checked> <span>Fakturaadress samma som leveransadress</span></label>
+
+          <!-- Billing address fields (hidden when sameBilling is checked) -->
+          <div id="billingFields" style="display:none;margin-top:18px">
+            <h3 class="h3 mb-16" style="font-size:1rem">Fakturaadress</h3>
+            <div class="field"><label for="billingAddress">Adress</label><input class="input" id="billingAddress" autocomplete="billing street-address"></div>
+            <div class="grid cols-2" style="gap:14px">
+              <div class="field"><label for="billingZip">Postnummer</label><input class="input" id="billingZip" autocomplete="billing postal-code"></div>
+              <div class="field" style="margin-bottom:0"><label for="billingCity">Ort</label><input class="input" id="billingCity" autocomplete="billing address-level2"></div>
+            </div>
+          </div>
         </div></div>
 
+        <!-- 3. Fraktmetod -->
         <div class="card mb-24"><div class="card__body">
           <h2 class="h3 mb-16" style="font-size:1.2rem">Fraktmetod</h2>
-          <div class="pay-opt sel"><input type="radio" name="ship" checked style="accent-color:var(--bordeaux-700)"><div><b>Hemleverans</b><div class="muted" style="font-size:13.5px">1–3 arbetsdagar</div></div><span class="logo-tag">FRI</span></div>
-          <div class="pay-opt"><input type="radio" name="ship" style="accent-color:var(--bordeaux-700)"><div><b>Ombud / PostNord</b><div class="muted" style="font-size:13.5px">Hämta hos ombud</div></div><span class="logo-tag">0 KR</span></div>
+          <div class="ship-opt sel pay-opt"><input type="radio" name="ship" value="home" checked style="accent-color:var(--bordeaux-700)"><div><b>Hemleverans</b><div class="muted" style="font-size:13.5px">1–3 arbetsdagar</div></div><span class="logo-tag">FRI</span></div>
+          <div class="ship-opt pay-opt"><input type="radio" name="ship" value="pickup" style="accent-color:var(--bordeaux-700)"><div><b>Ombud / PostNord</b><div class="muted" style="font-size:13.5px">Hämta hos ombud</div></div><span class="logo-tag">0 KR</span></div>
         </div></div>
 
-        <div class="card"><div class="card__body">
+        <!-- 4. Betalmetod -->
+        <div class="card"><div class="card__body" data-pay-group="true">
           <h2 class="h3 mb-16" style="font-size:1.2rem">Betalmetod</h2>
-          <div class="pay-opt sel"><input type="radio" name="pay" checked style="accent-color:var(--bordeaux-700)"><div><b>Swish</b><div class="muted" style="font-size:13.5px">Betala direkt</div></div><span class="logo-tag">SWISH</span></div>
-          <div class="pay-opt"><input type="radio" name="pay" style="accent-color:var(--bordeaux-700)"><div><b>Klarna</b><div class="muted" style="font-size:13.5px">Faktura eller delbetalning</div></div><span class="logo-tag">KLARNA</span></div>
-          <div class="pay-opt"><input type="radio" name="pay" style="accent-color:var(--bordeaux-700)"><div><b>Kort</b><div class="muted" style="font-size:13.5px">Visa / Mastercard</div></div><span class="logo-tag">KORT</span></div>
-          <div class="pay-opt"><input type="radio" name="pay" style="accent-color:var(--bordeaux-700)"><div><b>Faktura (företag)</b><div class="muted" style="font-size:13.5px">30 dagar · även e-faktura/Peppol</div></div><span class="logo-tag">FAKTURA</span></div>
+          <div class="pay-opt sel"><input type="radio" name="pay" value="swish" checked style="accent-color:var(--bordeaux-700)"><div><b>Swish</b><div class="muted" style="font-size:13.5px">Betala direkt (simulerad)</div></div><span class="logo-tag">SWISH</span></div>
+          <div class="pay-opt"><input type="radio" name="pay" value="klarna" style="accent-color:var(--bordeaux-700)"><div><b>Klarna</b><div class="muted" style="font-size:13.5px">Faktura eller delbetalning (simulerad)</div></div><span class="logo-tag">KLARNA</span></div>
+          <div class="pay-opt"><input type="radio" name="pay" value="card" style="accent-color:var(--bordeaux-700)"><div><b>Kort</b><div class="muted" style="font-size:13.5px">Visa / Mastercard (simulerad)</div></div><span class="logo-tag">KORT</span></div>
+          <div class="pay-opt"><input type="radio" name="pay" value="invoice" style="accent-color:var(--bordeaux-700)"><div><b>Faktura (företag)</b><div class="muted" style="font-size:13.5px">30 dagar · även e-faktura/Peppol</div></div><span class="logo-tag">FAKTURA</span></div>
         </div></div>
 
-        <label class="checkbox mt-24"><input type="checkbox"> <span>Jag godkänner <a href="villkor.html" class="tlink">köpvillkoren</a> och har tagit del av <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
-        <div class="flex between center mt-24 wrap gap-12"><a class="btn btn--ghost" href="kundvagn.html">← Tillbaka till kundvagn</a><a class="btn btn--primary btn--lg" href="#">Slutför köp →</a></div>
-      </div>
+        <!-- Terms + Submit -->
+        <label class="checkbox mt-24"><input type="checkbox" id="termsCheck"> <span>Jag godkänner <a href="villkor.html" class="tlink">köpvillkoren</a> och har tagit del av <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
 
-      <!-- summary -->
-      <aside class="co-summary">
+        <!-- Inline error display -->
+        <div id="orderError" class="error-box mt-24" style="display:none" role="alert" aria-live="polite"></div>
+
+        <div class="flex between center mt-24 wrap gap-12">
+          <a class="btn btn--ghost" href="kundvagn.html">&#8592; Tillbaka till kundvagn</a>
+          <button class="btn btn--primary btn--lg" id="submitOrder" type="button">Slutför beställning &#8594;</button>
+        </div>
+
+      </div><!-- /#kassaRoot -->
+
+      <!-- Order summary sidebar -->
+      <aside class="co-summary" id="kassaSummary">
         <div class="card"><div class="card__body">
           <h3 class="h3 mb-16" style="font-size:1.15rem">Din order</h3>
-          <div class="flex gap-12 center mb-16"><div class="ph" style="width:54px;height:54px;border-radius:var(--r-sm);flex:0 0 auto"><span></span></div><div style="font-size:14px"><b>Smarty Saver</b><div class="muted">1 × 11 999 kr</div></div></div>
-          <div class="flex gap-12 center mb-16"><div class="ph" style="width:54px;height:54px;border-radius:var(--r-sm);flex:0 0 auto"><span></span></div><div style="font-size:14px"><b>Utomhusskåp</b><div class="muted">1 × 6 499 kr</div></div></div>
+          <div id="summaryItems"><!-- rendered by checkout.js --></div>
           <hr class="rule" style="margin:14px 0">
           <div class="grid" style="gap:10px;font-size:14.5px">
-            <div class="flex between"><span class="muted">Delsumma (exkl. moms)</span><span>14 798 kr</span></div>
-            <div class="flex between"><span class="muted">Moms (25%)</span><span>3 700 kr</span></div>
+            <div class="flex between"><span class="muted">Delsumma (exkl. moms)</span><span id="kassaSummaryExcl">–</span></div>
+            <div class="flex between"><span class="muted">Moms (25%)</span><span id="kassaSummaryVat">–</span></div>
             <div class="flex between"><span class="muted">Frakt</span><span>Fri</span></div>
           </div>
           <hr class="rule" style="margin:14px 0">
-          <div class="flex between center"><b style="font-size:1.05rem">Totalt</b><span class="price-from" style="font-size:1.7rem">18 498 kr</span></div>
+          <div class="flex between center"><b style="font-size:1.05rem">Totalt</b><span class="price-from" style="font-size:1.7rem" id="kassaSummaryTotal">–</span></div>
         </div></div>
       </aside>
+
     </div>
   </section>
 </main>
 
 <div id="site-footer"></div>
 <script src="site.js"></script>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/cart.js"></script>
+<script src="app/db.js"></script>
+<script src="app/features/checkout.js"></script>
 </body>
 </html>

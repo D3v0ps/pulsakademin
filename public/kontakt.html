@@ -36,15 +36,18 @@
       <div>
         <div class="card"><div class="card__body" style="padding:clamp(22px,3vw,36px)">
           <h2 class="h3 mb-24">Skicka en förfrågan</h2>
-          <div class="field"><label>Ärendetyp</label><select class="select"><option>Boka kurs</option><option>Begär offert</option><option>Fråga om hjärtstartare</option><option>Support på beställning</option><option>Fakturafråga</option><option>Övrigt</option></select></div>
-          <div class="field"><label>Jag är</label><div class="pillrow"><label class="chip"><input type="radio" name="typ" checked style="width:15px;height:15px"> Privatperson</label><label class="chip"><input type="radio" name="typ" style="width:15px;height:15px"> Företag</label></div></div>
-          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Namn</label><input class="input"></div><div class="field"><label>Telefon</label><input class="input"></div></div>
-          <div class="field"><label>E-post</label><input class="input" type="email"></div>
-          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Företag (valfritt)</label><input class="input"></div><div class="field"><label>Antal deltagare (valfritt)</label><input class="input" type="number"></div></div>
-          <div class="grid cols-2" style="gap:14px"><div class="field"><label>Önskad utbildning</label><select class="select"><option>Ingen särskild</option><option>HLR vuxen</option><option>HLR barn</option><option>S-HLR</option><option>Första hjälpen</option><option>Brandskydd</option></select></div><div class="field"><label>Önskad stad</label><input class="input"></div></div>
-          <div class="field"><label>Meddelande</label><textarea class="textarea"></textarea></div>
-          <label class="checkbox mb-16"><input type="checkbox"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
-          <button class="btn btn--primary btn--block btn--lg">Skicka</button>
+          <div id="kontaktForm">
+            <div class="field"><label>Ärendetyp</label><select class="select" name="kind"><option>Boka kurs</option><option>Begär offert</option><option>Fråga om hjärtstartare</option><option>Support på beställning</option><option>Fakturafråga</option><option>Övrigt</option></select></div>
+            <div class="field"><label>Jag är</label><div class="pillrow"><label class="chip"><input type="radio" name="typ" value="privatperson" checked style="width:15px;height:15px"> Privatperson</label><label class="chip"><input type="radio" name="typ" value="foretag" style="width:15px;height:15px"> Företag</label></div></div>
+            <div class="grid cols-2" style="gap:14px"><div class="field"><label>Namn</label><input class="input" name="name"></div><div class="field"><label>Telefon</label><input class="input" name="phone"></div></div>
+            <div class="field"><label>E-post</label><input class="input" name="email" type="email"></div>
+            <div id="foretagFields" style="display:none"><div class="grid cols-2" style="gap:14px"><div class="field"><label>Företag (valfritt)</label><input class="input" name="company"></div><div class="field"><label>Antal deltagare (valfritt)</label><input class="input" name="participants" type="number"></div></div></div>
+            <div class="grid cols-2" style="gap:14px"><div class="field"><label>Önskad utbildning</label><select class="select" name="course"><option>Ingen särskild</option><option>HLR vuxen</option><option>HLR barn</option><option>S-HLR</option><option>Första hjälpen</option><option>Brandskydd</option></select></div><div class="field"><label>Önskad stad</label><input class="input" name="city"></div></div>
+            <div class="field"><label>Meddelande</label><textarea class="textarea" name="message"></textarea></div>
+            <label class="checkbox mb-16"><input type="checkbox" name="consent"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
+            <div id="kontaktStatus" style="display:none;margin-bottom:14px;padding:12px 16px;border-radius:8px;font-size:14.5px;font-weight:500" role="alert" aria-live="polite"></div>
+            <button id="kontaktBtn" class="btn btn--primary btn--block btn--lg">Skicka</button>
+          </div>
         </div></div>
 
         <h2 class="h3 mt-48 mb-16">Innan du hör av dig</h2>
@@ -56,13 +59,110 @@
 
 <div id="site-footer"></div>
 <script src="site.js"></script>
+<script src="app/config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app/supabase.js"></script>
+<script src="app/cart.js"></script>
+<script src="app/db.js"></script>
 <script>
-  const kf=[
+  /* FAQ */
+  var kf = [
     {q:"Behöver du offert?",a:"För grupper och företag ger vi en fast offert utan förpliktelser. Använd vårt offertformulär så återkommer vi snabbt."},
     {q:"Kan ni komma till vår arbetsplats?",a:"Ja, vi utbildar gärna på plats hos er i hela Sverige och tar med all utrustning."},
     {q:"Hur snabbt svarar ni?",a:"Vi svarar oftast inom ett par timmar under våra öppettider, alla dagar 08–22."},
   ];
-  document.getElementById('kFaq').innerHTML = kf.map(f=>`<details class="acc__item"><summary class="acc__q">${f.q}<span class="pm">+</span></summary><div class="acc__a">${f.a}</div></details>`).join('');
+  document.getElementById('kFaq').innerHTML = kf.map(function(f) {
+    return '<details class="acc__item"><summary class="acc__q">' + f.q + '<span class="pm">+</span></summary><div class="acc__a">' + f.a + '</div></details>';
+  }).join('');
+
+  /* Privatperson / Företag toggle */
+  var typRadios = document.querySelectorAll('[name="typ"]');
+  var foretagFields = document.getElementById('foretagFields');
+  typRadios.forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      foretagFields.style.display = this.value === 'foretag' ? '' : 'none';
+    });
+  });
+
+  /* Contact form */
+  (function() {
+    var form      = document.getElementById('kontaktForm');
+    var btn       = document.getElementById('kontaktBtn');
+    var statusEl  = document.getElementById('kontaktStatus');
+    var kindEl    = form.querySelector('[name=kind]');
+    var nameEl    = form.querySelector('[name=name]');
+    var phoneEl   = form.querySelector('[name=phone]');
+    var emailEl   = form.querySelector('[name=email]');
+    var companyEl = form.querySelector('[name=company]');
+    var partEl    = form.querySelector('[name=participants]');
+    var courseEl  = form.querySelector('[name=course]');
+    var cityEl    = form.querySelector('[name=city]');
+    var msgEl     = form.querySelector('[name=message]');
+    var consentEl = form.querySelector('[name=consent]');
+
+    function showStatus(html, isError) {
+      statusEl.innerHTML = html;
+      statusEl.style.display = 'block';
+      statusEl.style.color = isError ? 'var(--danger,#c0392b)' : 'var(--green-dark,#1a5c2a)';
+      statusEl.style.background = isError ? 'var(--red-tint,#fdf0f0)' : 'var(--green-tint,#f0fdf4)';
+    }
+
+    btn.addEventListener('click', async function() {
+      statusEl.style.display = 'none';
+      statusEl.innerHTML = '';
+
+      if (!consentEl.checked) {
+        showStatus('Du måste samtycka till integritetspolicyn för att skicka formuläret.', true);
+        consentEl.focus();
+        return;
+      }
+
+      var name  = (nameEl.value || '').trim();
+      var email = (emailEl.value || '').trim();
+      var phone = (phoneEl.value || '').trim();
+      var kind  = (kindEl.value || '').trim();
+      var msg   = (msgEl.value || '').trim();
+
+      if (!name)  { showStatus('Vänligen ange ditt namn.', true); nameEl.focus(); return; }
+      if (!email) { showStatus('Vänligen ange din e-postadress.', true); emailEl.focus(); return; }
+
+      /* Build a descriptive message suffix for company/course/city extras */
+      var extras = [];
+      var typVal = (form.querySelector('[name=typ]:checked') || {}).value || '';
+      if (typVal === 'foretag') {
+        var company = (companyEl.value || '').trim();
+        var parts   = (partEl.value || '').trim();
+        if (company) extras.push('Företag: ' + company);
+        if (parts)   extras.push('Antal deltagare: ' + parts);
+      }
+      var course = (courseEl.value || '').trim();
+      var city   = (cityEl.value || '').trim();
+      if (course && course !== 'Ingen särskild') extras.push('Önskad utbildning: ' + course);
+      if (city)   extras.push('Önskad stad: ' + city);
+
+      var fullMsg = msg + (extras.length ? '\n\n' + extras.join('\n') : '');
+
+      btn.disabled = true;
+      btn.textContent = 'Skickar…';
+
+      try {
+        await PA.db.sendContact({ name: name, email: email, phone: phone, subject: kind, kind: kind, message: fullMsg });
+        showStatus('Tack! Vi svarar inom ett par timmar.', false);
+        /* reset form fields individually (radios stay at default) */
+        nameEl.value = ''; phoneEl.value = ''; emailEl.value = '';
+        if (companyEl) companyEl.value = ''; if (partEl) partEl.value = '';
+        msgEl.value = ''; consentEl.checked = false;
+        courseEl.selectedIndex = 0; cityEl.value = ''; kindEl.selectedIndex = 0;
+        foretagFields.style.display = 'none';
+      } catch(err) {
+        var errMsg = (err && err.message) ? err.message : 'Ett fel uppstod – försök igen eller ring 0293-76 10 11.';
+        showStatus(errMsg, true);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Skicka';
+      }
+    });
+  })();
 </script>
 </body>
 </html>
