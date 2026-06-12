@@ -198,6 +198,177 @@
     </div>
   </div></footer>`;
 
+  /* ---- injected styles (a11y skip-link + cookie banner) ---- */
+  function injectStyles() {
+    if (document.getElementById("pa-site-styles")) return;
+    const s = document.createElement("style");
+    s.id = "pa-site-styles";
+    s.textContent = `
+/* --- skip-to-content --- */
+.pa-skip {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  z-index: 600;
+  background: var(--bordeaux-700, #6B1422);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 10px 22px;
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.pa-skip:focus {
+  left: 16px;
+  top: 16px;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* --- cookie consent banner --- */
+.pa-cookie {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 520;
+  background: var(--cream, #FBF6F0);
+  color: var(--ink, #1A1A1A);
+  border-top: 1px solid var(--line, #E8E0D8);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  box-shadow: 0 -4px 24px rgba(26,26,26,0.10);
+}
+.pa-cookie__text {
+  flex: 1 1 280px;
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+}
+.pa-cookie__text a {
+  color: var(--bordeaux-700, #6B1422);
+  text-decoration: underline;
+}
+.pa-cookie__btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .pa-cookie {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+  .pa-cookie__btns {
+    flex-direction: column;
+  }
+}
+`;
+    document.head.appendChild(s);
+  }
+
+  /* ---- skip-to-content ---- */
+  function mountSkipLink() {
+    if (document.getElementById("pa-skip-link")) return;
+    const a = document.createElement("a");
+    a.id = "pa-skip-link";
+    a.className = "pa-skip";
+    a.href = "#huvudinnehall";
+    a.textContent = "Hoppa till innehållet";
+    document.body.insertBefore(a, document.body.firstChild);
+
+    // Ensure <main> has the target id
+    const main = document.querySelector("main");
+    if (main) {
+      if (!main.id) main.id = "huvudinnehall";
+      if (!main.hasAttribute("tabindex")) main.setAttribute("tabindex", "-1");
+    }
+  }
+
+  /* ---- cookie consent ---- */
+  function mountCookieBanner() {
+    if (localStorage.getItem("pa_cookie_consent")) return;
+    if (document.getElementById("pa-cookie-banner")) return;
+
+    const banner = document.createElement("div");
+    banner.id = "pa-cookie-banner";
+    banner.className = "pa-cookie";
+    banner.setAttribute("role", "region");
+    banner.setAttribute("aria-label", "Cookiesamtycke");
+    banner.innerHTML = `
+      <p class="pa-cookie__text">
+        Vi använder nödvändiga cookies för att sajten ska fungera.
+        Du kan läsa mer i vår <a href="${P}integritetspolicy.html">integritetspolicy</a>.
+      </p>
+      <div class="pa-cookie__btns">
+        <button class="btn btn--outline" id="pa-cookie-necessary">Endast nödvändiga</button>
+        <button class="btn btn--primary" id="pa-cookie-all">Acceptera alla</button>
+      </div>`;
+    document.body.appendChild(banner);
+
+    const dismiss = (choice) => {
+      localStorage.setItem("pa_cookie_consent", choice);
+      banner.remove();
+    };
+    document.getElementById("pa-cookie-necessary").addEventListener("click", () => dismiss("necessary"));
+    document.getElementById("pa-cookie-all").addEventListener("click", () => dismiss("all"));
+  }
+
+  /* ---- newsletter form wiring ---- */
+  function wireNewsletter() {
+    const form = document.querySelector("form.footer__news");
+    if (!form) return;
+    if (form.dataset.wired) return;
+    form.dataset.wired = "1";
+
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const input = form.querySelector('input[type="email"]');
+      if (!input) return;
+      const email = input.value.trim();
+
+      // Basic e-mail validation
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showNewsletterMsg(form, "Ange en giltig e-postadress.", false);
+        return;
+      }
+
+      try {
+        if (window.PA && window.PA.db && typeof window.PA.db.sendContact === "function") {
+          await window.PA.db.sendContact({
+            name: "",
+            email: email,
+            phone: "",
+            subject: "Nyhetsbrev",
+            kind: "Nyhetsbrev",
+            message: "Anmälan till nyhetsbrev"
+          });
+        }
+        // Success — replace form contents
+        showNewsletterMsg(form, "Tack! Du är anmäld till nyhetsbrevet.", true);
+      } catch (err) {
+        showNewsletterMsg(form, "Något gick fel. Försök igen eller kontakta oss.", false);
+      }
+    });
+  }
+
+  function showNewsletterMsg(form, text, success) {
+    form.innerHTML = `<p style="font-size:14px;margin:0;color:${success ? "var(--green, #2E7D32)" : "var(--coral, #E05C3A)"};">${text}</p>`;
+  }
+
   /* mount */
   function mount() {
     // favicon (single source of truth for every page that loads site.js)
@@ -207,10 +378,19 @@
       document.head.appendChild(fav);
     }
 
+    // inject shared styles (skip-link + cookie banner)
+    injectStyles();
+
     const h = document.getElementById("site-header");
     const f = document.getElementById("site-footer");
     if (h) h.innerHTML = header + drawer;
     if (f) f.innerHTML = footer;
+
+    // 1. skip-to-content
+    mountSkipLink();
+
+    // 2. cookie consent
+    mountCookieBanner();
 
     // active state
     const here = location.pathname.split("/").pop() || "index.html";
@@ -232,6 +412,9 @@
     burger && burger.addEventListener("click", open);
     close && close.addEventListener("click", shut);
     overlay && overlay.addEventListener("click", shut);
+
+    // 3. newsletter form
+    wireNewsletter();
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
   else mount();
