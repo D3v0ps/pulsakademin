@@ -201,19 +201,36 @@
   }
 
   /* ══════════════════════════════════════════════════════════
-     CONTACT MESSAGES — read list
+     CONTACT MESSAGES — read list + detail expander
   ══════════════════════════════════════════════════════════ */
   function renderContactMessages(rows) {
     if (!rows.length) return emptyState("Inga kontaktmeddelanden hittades.");
     return `<div style="overflow-x:auto"><table class="table">
-      <thead><tr><th>Namn</th><th>E-post</th><th>Ämne</th><th>Meddelande</th><th>Skapad</th></tr></thead>
-      <tbody>${rows.map(r => `<tr>
-        <td><b>${esc(r.name || "–")}</b></td>
-        <td>${esc(r.email || "–")}</td>
-        <td>${esc(r.kind || r.subject || "–")}</td>
-        <td style="max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc((r.message || "").slice(0, 80))}${(r.message || "").length > 80 ? "…" : ""}</td>
-        <td>${fmtDate(r.created_at)}</td>
-      </tr>`).join("")}</tbody>
+      <thead><tr><th>Namn</th><th>E-post</th><th>Ämne</th><th>Förhandsgranskning</th><th>Skapad</th><th></th></tr></thead>
+      <tbody>${rows.map(r => `
+        <tr data-id="${esc(r.id)}" class="cm-main-row">
+          <td><b>${esc(r.name || "–")}</b></td>
+          <td>${esc(r.email || "–")}</td>
+          <td>${esc(r.kind || r.subject || "–")}</td>
+          <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc((r.message || "").slice(0, 70))}${(r.message || "").length > 70 ? "…" : ""}</td>
+          <td>${fmtDate(r.created_at)}</td>
+          <td><button class="btn--show cm-show-btn" data-id="${esc(r.id)}">Visa</button></td>
+        </tr>
+        <tr class="detail-row cm-detail-row" id="cm-detail-${esc(r.id)}" style="display:none">
+          <td colspan="6">
+            <div class="detail-panel">
+              <div class="detail-grid">
+                <div><dt>Namn</dt><dd>${esc(r.name||"–")}</dd></div>
+                <div><dt>E-post</dt><dd>${esc(r.email||"–")}</dd></div>
+                <div><dt>Telefon</dt><dd>${esc(r.phone||"–")}</dd></div>
+                <div><dt>Ämne</dt><dd>${esc(r.kind||r.subject||"–")}</dd></div>
+              </div>
+              <h4>Meddelande</h4>
+              <div class="detail-msg">${esc(r.message||"–")}</div>
+            </div>
+          </td>
+        </tr>`).join("")}
+      </tbody>
     </table></div>`;
   }
 

@@ -129,6 +129,39 @@
         '<p class="tac muted mt-16" style="font-size:13px">Företagskund? <a class="tlink" href="#">Logga in på företagskonto</a></p>' +
       '</div>' +
 
+      /* forgot-password form (hidden initially) */
+      '<div id="pa-panel-forgot" hidden>' +
+        '<h1 class="h2 mb-8">Glömt lösenord?</h1>' +
+        '<p class="muted mb-24">Ange din e-postadress så skickar vi en återställningslänk.</p>' +
+        '<div id="pa-forgot-notice" class="pa-notice" hidden></div>' +
+        '<div class="field"><label for="pa-forgot-email">E-post</label>' +
+          '<input class="input" id="pa-forgot-email" type="email" autocomplete="email" placeholder="namn@exempel.se">' +
+          '<span id="pa-forgot-email-err" class="pa-field-err" hidden></span>' +
+        '</div>' +
+        '<button class="btn btn--primary btn--block btn--lg" id="pa-forgot-btn">Skicka återställningslänk</button>' +
+        '<p class="tac muted mt-24" style="font-size:14px"><button class="tlink" id="pa-back-to-login" style="background:none;border:none;cursor:pointer;font-size:inherit">← Tillbaka till inloggning</button></p>' +
+      '</div>' +
+
+      /* set-new-password form (hidden initially, shown on PASSWORD_RECOVERY) */
+      '<div id="pa-panel-recovery" hidden>' +
+        '<h1 class="h2 mb-8">Välj nytt lösenord</h1>' +
+        '<p class="muted mb-24">Ange ditt nya lösenord nedan.</p>' +
+        '<div id="pa-recovery-notice" class="pa-notice" hidden></div>' +
+        '<div class="field"><label for="pa-recovery-pw">Nytt lösenord</label>' +
+          '<input class="input" id="pa-recovery-pw" type="password" autocomplete="new-password" placeholder="Minst 8 tecken">' +
+          '<span id="pa-recovery-pw-err" class="pa-field-err" hidden></span>' +
+        '</div>' +
+        '<div class="field"><label for="pa-recovery-pw2">Upprepa lösenord</label>' +
+          '<input class="input" id="pa-recovery-pw2" type="password" autocomplete="new-password" placeholder="Upprepa lösenordet">' +
+          '<span id="pa-recovery-pw2-err" class="pa-field-err" hidden></span>' +
+        '</div>' +
+        '<button class="btn btn--primary btn--block btn--lg" id="pa-recovery-btn">Spara nytt lösenord</button>' +
+        '<div id="pa-recovery-success" hidden style="margin-top:18px;text-align:center">' +
+          '<p style="color:var(--green,#1a8c4e);font-weight:600;margin-bottom:12px">Lösenordet är uppdaterat ✓</p>' +
+          '<a class="btn btn--primary" href="portal.html">Gå till Mina sidor</a>' +
+        '</div>' +
+      '</div>' +
+
       /* register form */
       '<div id="pa-panel-register" hidden>' +
         '<h1 class="h2 mb-8">Skapa konto</h1>' +
@@ -174,7 +207,8 @@
     wireLoginForm();
     wireRegisterForm();
     wireTabs();
-    wireForgot();
+    wireForgotPanel();
+    wireRecovery();
   }
 
   function wireTabs() {
