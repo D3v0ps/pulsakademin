@@ -299,8 +299,10 @@
   }
 
   /* ---- cookie consent ---- */
+  function lsGet(k) { try { return window.localStorage && localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { if (window.localStorage) localStorage.setItem(k, v); } catch (e) {} }
   function mountCookieBanner() {
-    if (localStorage.getItem("pa_cookie_consent")) return;
+    if (lsGet("pa_cookie_consent")) return;
     if (document.getElementById("pa-cookie-banner")) return;
 
     const banner = document.createElement("div");
@@ -320,7 +322,7 @@
     document.body.appendChild(banner);
 
     const dismiss = (choice) => {
-      localStorage.setItem("pa_cookie_consent", choice);
+      lsSet("pa_cookie_consent", choice);
       banner.remove();
     };
     document.getElementById("pa-cookie-necessary").addEventListener("click", () => dismiss("necessary"));
