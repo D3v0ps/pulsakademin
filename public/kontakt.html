@@ -16,26 +16,26 @@
 
 <main>
   <section class="pagehead bg-cream2"><div class="container"><nav class="crumbs mb-16"><a href="index.html">Hem</a><span class="sep">/</span><span>Kontakt</span></nav>
-    <span class="eyebrow">Kontakt</span>
-    <h1 class="h1" style="margin:14px 0 16px">Kontakta PulsAkademin</h1>
-    <p class="lead measure">Vi hjälper dig boka rätt utbildning eller välja rätt hjärtstartare. Vi svarar oftast inom ett par timmar.</p>
+    <span class="eyebrow" data-cms="kontakt.hero.eyebrow">Kontakt</span>
+    <h1 class="h1" style="margin:14px 0 16px" data-cms="kontakt.hero.h1">Kontakta PulsAkademin</h1>
+    <p class="lead measure" data-cms="kontakt.hero.lead">Vi hjälper dig boka rätt utbildning eller välja rätt hjärtstartare. Vi svarar oftast inom ett par timmar.</p>
   </div></section>
 
   <section class="section" style="padding-top:8px" data-screen-label="Kontakt">
     <div class="container kontakt">
       <aside>
         <div class="grid" style="gap:14px">
-          <a class="card" href="tel:0293761011"><div class="card__body flex center gap-16"><span class="feature__ic">📞</span><div><b>0293-76 10 11</b><p class="muted" style="font-size:13.5px">Öppet alla dagar 08–22</p></div></div></a>
-          <a class="card" href="mailto:kontakt@pulsakademin.se"><div class="card__body flex center gap-16"><span class="feature__ic">✉️</span><div><b>kontakt@pulsakademin.se</b><p class="muted" style="font-size:13.5px">Svar inom ett par timmar</p></div></div></a>
-          <div class="card"><div class="card__body flex center gap-16"><span class="feature__ic">📍</span><div><b>Centralgatan 14</b><p class="muted" style="font-size:13.5px">815 38 Tierp</p></div></div></div>
-          <div class="card"><div class="card__body flex center gap-16"><span class="feature__ic">🕐</span><div><b>Öppettider</b><p class="muted" style="font-size:13.5px">Måndag–söndag 08:00–22:00</p></div></div></div>
+          <a class="card" href="tel:0293761011"><div class="card__body flex center gap-16"><span class="feature__ic">📞</span><div><b data-cms="kontakt.info.tel">0293-76 10 11</b><p class="muted" style="font-size:13.5px" data-cms="kontakt.info.tel-sub">Öppet alla dagar 08–22</p></div></div></a>
+          <a class="card" href="mailto:kontakt@pulsakademin.se"><div class="card__body flex center gap-16"><span class="feature__ic">✉️</span><div><b data-cms="kontakt.info.email">kontakt@pulsakademin.se</b><p class="muted" style="font-size:13.5px" data-cms="kontakt.info.email-sub">Svar inom ett par timmar</p></div></div></a>
+          <div class="card"><div class="card__body flex center gap-16"><span class="feature__ic">📍</span><div><b data-cms="kontakt.info.adress">Centralgatan 14</b><p class="muted" style="font-size:13.5px" data-cms="kontakt.info.postnr">815 38 Tierp</p></div></div></div>
+          <div class="card"><div class="card__body flex center gap-16"><span class="feature__ic">🕐</span><div><b data-cms="kontakt.info.oppet-title">Öppettider</b><p class="muted" style="font-size:13.5px" data-cms="kontakt.info.oppet-tider">Måndag–söndag 08:00–22:00</p></div></div></div>
         </div>
         <div class="card mt-16"><div class="ph ph--16x9" style="border-radius:var(--r-lg) var(--r-lg) 0 0"><span>Karta: Centralgatan 14, Tierp</span></div><div class="card__body"><p class="muted" style="font-size:13.5px">📍 Karta verifieras innan publicering – kontaktuppgifter och adress harmoniseras i hela webbplatsen.</p></div></div>
       </aside>
 
       <div>
         <div class="card"><div class="card__body" style="padding:clamp(22px,3vw,36px)">
-          <h2 class="h3 mb-24">Skicka en förfrågan</h2>
+          <h2 class="h3 mb-24" data-cms="kontakt.form.title">Skicka en förfrågan</h2>
           <div id="kontaktForm">
             <div class="field"><label>Ärendetyp</label><select class="select" name="kind"><option>Boka kurs</option><option>Begär offert</option><option>Fråga om hjärtstartare</option><option>Support på beställning</option><option>Fakturafråga</option><option>Övrigt</option></select></div>
             <div class="field"><label>Jag är</label><div class="pillrow"><label class="chip"><input type="radio" name="typ" value="privatperson" checked style="width:15px;height:15px"> Privatperson</label><label class="chip"><input type="radio" name="typ" value="foretag" style="width:15px;height:15px"> Företag</label></div></div>
@@ -46,11 +46,11 @@
             <div class="field"><label>Meddelande</label><textarea class="textarea" name="message"></textarea></div>
             <label class="checkbox mb-16"><input type="checkbox" name="consent"> <span>Jag samtycker till behandling av personuppgifter enligt <a href="integritetspolicy.html" class="tlink">integritetspolicyn</a>.</span></label>
             <div id="kontaktStatus" style="display:none;margin-bottom:14px;padding:12px 16px;border-radius:8px;font-size:14.5px;font-weight:500" role="alert" aria-live="polite"></div>
-            <button id="kontaktBtn" class="btn btn--primary btn--block btn--lg">Skicka</button>
+            <button id="kontaktBtn" class="btn btn--primary btn--block btn--lg" data-cms="kontakt.form.btn-skicka">Skicka</button>
           </div>
         </div></div>
 
-        <h2 class="h3 mt-48 mb-16">Innan du hör av dig</h2>
+        <h2 class="h3 mt-48 mb-16" data-cms="kontakt.faq.h2">Innan du hör av dig</h2>
         <div class="acc" id="kFaq"></div>
       </div>
     </div>
@@ -62,6 +62,7 @@
 <script src="app/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app/supabase.js"></script>
+<script src="app/cms.js"></script>
 <script src="app/cart.js"></script>
 <script src="app/db.js"></script>
 <script>
