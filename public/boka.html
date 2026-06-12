@@ -21,9 +21,9 @@
   <section class="pagehead bg-cream2" data-screen-label="Boka – Sidhuvud">
     <div class="container">
       <nav class="crumbs mb-24"><a href="index.html">Hem</a><span class="sep">/</span><span>Boka kurs</span></nav>
-      <span class="eyebrow">Kommande kurstillfällen</span>
-      <h1 class="h1" style="margin:14px 0 16px">Boka en plats</h1>
-      <p class="lead measure">Välj ett öppet tillfälle nedan eller <a href="offert.html" class="tlink">begär offert</a> för utbildning på plats hos er.</p>
+      <span class="eyebrow" data-cms="boka.hero.eyebrow">Kommande kurstillfällen</span>
+      <h1 class="h1" style="margin:14px 0 16px" data-cms="boka.hero.title">Boka en plats</h1>
+      <p class="lead measure" data-cms="boka.hero.lead" data-cms-html>Välj ett öppet tillfälle nedan eller <a href="offert.html" class="tlink">begär offert</a> för utbildning på plats hos er.</p>
     </div>
   </section>
 
@@ -54,8 +54,8 @@
 
   <section class="section--tight bg-bordeaux" data-screen-label="Boka – Företag CTA">
     <div class="container split center">
-      <div><span class="eyebrow">Hela gruppen samtidigt</span><h2 class="h2" style="margin:14px 0;color:var(--cream)">Boka företagsutbildning</h2><p class="lead">Vi kommer till er med all utrustning. Fast offert och samlad deltagarlista.</p></div>
-      <div class="flex gap-12 wrap" style="justify-content:flex-end"><a class="btn btn--primary btn--lg" href="offert.html">Begär offert</a><a class="btn btn--light btn--lg" href="foretag.html">För företag</a></div>
+      <div><span class="eyebrow" data-cms="boka.cta.eyebrow">Hela gruppen samtidigt</span><h2 class="h2" style="margin:14px 0;color:var(--cream)" data-cms="boka.cta.title">Boka företagsutbildning</h2><p class="lead" data-cms="boka.cta.lead">Vi kommer till er med all utrustning. Fast offert och samlad deltagarlista.</p></div>
+      <div class="flex gap-12 wrap" style="justify-content:flex-end"><a class="btn btn--primary btn--lg" href="offert.html" data-cms="boka.cta.btn-offert">Begär offert</a><a class="btn btn--light btn--lg" href="foretag.html" data-cms="boka.cta.btn-foretag">För företag</a></div>
     </div>
   </section>
 </main>
@@ -67,6 +67,7 @@
 <script src="app/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app/supabase.js"></script>
+<script src="app/cms.js"></script>
 <script src="app/cart.js"></script>
 <script src="app/auth.js"></script>
 <script src="app/db.js"></script>

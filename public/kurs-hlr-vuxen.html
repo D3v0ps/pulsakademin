@@ -92,9 +92,9 @@
   <section class="section" id="foretagsbokning" data-screen-label="Kursdetalj – Företagsbokning">
     <div class="container">
       <div style="max-width:720px;margin:0 auto">
-        <span class="eyebrow">Utbildning på plats</span>
-        <h2 class="h2" style="margin:14px 0 10px">Boka för företag</h2>
-        <p class="muted mb-32">Fyll i formuläret så återkommer vi med fast pris och förslag på datum. Vi kan komma till er eller utbilda i vår lokal.</p>
+        <span class="eyebrow" data-cms="kurs-hlr-vuxen.foretag.eyebrow">Utbildning på plats</span>
+        <h2 class="h2" style="margin:14px 0 10px" data-cms="kurs-hlr-vuxen.foretag.title">Boka för företag</h2>
+        <p class="muted mb-32" data-cms="kurs-hlr-vuxen.foretag.lead">Fyll i formuläret så återkommer vi med fast pris och förslag på datum. Vi kan komma till er eller utbilda i vår lokal.</p>
         <div id="quoteOk" style="display:none"></div>
         <form class="card" id="courseQuoteForm" novalidate>
           <div class="card__body">
@@ -135,7 +135,7 @@
   <!-- related -->
   <section class="section bg-cream2" data-screen-label="Kursdetalj – Relaterat">
     <div class="container">
-      <div class="sec-head"><div class="sec-head__txt"><span class="eyebrow">Relaterade utbildningar</span><h2 class="h2" style="margin-top:14px">Fortsätt utvecklas</h2></div><a class="tlink" href="utbildningar.html">Alla utbildningar →</a></div>
+      <div class="sec-head"><div class="sec-head__txt"><span class="eyebrow" data-cms="kurs-hlr-vuxen.related.eyebrow">Relaterade utbildningar</span><h2 class="h2" style="margin-top:14px" data-cms="kurs-hlr-vuxen.related.title">Fortsätt utvecklas</h2></div><a class="tlink" href="utbildningar.html">Alla utbildningar →</a></div>
       <div class="grid cols-3" id="relGrid"></div>
     </div>
   </section>
@@ -154,6 +154,7 @@
 <script src="app/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app/supabase.js"></script>
+<script src="app/cms.js"></script>
 <script src="app/cart.js"></script>
 <script src="app/auth.js"></script>
 <script src="app/db.js"></script>
