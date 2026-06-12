@@ -23,10 +23,10 @@
   <section class="pagehead bg-cream2" data-screen-label="Prislista – Sidhuvud">
     <div class="container tac">
       <nav class="crumbs mb-24" style="justify-content:center"><a href="index.html">Hem</a><span class="sep">/</span><span>Prislista</span></nav>
-      <span class="eyebrow" style="justify-content:center">Priser &amp; paket</span>
-      <h1 class="h1" style="margin:14px 0 16px">Tydliga priser, inga överraskningar</h1>
-      <p class="lead measure" style="margin-inline:auto">Fasta priser för privatpersoner och offert för företag och sjukvård. Alla priser visas inkl. moms.</p>
-      <div class="toggle mt-24"><button class="on">Inkl. moms</button><button>Exkl. moms</button></div>
+      <span class="eyebrow" style="justify-content:center" data-cms="prislista.hero.eyebrow">Priser &amp; paket</span>
+      <h1 class="h1" style="margin:14px 0 16px" data-cms="prislista.hero.h1">Tydliga priser, inga överraskningar</h1>
+      <p class="lead measure" style="margin-inline:auto" data-cms="prislista.hero.lead">Fasta priser för privatpersoner och offert för företag och sjukvård. Alla priser visas inkl. moms.</p>
+      <div class="toggle mt-24"><button class="on" data-cms="prislista.hero.toggle-inkl">Inkl. moms</button><button data-cms="prislista.hero.toggle-exkl">Exkl. moms</button></div>
     </div>
   </section>
 
@@ -36,50 +36,50 @@
         <!-- privat -->
         <div class="card pricecard"><div class="card__body" style="display:flex;flex-direction:column;flex:1">
           <span class="badge mb-16">Privatpersoner</span>
-          <h2 class="h3">Öppna kurser</h2>
-          <p class="muted" style="font-size:14px;margin:6px 0 18px">Boka enskild plats på ett öppet tillfälle.</p>
+          <h2 class="h3" data-cms="prislista.privat.h2">Öppna kurser</h2>
+          <p class="muted" style="font-size:14px;margin:6px 0 18px" data-cms="prislista.privat.lead">Boka enskild plats på ett öppet tillfälle.</p>
           <ul class="pl-list" id="pricePrivList" style="flex:1">
             <li><span class="ck">✓</span> HLR vuxen — <b style="margin-left:auto" data-price-incl="699" data-price-excl="559">699 kr inkl. moms</b></li>
             <li><span class="ck">✓</span> HLR barn — <b style="margin-left:auto" data-price-incl="699" data-price-excl="559">699 kr inkl. moms</b></li>
             <li><span class="ck">✓</span> HLR barn &amp; vuxen — <b style="margin-left:auto" data-price-incl="899" data-price-excl="719">899 kr inkl. moms</b></li>
             <li><span class="ck">✓</span> Repetition HLR — <b style="margin-left:auto" data-price-incl="499" data-price-excl="399">499 kr inkl. moms</b></li>
-            <li><span class="ck">✓</span> Kompetensbevis ingår</li>
+            <li><span class="ck">✓</span> <span data-cms="prislista.privat.bevis-ingaar">Kompetensbevis ingår</span></li>
           </ul>
-          <a class="btn btn--bordeaux btn--block mt-16" href="boka.html">Boka kurs</a>
+          <a class="btn btn--bordeaux btn--block mt-16" href="boka.html" data-cms="prislista.privat.btn-boka">Boka kurs</a>
         </div></div>
         <!-- foretag -->
         <div class="card pricecard feat"><div class="card__body" style="display:flex;flex-direction:column;flex:1">
           <span class="badge badge--coral mb-16">Populärast · Företag</span>
-          <h2 class="h3">Utbildning på plats</h2>
-          <p class="muted" style="font-size:14px;margin:6px 0 18px">Vi kommer till er. Pris per grupp utifrån antal.</p>
-          <div class="price-from" style="font-size:2rem">Från 4 900 kr<small> /grupp</small></div>
+          <h2 class="h3" data-cms="prislista.foretag.h2">Utbildning på plats</h2>
+          <p class="muted" style="font-size:14px;margin:6px 0 18px" data-cms="prislista.foretag.lead">Vi kommer till er. Pris per grupp utifrån antal.</p>
+          <div class="price-from" style="font-size:2rem" data-cms="prislista.foretag.pris">Från 4 900 kr<small> /grupp</small></div>
           <ul class="pl-list mt-16" style="flex:1">
-            <li><span class="ck">✓</span> Upp till 12 deltagare per grupp</li>
-            <li><span class="ck">✓</span> Volymrabatt vid flera grupper</li>
-            <li><span class="ck">✓</span> All utrustning ingår</li>
-            <li><span class="ck">✓</span> Faktura &amp; samlad deltagarlista</li>
-            <li><span class="ck">✓</span> Kompetensbevis till alla</li>
+            <li><span class="ck">✓</span> <span data-cms="prislista.foretag.li1">Upp till 12 deltagare per grupp</span></li>
+            <li><span class="ck">✓</span> <span data-cms="prislista.foretag.li2">Volymrabatt vid flera grupper</span></li>
+            <li><span class="ck">✓</span> <span data-cms="prislista.foretag.li3">All utrustning ingår</span></li>
+            <li><span class="ck">✓</span> <span data-cms="prislista.foretag.li4">Faktura &amp; samlad deltagarlista</span></li>
+            <li><span class="ck">✓</span> <span data-cms="prislista.foretag.li5">Kompetensbevis till alla</span></li>
           </ul>
-          <a class="btn btn--primary btn--block mt-16" href="offert.html">Begär offert</a>
+          <a class="btn btn--primary btn--block mt-16" href="offert.html" data-cms="prislista.foretag.btn-offert">Begär offert</a>
         </div></div>
         <!-- sjukvard -->
         <div class="card pricecard"><div class="card__body" style="display:flex;flex-direction:column;flex:1">
           <span class="badge mb-16">Sjukvård</span>
-          <h2 class="h3">S-HLR &amp; specialist</h2>
-          <p class="muted" style="font-size:14px;margin:6px 0 18px">Anpassat för vårdpersonal och team.</p>
+          <h2 class="h3" data-cms="prislista.sjukvard.h2">S-HLR &amp; specialist</h2>
+          <p class="muted" style="font-size:14px;margin:6px 0 18px" data-cms="prislista.sjukvard.lead">Anpassat för vårdpersonal och team.</p>
           <ul class="pl-list" id="priceShlrList" style="flex:1">
             <li><span class="ck">✓</span> S-HLR vuxen — <b style="margin-left:auto">Offert</b></li>
             <li><span class="ck">✓</span> S-HLR barn — <b style="margin-left:auto">Offert</b></li>
             <li><span class="ck">✓</span> Repetition S-HLR — <b style="margin-left:auto">Offert</b></li>
-            <li><span class="ck">✓</span> Teamträning &amp; scenarier</li>
-            <li><span class="ck">✓</span> Enligt HLR-rådets riktlinjer</li>
+            <li><span class="ck">✓</span> <span data-cms="prislista.sjukvard.li4">Teamträning &amp; scenarier</span></li>
+            <li><span class="ck">✓</span> <span data-cms="prislista.sjukvard.li5">Enligt HLR-rådets riktlinjer</span></li>
           </ul>
-          <a class="btn btn--bordeaux btn--block mt-16" href="offert.html">Begär offert</a>
+          <a class="btn btn--bordeaux btn--block mt-16" href="offert.html" data-cms="prislista.sjukvard.btn-offert">Begär offert</a>
         </div></div>
       </div>
 
       <!-- tillägg -->
-      <h2 class="h2 mt-48 mb-24">Tillägg &amp; tjänster</h2>
+      <h2 class="h2 mt-48 mb-24" data-cms="prislista.tillagg.h2">Tillägg &amp; tjänster</h2>
       <div class="card"><div style="overflow-x:auto"><table class="table">
         <thead><tr><th>Tillägg</th><th>Beskrivning</th><th style="text-align:right">Pris</th></tr></thead>
         <tbody>
@@ -96,7 +96,7 @@
 
   <section class="section bg-cream2" data-screen-label="Prislista – FAQ">
     <div class="container" style="max-width:880px">
-      <h2 class="h2 tac mb-32">Frågor om pris</h2>
+      <h2 class="h2 tac mb-32" data-cms="prislista.faq.h2">Frågor om pris</h2>
       <div class="acc" id="priceFaq"></div>
     </div>
   </section>
@@ -107,6 +107,7 @@
 <script src="app/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app/supabase.js"></script>
+<script src="app/cms.js"></script>
 <script src="app/db.js"></script>
 <script src="site.js"></script>
 <script src="app/features/catalog.js"></script>
