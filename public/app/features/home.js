@@ -21,7 +21,7 @@
     if (!el) return;
     el.innerHTML = courses.slice(0, 6).map(function (c) {
       return '<a class="card card--hover" href="' + courseHref(c) + '">' +
-        '<div class="ph ph--16x9"><span>' + (c.img || "") + '</span></div>' +
+        '<div class="ph ph--16x9">' + (PA.phImg ? PA.phImg(c.img, c.title).replace('ph-img', 'ph-photo') : '<span>' + (c.img || "") + '</span>') + '</div>' +
         '<div class="card__body">' +
           '<div class="coursecard__top"><h3 class="h3" style="font-size:1.25rem">' + c.title + '</h3>' +
           '<span class="badge badge--coral">' + (c.category || "") + '</span></div>' +
@@ -71,7 +71,7 @@
       var price  = typeof p.price_incl_vat === "number" ? PA.formatSEK(p.price_incl_vat) : (p.price_label || "");
       var stock  = p.stock_status || "I lager";
       var inStock = stock.toLowerCase().indexOf("lager") !== -1;
-      var href   = (p.slug && !p.slug.startsWith("demo-")) ? "produkt.html?id=" + p.slug : "produkt.html";
+      var href   = (p.slug && !p.slug.startsWith("demo-")) ? "produkt.html?p=" + p.slug : "produkt.html";
       var stockBadge = inStock
         ? '<span class="badge badge--green"><span class="dot"></span>' + stock + "</span>"
         : '<span class="badge badge--amber"><span class="dot"></span>' + stock + "</span>";

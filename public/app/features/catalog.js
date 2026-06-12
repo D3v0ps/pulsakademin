@@ -35,7 +35,7 @@
     var badge = course.category ? '<span class="badge badge--coral">' + course.category + '</span>' : '';
     return (
       '<div class="card card--hover catalog-card" id="c-' + course.slug + '" style="display:flex;flex-direction:column">' +
-        '<div class="ph ph--16x9" aria-hidden="true"><span>' + (course.img || 'Bild: ' + course.title) + '</span></div>' +
+        '<div class="ph ph--16x9" aria-hidden="true">' + (PA.phImg ? PA.phImg(course.img, course.title).replace('ph-img', 'ph-photo') : '<span>' + (course.img || 'Bild: ' + course.title) + '</span>') + '</div>' +
         '<div class="card__body" style="display:flex;flex-direction:column;flex:1">' +
           '<div class="coursecard__top">' +
             '<h3 class="h3" style="font-size:1.15rem">' + course.title + '</h3>' +

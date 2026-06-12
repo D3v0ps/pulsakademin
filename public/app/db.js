@@ -92,8 +92,14 @@
   async function listProducts(opts = {}) {
     let list;
     if (ready()) {
-      const { data, error } = await sb().from("products").select("*").eq("active", true);
+      let qy = sb().from("products").select("*, category:product_categories!inner(slug,name)").eq("active", true);
+      if (opts.category) qy = qy.eq("category.slug", opts.category);
+      const { data, error } = await qy;
       list = (!error && data && data.length) ? data : null;
+      if (!list && !opts.category) {
+        const r2 = await sb().from("products").select("*").eq("active", true);
+        list = (!r2.error && r2.data && r2.data.length) ? r2.data : null;
+      }
     }
     if (!list) list = DEMO.products.map((p, i) => ({
       id: "demo-" + i, name: p.name, slug: "demo-" + i, usp: p.usp, price_incl_vat: num(p.price),
@@ -113,6 +119,13 @@
   async function getProduct(idOrSlug) {
     if (ready()) { const { data } = await sb().from("products").select("*").or(`slug.eq.${idOrSlug},id.eq.${idOrSlug}`).maybeSingle(); if (data) return data; }
     const all = await listProducts(); return all.find((p) => p.slug === idOrSlug || p.id === idOrSlug) || all[0] || null;
+  }
+  async function listCategories() {
+    if (ready()) {
+      const { data } = await sb().from("product_categories").select("*").order("sort");
+      if (data && data.length) return data;
+    }
+    return [];
   }
   async function listArticles() {
     if (ready()) { const { data } = await sb().from("articles").select("*").eq("published", true).order("created_at", { ascending: false }); if (data) return data; }
@@ -168,7 +181,7 @@
   async function myOrders() { need(); const { data, error } = await sb().from("orders").select("*, items:order_items(*)").order("created_at", { ascending: false }); if (error) throw error; return data; }
 
   PA.db = {
-    ready, listCourses, getCourse, listInstances, listProducts, getProduct, listArticles,
+    ready, listCourses, getCourse, listInstances, listProducts, getProduct, listArticles, listCategories,
     createQuote, sendContact, createBooking, createOrder,
     adminList, adminCounts, myBookings, myOrders,
   };

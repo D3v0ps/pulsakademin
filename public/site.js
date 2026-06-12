@@ -188,6 +188,7 @@
         <span>© 2026 PulsAkademin</span>
         <a href="${P}villkor.html">Villkor</a>
         <a href="${P}integritetspolicy.html">Integritetspolicy</a>
+        <a href="${P}krediter.html">Bildkrediter</a>
         <a href="${P}integritetspolicy.html">Cookies</a>
         <a href="${P}villkor.html">Retur & reklamation</a>
       </div>
