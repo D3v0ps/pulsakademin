@@ -8,7 +8,7 @@
 
   /* ---- helpers ---- */
   function cardLink(course) {
-    return course.slug === 'hlr-vuxen' ? 'kurs-hlr-vuxen.html' : 'utbildningar.html#' + course.slug;
+    return course.slug === 'hlr-vuxen' ? 'kurs-hlr-vuxen.html' : 'kurs.html?slug=' + course.slug;
   }
 
   function normalise(s) {
