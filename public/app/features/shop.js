@@ -172,9 +172,64 @@ PA.shop.compare = (function () {
 })();
 
 /* ─────────────────────────────────────────────
-   HJARTSTARTARE PAGE
+   CATEGORY PAGE (hjartstartare.html — generic, driven by ?cat=)
    ───────────────────────────────────────────── */
 PA.shop.initHjartstartare = function () {
+  var CAT_LABELS = {
+    hjartstartare: 'Hjärtstartare',
+    batterier: 'Batterier till hjärtstartare',
+    elektroder: 'Elektroder',
+    skap: 'Skåp & väggfästen',
+    vaskor: 'Väskor',
+    paket: 'Paketlösningar',
+  };
+  var ALL_CATS = ['hjartstartare', 'batterier', 'elektroder', 'skap', 'vaskor'];
+
+  var params = new URLSearchParams(window.location.search);
+  var activeCat = params.get('cat') || 'hjartstartare';
+  var catLabel = CAT_LABELS[activeCat] || activeCat;
+
+  // Update page title and hero text
+  document.title = catLabel + ' – köp online | PulsAkademin';
+  var crumbCat = document.getElementById('crumb-cat');
+  if (crumbCat) crumbCat.textContent = catLabel;
+
+  var heroEyebrow = document.querySelector('[data-cms="hjartstartare.hero.eyebrow"]');
+  var heroTitle = document.querySelector('[data-cms="hjartstartare.hero.title"]');
+  var heroLead = document.querySelector('[data-cms="hjartstartare.hero.lead"]');
+
+  var titleMap = {
+    hjartstartare: 'Rätt hjärtstartare för er miljö',
+    batterier: 'Batterier till hjärtstartare',
+    elektroder: 'Elektroder & defibrillationsplattor',
+    skap: 'Skåp & väggfästen för hjärtstartare',
+    vaskor: 'Väskor & transportväskor',
+    paket: 'Kompletta paketlösningar',
+  };
+  var leadMap = {
+    hjartstartare: 'Välj hjärtstartare för arbetsplats, skola, förening eller offentlig miljö. Osäker? Använd vår guide eller få rådgivning.',
+    batterier: 'Håll din hjärtstartare redo med rätt batteri. Vi erbjuder batterier till de flesta modeller på marknaden.',
+    elektroder: 'Elektroder för vuxna och barn till de vanligaste hjärtstartarna. Vi skickar påminnelse när det är dags att byta.',
+    skap: 'Skydda och exponera din hjärtstartare med rätt skåp eller väggfäste – för inomhus och utomhus.',
+    vaskor: 'Transportväskor och ryggsäckar för säker förvaring och snabb tillgång till hjärtstartaren.',
+    paket: 'Allt-i-ett-lösningar med hjärtstartare, skåp, elektroder och utbildning. Vi sätter ihop paketet åt er.',
+  };
+
+  if (heroEyebrow) heroEyebrow.textContent = catLabel;
+  if (heroTitle) heroTitle.textContent = titleMap[activeCat] || catLabel;
+  if (heroLead) heroLead.textContent = leadMap[activeCat] || '';
+
+  // Category quick-chips
+  var chipsEl = document.getElementById('cat-chips');
+  if (chipsEl) {
+    chipsEl.innerHTML = ALL_CATS.map(function (slug) {
+      var lbl = CAT_LABELS[slug] || slug;
+      var isActive = slug === activeCat;
+      return '<a class="chip' + (isActive ? ' active' : '') + '" href="hjartstartare.html?cat=' + slug + '">' + lbl + '</a>';
+    }).join('');
+    chipsEl.style.display = 'flex';
+  }
+
   var grid = document.getElementById('prodCat');
   var countEl = document.getElementById('pcount');
   var sortSel = document.querySelector('.select');
@@ -182,9 +237,29 @@ PA.shop.initHjartstartare = function () {
   var inStockChk = document.getElementById('filter-instock');
   var clearBtn = document.getElementById('clear-filters');
   var compareModal = document.getElementById('compare-modal');
+  var brandFilterList = document.getElementById('brand-filter-list');
 
-  // collect brand checkboxes
-  var brandChks = document.querySelectorAll('.js-brand-chk');
+  // brand checkboxes — rebuilt dynamically after first load
+  var brandChks = [];
+
+  function rebuildBrandFilter(products) {
+    if (!brandFilterList) return;
+    var brands = [];
+    products.forEach(function (p) {
+      if (p.brand && brands.indexOf(p.brand) === -1) brands.push(p.brand);
+    });
+    brands.sort();
+    if (brands.length === 0) {
+      brandFilterList.innerHTML = '<span class="muted" style="font-size:13px">Inga varumärken</span>';
+      brandChks = [];
+      return;
+    }
+    brandFilterList.innerHTML = brands.map(function (b) {
+      return '<label class="fopt"><input type="checkbox" class="js-brand-chk" value="' + _esc(b) + '"> ' + b + '</label>';
+    }).join('');
+    brandChks = Array.from(brandFilterList.querySelectorAll('.js-brand-chk'));
+    brandChks.forEach(function (chk) { chk.addEventListener('change', loadAndRender); });
+  }
 
   function currentOpts() {
     var brands = [];
@@ -192,11 +267,10 @@ PA.shop.initHjartstartare = function () {
     var sortVal = sortSel ? sortSel.value : '';
     var sort = sortVal === 'price-asc' ? 'price-asc' : sortVal === 'price-desc' ? 'price-desc' : '';
     return {
-      brand: brands.length === 1 ? brands[0] : (brands.length > 1 ? brands : undefined),
       inStock: inStockChk ? inStockChk.checked : false,
       q: searchBox ? searchBox.value.trim() : '',
       sort: sort,
-      brands: brands, // multi-brand support
+      brands: brands,
     };
   }
 
@@ -212,25 +286,36 @@ PA.shop.initHjartstartare = function () {
     if (rb) rb.addEventListener('click', resetFilters);
   }
 
+  var brandsBuilt = false;
+
   async function loadAndRender() {
     renderLoading();
     var opts = currentOpts();
-    // For multi-brand, fetch all then filter locally
     var products;
     try {
-      if (opts.brands && opts.brands.length > 1) {
-        var all = await PA.db.listProducts({ inStock: opts.inStock, q: opts.q, sort: opts.sort });
-        products = all.filter(function (p) { return opts.brands.includes(p.brand); });
+      // Always filter by active category (omitting category returns ALL)
+      var fetchOpts = {
+        category: activeCat,
+        inStock: opts.inStock,
+        q: opts.q,
+        sort: opts.sort,
+      };
+      var raw = await PA.db.listProducts(fetchOpts);
+
+      // Build brand filter from the full unfiltered set once
+      if (!brandsBuilt) {
+        rebuildBrandFilter(raw);
+        brandsBuilt = true;
+      }
+
+      // Apply multi-brand filter locally
+      if (opts.brands && opts.brands.length > 0) {
+        products = raw.filter(function (p) { return opts.brands.indexOf(p.brand) !== -1; });
       } else {
-        products = await PA.db.listProducts({
-          brand: opts.brands && opts.brands.length === 1 ? opts.brands[0] : undefined,
-          inStock: opts.inStock,
-          q: opts.q,
-          sort: opts.sort,
-        });
+        products = raw;
       }
     } catch (err) {
-      grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted)">Kunde inte ladda produkter.</div>';
+      if (grid) grid.innerHTML = '<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--muted)">Kunde inte ladda produkter.</div>';
       return;
     }
 
@@ -246,7 +331,6 @@ PA.shop.initHjartstartare = function () {
       chk.addEventListener('change', function () {
         var result = PA.shop.compare.toggle({ pid: chk.dataset.pid, name: chk.dataset.name, price: chk.dataset.price });
         if (chk.checked && result.length >= 3) {
-          // disable all unchecked if max reached
           grid.querySelectorAll('.js-compare-chk:not(:checked)').forEach(function (c) { c.disabled = true; });
         } else {
           grid.querySelectorAll('.js-compare-chk').forEach(function (c) { c.disabled = false; });
@@ -266,7 +350,6 @@ PA.shop.initHjartstartare = function () {
   }
 
   // event bindings
-  brandChks.forEach(function (chk) { chk.addEventListener('change', loadAndRender); });
   if (inStockChk) inStockChk.addEventListener('change', loadAndRender);
   if (searchBox) searchBox.addEventListener('input', debounce(loadAndRender, 300));
   if (sortSel) sortSel.addEventListener('change', loadAndRender);
@@ -310,13 +393,35 @@ PA.shop.initWebbshop = function () {
 
   grid.innerHTML = '<div style="grid-column:1/-1;padding:32px;text-align:center;color:var(--muted)">Laddar…</div>';
 
-  PA.db.listProducts({}).then(function (products) {
+  PA.db.listProducts({ category: 'hjartstartare' }).then(function (products) {
     var featured = products.slice(0, 4);
     if (!featured.length) { grid.innerHTML = ''; return; }
     grid.innerHTML = featured.map(function (p) { return PA.shop.prodCardHTML(p, 'compact'); }).join('');
     PA.shop.bindAddToCart(grid);
   }).catch(function () {
     grid.innerHTML = '<div style="grid-column:1/-1;color:var(--muted)">Kunde inte ladda produkter.</div>';
+  });
+};
+
+/** Update live product counts on the category cards in webbshop.html */
+PA.shop.initWebbshopCounts = function () {
+  var countEls = document.querySelectorAll('.js-catcount');
+  if (!countEls.length) return;
+
+  PA.db.listProducts({}).then(function (all) {
+    // Tally per category slug
+    var counts = {};
+    all.forEach(function (p) {
+      var slug = p.category && p.category.slug ? p.category.slug : null;
+      if (slug) counts[slug] = (counts[slug] || 0) + 1;
+    });
+    countEls.forEach(function (el) {
+      var cat = el.dataset.cat;
+      var n = counts[cat] || 0;
+      el.textContent = n > 0 ? n + ' →' : '→';
+    });
+  }).catch(function () {
+    // silently leave arrows as-is if backend is unavailable
   });
 };
 
@@ -357,6 +462,36 @@ PA.shop.initProdukt = function () {
     document.title = p.name + ' | PulsAkademin';
     var crumbName = document.getElementById('crumb-name');
     if (crumbName) crumbName.textContent = p.name;
+    var crumbCatLink = document.getElementById('crumb-cat-link');
+    if (crumbCatLink && p.category && p.category.slug) {
+      var CAT_LABELS_PDP = {
+        hjartstartare: 'Hjärtstartare', batterier: 'Batterier till hjärtstartare',
+        elektroder: 'Elektroder', skap: 'Skåp & väggfästen', vaskor: 'Väskor', paket: 'Paketlösningar',
+      };
+      crumbCatLink.href = 'hjartstartare.html?cat=' + p.category.slug;
+      crumbCatLink.textContent = CAT_LABELS_PDP[p.category.slug] || p.category.name || 'Produkter';
+    }
+
+    // Render description as readable paragraphs
+    var descHTML = (function () {
+      var raw = (p.description || p.usp || p.name).trim();
+      // Split on double newline first, then group sentences ~2-3 at a time
+      var parts = raw.split(/\n{2,}/);
+      if (parts.length > 1) {
+        return parts.map(function (chunk) { return '<p>' + chunk.trim() + '</p>'; }).join('');
+      }
+      // Single block: split on sentence endings and group into chunks of 2-3
+      var sentences = raw.match(/[^.!?]+[.!?]+["']?/g) || [raw];
+      var paras = [];
+      for (var i = 0; i < sentences.length; i += 2) {
+        var chunk = sentences.slice(i, i + 2).join(' ').trim();
+        if (chunk) paras.push('<p>' + chunk + '</p>');
+      }
+      return paras.length ? paras.join('') : '<p>' + raw + '</p>';
+    })();
+
+    // Category label for spec table
+    var catName = (p.category && p.category.name) ? p.category.name : '';
 
     wrap.innerHTML =
       '<div class="gallery">' +
@@ -375,13 +510,14 @@ PA.shop.initProdukt = function () {
 
       '<div class="mt-24" style="max-width:62ch">' +
         '<div id="tab-desc">' +
-          '<p class="lead">' + (p.description || p.usp || p.name) + '</p>' +
-          '<ul class="usp mt-24" style="font-size:14.5px">' + uspHTML + '</ul>' +
+          descHTML +
+          (uspLines.length ? '<ul class="usp mt-24" style="font-size:14.5px">' + uspHTML + '</ul>' : '') +
         '</div>' +
         '<div id="tab-spec" style="display:none">' +
           '<h3 class="h3 mb-16">Specifikationer</h3>' +
           '<table class="spec-table" style="width:100%">' +
             '<tr><td>Varumärke</td><td>' + (p.brand || '–') + '</td></tr>' +
+            (catName ? '<tr><td>Kategori</td><td>' + catName + '</td></tr>' : '') +
             '<tr><td>Artikelnr</td><td>' + (p.id || p.slug || '–') + '</td></tr>' +
             '<tr><td>Lagerstatus</td><td>' + (p.stock_status || '–') + '</td></tr>' +
           '</table>' +
@@ -512,14 +648,27 @@ PA.shop.initProdukt = function () {
       });
     });
 
-    // cross-sell
+    // cross-sell: prefer same-category products
     if (crossGrid) {
-      PA.db.listProducts({}).then(function (all) {
+      var thisCatSlug = (p.category && p.category.slug) ? p.category.slug : null;
+      var crossFetch = thisCatSlug
+        ? PA.db.listProducts({ category: thisCatSlug })
+        : PA.db.listProducts({});
+      crossFetch.then(function (all) {
         var others = all.filter(function (x) { return (x.slug || x.id) !== (p.slug || p.id); }).slice(0, 4);
-        if (!others.length) { crossGrid.closest('section') && (crossGrid.innerHTML = ''); return; }
+        // If same-category yields fewer than 2, fall back to all products
+        if (others.length < 2 && thisCatSlug) {
+          return PA.db.listProducts({}).then(function (allFallback) {
+            var fb = allFallback.filter(function (x) { return (x.slug || x.id) !== (p.slug || p.id); }).slice(0, 4);
+            if (!fb.length) { var sec = crossGrid.closest('section'); if (sec) sec.style.display = 'none'; return; }
+            crossGrid.innerHTML = fb.map(function (x) { return PA.shop.prodCardHTML(x, 'compact'); }).join('');
+            PA.shop.bindAddToCart(crossGrid);
+          });
+        }
+        if (!others.length) { var sec = crossGrid.closest('section'); if (sec) sec.style.display = 'none'; return; }
         crossGrid.innerHTML = others.map(function (x) { return PA.shop.prodCardHTML(x, 'compact'); }).join('');
         PA.shop.bindAddToCart(crossGrid);
-      });
+      }).catch(function () {});
     }
 
   }).catch(function () {

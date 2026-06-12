@@ -617,6 +617,149 @@
     </table></div>`;
   }
 
+  /* ══════════════════════════════════════════════════════════
+     ARTICLES — list + inline edit + new + delete
+  ══════════════════════════════════════════════════════════ */
+  function renderArticles(rows) {
+    const rowsHtml = rows.map(r => `
+      <tr data-id="${esc(r.id)}" class="art-row">
+        <td><b>${esc(r.title || "–")}</b><div class="muted" style="font-size:12px;font-family:var(--font-mono)">${esc(r.slug||"")}</div></td>
+        <td>${esc(r.category || "–")}</td>
+        <td>${r.published ? '<span class="badge badge--green">Publicerad</span>' : '<span class="badge">Utkast</span>'}</td>
+        <td>${fmtDate(r.created_at)}</td>
+        <td style="white-space:nowrap">
+          <button class="btn--edit art-edit-btn" data-id="${esc(r.id)}" style="margin-right:4px">Redigera</button>
+          <button class="btn--danger art-delete-btn" data-id="${esc(r.id)}">Ta bort</button>
+        </td>
+      </tr>
+      <tr class="art-edit-row" id="art-edit-${esc(r.id)}" style="display:none">
+        <td colspan="5">
+          <div class="inline-form wide">
+            <div>
+              <label>Titel</label>
+              <input type="text" name="title" value="${esc(r.title||"")}">
+            </div>
+            <div>
+              <label>Kategori</label>
+              <input type="text" name="category" value="${esc(r.category||"")}">
+            </div>
+            <div class="span2">
+              <label>Ingress (excerpt)</label>
+              <textarea name="excerpt" rows="3">${esc(r.excerpt||"")}</textarea>
+            </div>
+            <div class="span2">
+              <label>Brödtext (body)</label>
+              <textarea name="body" rows="10" class="art-body-ta">${esc(r.body||"")}</textarea>
+            </div>
+            <div class="span2">
+              <label>Bild-URL</label>
+              <input type="text" name="image" value="${esc(r.image||"")}">
+            </div>
+            <div>
+              <label><input type="checkbox" name="published" style="width:auto;margin-right:6px"${r.published?" checked":""}> Publicerad</label>
+            </div>
+            <div class="form-actions">
+              <button class="btn--save art-save-btn" data-id="${esc(r.id)}">Spara</button>
+              <button class="btn--cancel-edit art-cancel-btn" data-id="${esc(r.id)}">Avbryt</button>
+              <span class="status-msg"></span>
+            </div>
+          </div>
+        </td>
+      </tr>`).join("");
+
+    const tableHtml = rows.length
+      ? `<div style="overflow-x:auto"><table class="table">
+          <thead><tr><th>Titel</th><th>Kategori</th><th>Status</th><th>Skapad</th><th></th></tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table></div>`
+      : emptyState("Inga artiklar hittades.");
+
+    return `<div class="abar">
+        <button class="btn btn--primary btn--sm" id="new-art-toggle">+ Ny artikel</button>
+      </div>
+      <div id="new-art-form" style="display:none" class="new-row-section">
+        <div class="inline-form wide">
+          <div>
+            <label>Titel *</label>
+            <input type="text" id="na-title" placeholder="Artikelns rubrik">
+          </div>
+          <div>
+            <label>Kategori</label>
+            <input type="text" id="na-category" placeholder="t.ex. HLR, AED, Säkerhet">
+          </div>
+          <div class="span2">
+            <label>Ingress (excerpt)</label>
+            <textarea id="na-excerpt" rows="3" placeholder="Kort sammanfattning…"></textarea>
+          </div>
+          <div class="span2">
+            <label>Brödtext (body)</label>
+            <textarea id="na-body" rows="10" class="art-body-ta" placeholder="Artikelns innehåll…"></textarea>
+          </div>
+          <div class="span2">
+            <label>Bild-URL</label>
+            <input type="text" id="na-image" placeholder="https://…">
+          </div>
+          <div>
+            <label><input type="checkbox" id="na-published" style="width:auto;margin-right:6px"> Publicerad</label>
+          </div>
+          <div class="form-actions">
+            <button class="btn--save" id="na-save-btn">Skapa artikel</button>
+            <button class="btn--cancel-edit" id="na-cancel-btn">Avbryt</button>
+            <span class="status-msg" id="na-msg"></span>
+          </div>
+        </div>
+      </div>
+      ${tableHtml}`;
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     USERS (profiles) — list + role editor + invite card
+  ══════════════════════════════════════════════════════════ */
+  function renderUsers(rows, currentUserId) {
+    const roles = ["customer","company","instructor","admin"];
+
+    const inviteCard = `<div class="invite-card">
+      <h3>Bjud in kollega som admin</h3>
+      <p>För att ge en ny person adminbehörighet, följ dessa steg:</p>
+      <ol class="invite-steps">
+        <li>Be kollegan skapa ett konto på <b>logga-in.html</b> (länken nedan).</li>
+        <li>När kontot syns i listan här – välj rollen <b>Admin</b> i rullgardinsmenyn.</li>
+      </ol>
+      <div class="invite-actions">
+        <button class="btn--copy" id="copy-reg-link">Kopiera registreringslänk</button>
+        <a id="invite-mailto" href="#" class="btn btn--outline btn--sm">Skicka e-postinbjudan</a>
+        <span class="status-msg" id="copy-reg-msg"></span>
+      </div>
+    </div>`;
+
+    if (!rows.length) return inviteCard + emptyState("Inga användare hittades.");
+
+    const rowsHtml = rows.map(r => {
+      const isOwn = r.id === currentUserId;
+      return `<tr data-id="${esc(r.id)}">
+        <td>${esc(r.email || "–")}</td>
+        <td>${esc(r.name || "–")}</td>
+        <td>
+          ${isOwn
+            ? `<select class="role-sel" data-id="${esc(r.id)}" data-own="1">
+                ${roles.map(role => `<option value="${role}"${r.role===role?" selected":""}>${role}</option>`).join("")}
+               </select>
+               <span class="own-role-warn" id="own-warn-${esc(r.id)}" style="display:none">⚠ Du kan inte ta bort din egen adminbehörighet</span>`
+            : `<select class="role-sel" data-id="${esc(r.id)}">
+                ${roles.map(role => `<option value="${role}"${r.role===role?" selected":""}>${role}</option>`).join("")}
+               </select>`}
+          <span class="status-msg" id="role-msg-${esc(r.id)}"></span>
+        </td>
+        <td>${fmtDate(r.created_at)}</td>
+      </tr>`;
+    }).join("");
+
+    return inviteCard + `<div style="overflow-x:auto"><table class="table">
+      <thead><tr><th>E-post</th><th>Namn</th><th>Roll</th><th>Skapad</th></tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table></div>`;
+  }
+
   /* ── TABLE_RENDERERS (static tables only; editable ones handled in bindView) */
   const TABLE_RENDERERS = {
     contact_messages: renderContactMessages,
@@ -1056,6 +1199,319 @@
     });
   }
 
+  /* ── DETAIL EXPANDERS: Orders ───────────────────────── */
+  function bindOrdersView(container) {
+    bindStatusSelects(container);
+    container.querySelectorAll(".order-show-btn").forEach(btn => {
+      btn.addEventListener("click", async function () {
+        const id = this.dataset.id;
+        const detailRow = container.querySelector(`#order-detail-${id}`);
+        if (!detailRow) return;
+        const isOpen = detailRow.style.display !== "none";
+        if (isOpen) { detailRow.style.display = "none"; this.textContent = "Visa"; return; }
+        detailRow.style.display = "";
+        this.textContent = "Dölj";
+        const contentEl = container.querySelector(`#order-detail-content-${id}`);
+        if (!contentEl || contentEl.dataset.loaded) return;
+        try {
+          const { data: items, error } = await PA.sb.from("order_items").select("*").eq("order_id", id);
+          if (error) throw error;
+          // get the main row's data from the DOM context - re-fetch order for customer/shipping details
+          const { data: orderArr, error: oErr } = await PA.sb.from("orders").select("*").eq("id", id).limit(1);
+          if (oErr) throw oErr;
+          const o = (orderArr && orderArr[0]) || {};
+          const itemsHtml = items && items.length
+            ? `<div class="detail-items"><table>
+                <thead><tr><th>Produkt</th><th>SKU</th><th>Antal</th><th>À-pris inkl. moms</th><th>Rad totalt</th></tr></thead>
+                <tbody>${items.map(i => `<tr>
+                  <td>${esc(i.product_name||"–")}</td>
+                  <td><code style="font-size:11px">${esc(i.sku||"–")}</code></td>
+                  <td>${esc(i.qty!=null?String(i.qty):"–")}</td>
+                  <td>${fmtMoney(i.unit_price_incl_vat)}</td>
+                  <td>${fmtMoney(i.qty != null && i.unit_price_incl_vat != null ? i.qty * i.unit_price_incl_vat : null)}</td>
+                </tr>`).join("")}</tbody>
+              </table></div>`
+            : `<p class="muted" style="font-size:13px">Inga orderrader.</p>`;
+          contentEl.innerHTML = `
+            <div class="detail-grid" style="margin-bottom:12px">
+              <div><dt>Kundnamn</dt><dd>${esc(o.customer_name||"–")}</dd></div>
+              <div><dt>E-post</dt><dd>${esc(o.customer_email||"–")}</dd></div>
+              <div><dt>Telefon</dt><dd>${esc(o.customer_phone||"–")}</dd></div>
+              <div><dt>Leveransadress</dt><dd>${esc(o.shipping_address||"–")}</dd></div>
+              <div><dt>Betalsätt</dt><dd>${esc(o.payment_method||"–")}</dd></div>
+              <div><dt>Totalt inkl. moms</dt><dd>${fmtMoney(o.total_incl_vat)}</dd></div>
+            </div>
+            <h4>Orderrader</h4>
+            ${itemsHtml}`;
+          contentEl.dataset.loaded = "1";
+        } catch (e) {
+          contentEl.innerHTML = `<span class="inline-err">Fel: ${esc(e.message||String(e))}</span>`;
+        }
+      });
+    });
+  }
+
+  /* ── DETAIL EXPANDERS: Bookings ─────────────────────── */
+  function bindBookingsView(container) {
+    bindStatusSelects(container);
+    container.querySelectorAll(".booking-show-btn").forEach(btn => {
+      btn.addEventListener("click", async function () {
+        const id = this.dataset.id;
+        const detailRow = container.querySelector(`#booking-detail-${id}`);
+        if (!detailRow) return;
+        const isOpen = detailRow.style.display !== "none";
+        if (isOpen) { detailRow.style.display = "none"; this.textContent = "Visa"; return; }
+        detailRow.style.display = "";
+        this.textContent = "Dölj";
+        const contentEl = container.querySelector(`#booking-detail-content-${id}`);
+        if (!contentEl || contentEl.dataset.loaded) return;
+        try {
+          const { data: participants, error: pErr } = await PA.sb.from("participants").select("*").eq("booking_id", id);
+          if (pErr) throw pErr;
+          const { data: bookingArr, error: bErr } = await PA.sb
+            .from("bookings")
+            .select("*, course_instances(city, start_at, end_at, venue, courses(title))")
+            .eq("id", id)
+            .limit(1);
+          if (bErr) throw bErr;
+          const b = (bookingArr && bookingArr[0]) || {};
+          const ci = b.course_instances || {};
+          const course = ci.courses || {};
+          const participantsHtml = participants && participants.length
+            ? `<div class="detail-items"><table>
+                <thead><tr><th>Förnamn</th><th>Efternamn</th><th>E-post</th></tr></thead>
+                <tbody>${participants.map(p => `<tr>
+                  <td>${esc(p.first_name||"–")}</td>
+                  <td>${esc(p.last_name||"–")}</td>
+                  <td>${esc(p.email||"–")}</td>
+                </tr>`).join("")}</tbody>
+              </table></div>`
+            : `<p class="muted" style="font-size:13px">Inga deltagare registrerade.</p>`;
+          contentEl.innerHTML = `
+            <div class="detail-grid" style="margin-bottom:12px">
+              <div><dt>Kontaktperson</dt><dd>${esc(b.contact_name||"–")}</dd></div>
+              <div><dt>E-post</dt><dd>${esc(b.contact_email||"–")}</dd></div>
+              <div><dt>Telefon</dt><dd>${esc(b.contact_phone||"–")}</dd></div>
+              <div><dt>Bokningstyp</dt><dd>${esc(b.booking_type||"–")}</dd></div>
+              <div><dt>Kurs</dt><dd>${esc(course.title||"–")}</dd></div>
+              <div><dt>Stad</dt><dd>${esc(ci.city||"–")}</dd></div>
+              <div><dt>Lokal</dt><dd>${esc(ci.venue||"–")}</dd></div>
+              <div><dt>Starttid</dt><dd>${fmtDate(ci.start_at)}</dd></div>
+            </div>
+            <h4>Deltagare</h4>
+            ${participantsHtml}`;
+          contentEl.dataset.loaded = "1";
+        } catch (e) {
+          contentEl.innerHTML = `<span class="inline-err">Fel: ${esc(e.message||String(e))}</span>`;
+        }
+      });
+    });
+  }
+
+  /* ── DETAIL EXPANDERS: Quote Requests ───────────────── */
+  function bindQuoteRequestsView(container) {
+    bindStatusSelects(container);
+    // detail rows are already rendered inline — no fetch needed, just toggle
+    container.querySelectorAll(".qr-show-btn").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        const detailRow = container.querySelector(`#qr-detail-${id}`);
+        if (!detailRow) return;
+        const isOpen = detailRow.style.display !== "none";
+        detailRow.style.display = isOpen ? "none" : "";
+        this.textContent = isOpen ? "Visa" : "Dölj";
+      });
+    });
+  }
+
+  /* ── DETAIL EXPANDERS: Contact Messages ─────────────── */
+  function bindContactMessagesView(container) {
+    container.querySelectorAll(".cm-show-btn").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        const detailRow = container.querySelector(`#cm-detail-${id}`);
+        if (!detailRow) return;
+        const isOpen = detailRow.style.display !== "none";
+        detailRow.style.display = isOpen ? "none" : "";
+        this.textContent = isOpen ? "Visa" : "Dölj";
+      });
+    });
+  }
+
+  /* ── ARTICLES events ───────────────────────────────── */
+  function bindArticlesView(container, reloadFn) {
+    /* toggle edit rows */
+    container.querySelectorAll(".art-edit-btn").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        const editRow = container.querySelector(`#art-edit-${id}`);
+        if (editRow) editRow.style.display = editRow.style.display === "none" ? "" : "none";
+      });
+    });
+    container.querySelectorAll(".art-cancel-btn").forEach(btn => {
+      btn.addEventListener("click", function () {
+        const id = this.dataset.id;
+        const editRow = container.querySelector(`#art-edit-${id}`);
+        if (editRow) editRow.style.display = "none";
+      });
+    });
+
+    /* save existing article */
+    container.querySelectorAll(".art-save-btn").forEach(btn => {
+      btn.addEventListener("click", async function () {
+        const id = this.dataset.id;
+        const row = container.querySelector(`#art-edit-${id}`);
+        if (!row) return;
+        const msgEl = row.querySelector(".status-msg");
+        if (msgEl) { msgEl.textContent = ""; msgEl.className = "status-msg"; }
+        const titleVal = row.querySelector("[name=title]").value.trim();
+        if (!titleVal) { if (msgEl) showErr(msgEl, "Titel krävs."); return; }
+        const data = {
+          title: titleVal,
+          slug: slugify(titleVal),
+          category: row.querySelector("[name=category]").value.trim(),
+          excerpt: row.querySelector("[name=excerpt]").value.trim(),
+          body: row.querySelector("[name=body]").value.trim(),
+          image: row.querySelector("[name=image]").value.trim() || null,
+          published: row.querySelector("[name=published]").checked,
+        };
+        setBtnState(this, true);
+        try {
+          const { error } = await PA.sb.from("articles").update(data).eq("id", id);
+          if (error) throw error;
+          if (msgEl) showSaved(msgEl);
+        } catch (e) {
+          if (msgEl) showErr(msgEl, "Fel: " + (e.message || String(e)));
+        } finally {
+          setBtnState(this, false);
+        }
+      });
+    });
+
+    /* delete article */
+    container.querySelectorAll(".art-delete-btn").forEach(btn => {
+      btn.addEventListener("click", async function () {
+        const id = this.dataset.id;
+        if (!confirm("Ta bort denna artikel? Åtgärden kan inte ångras.")) return;
+        const dataRow = container.querySelector(`tr[data-id="${id}"].art-row`);
+        const editRow = container.querySelector(`#art-edit-${id}`);
+        try {
+          const { error } = await PA.sb.from("articles").delete().eq("id", id);
+          if (error) throw error;
+          if (dataRow) dataRow.remove();
+          if (editRow) editRow.remove();
+        } catch (e) {
+          alert("Fel vid borttagning: " + (e.message || String(e)));
+        }
+      });
+    });
+
+    /* new article toggle */
+    const newToggle = container.querySelector("#new-art-toggle");
+    const newForm = container.querySelector("#new-art-form");
+    if (newToggle && newForm) {
+      newToggle.addEventListener("click", () => {
+        newForm.style.display = newForm.style.display === "none" ? "" : "none";
+      });
+      const cancelBtn = newForm.querySelector("#na-cancel-btn");
+      if (cancelBtn) cancelBtn.addEventListener("click", () => { newForm.style.display = "none"; });
+
+      const saveBtn = newForm.querySelector("#na-save-btn");
+      if (saveBtn) {
+        saveBtn.addEventListener("click", async function () {
+          const msgEl = newForm.querySelector("#na-msg");
+          if (msgEl) { msgEl.textContent = ""; msgEl.className = "status-msg"; }
+          const title = newForm.querySelector("#na-title").value.trim();
+          if (!title) { if (msgEl) showErr(msgEl, "Titel krävs."); return; }
+          const data = {
+            title,
+            slug: slugify(title),
+            category: newForm.querySelector("#na-category").value.trim(),
+            excerpt: newForm.querySelector("#na-excerpt").value.trim(),
+            body: newForm.querySelector("#na-body").value.trim(),
+            image: newForm.querySelector("#na-image").value.trim() || null,
+            published: newForm.querySelector("#na-published").checked,
+          };
+          setBtnState(this, true);
+          try {
+            const { error } = await PA.sb.from("articles").insert(data);
+            if (error) throw error;
+            if (msgEl) showSaved(msgEl);
+            newForm.style.display = "none";
+            reloadFn();
+          } catch (e) {
+            if (msgEl) showErr(msgEl, "Fel: " + (e.message || String(e)));
+          } finally {
+            setBtnState(this, false);
+          }
+        });
+      }
+    }
+  }
+
+  /* ── USERS events ─────────────────────────────────── */
+  function bindUsersView(container, currentUserId) {
+    /* copy registration link */
+    const copyBtn = container.querySelector("#copy-reg-link");
+    const copyMsg = container.querySelector("#copy-reg-msg");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", async function () {
+        const link = location.origin + "/logga-in.html";
+        if (copyMsg) { copyMsg.textContent = ""; copyMsg.className = "status-msg"; }
+        try {
+          await navigator.clipboard.writeText(link);
+          if (copyMsg) showSaved(copyMsg);
+        } catch (e) {
+          if (copyMsg) showErr(copyMsg, "Kunde inte kopiera: " + (e.message || String(e)));
+        }
+      });
+    }
+
+    /* prefill mailto link */
+    const mailtoLink = container.querySelector("#invite-mailto");
+    if (mailtoLink) {
+      const link = location.origin + "/logga-in.html";
+      const subject = encodeURIComponent("Inbjudan till PulsAkademin adminpanel");
+      const body = encodeURIComponent(
+        "Hej!\n\nDu är inbjuden att bli administratör i PulsAkademin.\n\n" +
+        "Följ dessa steg:\n" +
+        "1. Skapa ett konto via länken nedan\n" +
+        "2. Meddela mig så sätter jag din roll till Admin i adminpanelen\n\n" +
+        "Registreringslänk: " + link + "\n\nMed vänliga hälsningar"
+      );
+      mailtoLink.href = `mailto:?subject=${subject}&body=${body}`;
+    }
+
+    /* role selects */
+    container.querySelectorAll("select.role-sel").forEach(sel => {
+      sel.addEventListener("change", async function () {
+        const id = this.dataset.id;
+        const isOwn = this.dataset.own === "1";
+        const newRole = this.value;
+        const msgEl = container.querySelector(`#role-msg-${id}`);
+        const warnEl = container.querySelector(`#own-warn-${id}`);
+        if (msgEl) { msgEl.textContent = ""; msgEl.className = "status-msg"; }
+        if (warnEl) warnEl.style.display = "none";
+
+        /* guard: block own demotion */
+        if (isOwn && newRole !== "admin") {
+          if (warnEl) warnEl.style.display = "";
+          // revert select
+          this.value = "admin";
+          return;
+        }
+
+        try {
+          const { error } = await PA.sb.from("profiles").update({ role: newRole }).eq("id", id);
+          if (error) throw error;
+          if (msgEl) showSaved(msgEl);
+        } catch (e) {
+          if (msgEl) showErr(msgEl, "Fel: " + (e.message || String(e)));
+        }
+      });
+    });
+  }
+
   /* ── main init ────────────────────────────────────────── */
   async function init() {
     const main = document.getElementById("admin-main");
@@ -1171,7 +1627,7 @@
         try {
           const rows = await PA.db.adminList("bookings");
           main.innerHTML = renderBookings(rows, main);
-          bindStatusSelects(main);
+          bindBookingsView(main);
         } catch (e) {
           main.innerHTML = errorState("Kunde inte ladda data: " + (e.message || String(e)));
         }
@@ -1183,7 +1639,7 @@
         try {
           const rows = await PA.db.adminList("orders");
           main.innerHTML = renderOrders(rows);
-          bindStatusSelects(main);
+          bindOrdersView(main);
         } catch (e) {
           main.innerHTML = errorState("Kunde inte ladda data: " + (e.message || String(e)));
         }
@@ -1195,7 +1651,19 @@
         try {
           const rows = await PA.db.adminList("quote_requests");
           main.innerHTML = renderQuoteRequests(rows);
-          bindStatusSelects(main);
+          bindQuoteRequestsView(main);
+        } catch (e) {
+          main.innerHTML = errorState("Kunde inte ladda data: " + (e.message || String(e)));
+        }
+        return;
+      }
+
+      /* ── CONTACT MESSAGES ────────────────────────────── */
+      if (viewKey === "contact_messages") {
+        try {
+          const rows = await PA.db.adminList("contact_messages");
+          main.innerHTML = renderContactMessages(rows);
+          bindContactMessagesView(main);
         } catch (e) {
           main.innerHTML = errorState("Kunde inte ladda data: " + (e.message || String(e)));
         }
@@ -1214,7 +1682,39 @@
         return;
       }
 
-      /* ── fallback (contact_messages + any future static views) */
+      /* ── ARTICLES ────────────────────────────────────── */
+      if (viewKey === "articles") {
+        try {
+          const { data: rows, error } = await PA.sb
+            .from("articles")
+            .select("id, slug, title, category, published, created_at")
+            .order("created_at", { ascending: false });
+          if (error) throw error;
+          main.innerHTML = renderArticles(rows || []);
+          bindArticlesView(main, () => showView("articles"));
+        } catch (e) {
+          main.innerHTML = errorState("Kunde inte ladda data: " + (e.message || String(e)));
+        }
+        return;
+      }
+
+      /* ── USERS ───────────────────────────────────────── */
+      if (viewKey === "users") {
+        try {
+          const { data: rows, error } = await PA.sb
+            .from("profiles")
+            .select("id, email, name, role, created_at")
+            .order("created_at", { ascending: false });
+          if (error) throw error;
+          main.innerHTML = renderUsers(rows || [], profile.id);
+          bindUsersView(main, profile.id);
+        } catch (e) {
+          main.innerHTML = errorState("Kunde inte ladda data: " + (e.message || String(e)));
+        }
+        return;
+      }
+
+      /* ── fallback (any future static views) */
       const tableKey = VIEWS[viewKey]?.table;
       if (!tableKey) { main.innerHTML = emptyState("Ingen visning tillgänglig."); return; }
       try {
