@@ -27,7 +27,7 @@ PA.shop.prodCardHTML = function (p, mode) {
     return (
       '<div class="card prodcard card--hover" data-pid="' + slug + '">' +
         '<a href="produkt.html?p=' + slug + '">' +
-          '<div class="ph"><div class="prodcard__badges">' + badgesHTML + '</div><span>' + (p.img || '') + '</span></div>' +
+          '<div class="ph"><div class="prodcard__badges">' + badgesHTML + '</div>' + PA.phImg(p.img, p.name) + '</div>' +
         '</a>' +
         '<div class="card__body">' +
           '<div class="prodcard__name">' + p.name + '</div>' +
@@ -44,7 +44,7 @@ PA.shop.prodCardHTML = function (p, mode) {
   return (
     '<div class="card prodcard card--hover" data-pid="' + slug + '">' +
       '<a href="produkt.html?p=' + slug + '">' +
-        '<div class="ph"><div class="prodcard__badges">' + badgesHTML + '</div><span>' + (p.img || '') + '</span></div>' +
+        '<div class="ph"><div class="prodcard__badges">' + badgesHTML + '</div>' + PA.phImg(p.img, p.name) + '</div>' +
       '</a>' +
       '<div class="card__body">' +
         '<div class="muted" style="font-size:12px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">' + (p.brand || '') + '</div>' +
@@ -361,12 +361,9 @@ PA.shop.initProdukt = function () {
     wrap.innerHTML =
       '<div class="gallery">' +
         '<div class="thumbs" id="pdp-thumbs">' +
-          '<div class="ph sel js-thumb" data-idx="0"><span>' + (p.img || 'Bild') + '</span></div>' +
-          '<div class="ph js-thumb" data-idx="1"><span>2</span></div>' +
-          '<div class="ph js-thumb" data-idx="2"><span>3</span></div>' +
-          '<div class="ph js-thumb" data-idx="3"><span>4</span></div>' +
+          '<div class="ph sel js-thumb" data-idx="0">' + PA.phImg(p.img, p.name) + '</div>' +
         '</div>' +
-        '<div class="main"><div class="ph" id="pdp-main-img"><span>' + (p.img || 'Bild') + '</span></div></div>' +
+        '<div class="main"><div class="ph" id="pdp-main-img">' + PA.phImg(p.img, p.name) + '</div></div>' +
       '</div>' +
 
       '<div class="tabs mt-48" id="pdp-tabs">' +

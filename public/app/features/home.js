@@ -76,7 +76,7 @@
         ? '<span class="badge badge--green"><span class="dot"></span>' + stock + "</span>"
         : '<span class="badge badge--amber"><span class="dot"></span>' + stock + "</span>";
       return '<a class="card prodcard card--hover" href="' + href + '">' +
-        '<div class="ph"><div class="prodcard__badges">' + badges + '</div><span>' + (p.img || "") + '</span></div>' +
+        '<div class="ph"><div class="prodcard__badges">' + badges + '</div>' + PA.phImg(p.img, p.name) + '</div>' +
         '<div class="card__body">' +
           '<div class="prodcard__name">' + p.name + '</div>' +
           '<div class="prodcard__usp">' + (p.usp || "") + '</div>' +

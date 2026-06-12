@@ -11,6 +11,15 @@
  */
 (function () {
   window.PA = window.PA || {};
+  // Render a real <img> when img is a path/URL (real product photo); otherwise
+  // the hatched placeholder showing the label text (demo data).
+  PA.phImg = function (src, alt) {
+    src = src || "";
+    if (src.charAt(0) === "/" || src.lastIndexOf("http", 0) === 0)
+      return '<img src="' + src + '" alt="' + String(alt || "").replace(/"/g, "&quot;") +
+             '" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply">';
+    return "<span>" + src + "</span>";
+  };
   const sb = () => PA.sb;
   const ready = () => !!sb();
   const need = () => { if (!ready()) throw new Error("Backend ej konfigurerad – lägg in Supabase URL och anon-nyckel i app/config.js för att aktivera bokningar, ordrar och offerter."); };
