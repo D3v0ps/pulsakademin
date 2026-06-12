@@ -16,8 +16,8 @@
   PA.phImg = function (src, alt) {
     src = src || "";
     if (src.charAt(0) === "/" || src.lastIndexOf("http", 0) === 0)
-      return '<img src="' + src + '" alt="' + String(alt || "").replace(/"/g, "&quot;") +
-             '" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply">';
+      return '<img class="ph-img" src="' + src + '" alt="' + String(alt || "").replace(/"/g, "&quot;") +
+             '" loading="lazy" style="width:100%;height:100%;object-fit:contain">';
     return "<span>" + src + "</span>";
   };
   const sb = () => PA.sb;

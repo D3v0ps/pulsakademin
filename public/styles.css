@@ -429,3 +429,13 @@ h1,h2,h3,h4,h5 { font-family: var(--font-display); font-weight: 700; line-height
 
 /* hero split: on small screens stack image first/below */
 @media (max-width: 860px) { .hero .split > div:last-child { order: -1; } }
+
+/* ---------- Real photos inside placeholder frames ---------- */
+/* product shots (contain, clean white bg, no hatch/dashed border) */
+.ph:has(> img.ph-img) { background: #fff; padding: 6%; }
+.ph:has(> img.ph-img)::after { display: none; }
+.ph > img.ph-img { width: 100%; height: 100%; object-fit: contain; }
+/* photographic fills (cover the whole frame) */
+.ph:has(> img.ph-photo) { background: none; padding: 0; }
+.ph:has(> img.ph-photo)::after { display: none; }
+.ph > img.ph-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
