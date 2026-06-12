@@ -318,28 +318,160 @@
     });
   }
 
-  function wireForgot() {
+  function wireForgotPanel() {
+    /* "Glömt lösenord?"-link in the login form — swaps to the forgot panel */
     var link = el("pa-forgot");
     if (!link) return;
     link.addEventListener("click", function (e) {
       e.preventDefault();
-      var email = (el("pa-login-email") && el("pa-login-email").value || "").trim();
+      /* pre-fill the forgot email field from the login email field if available */
+      var loginEmail = el("pa-login-email");
+      var forgotEmail = el("pa-forgot-email");
+      if (loginEmail && forgotEmail && loginEmail.value) {
+        forgotEmail.value = loginEmail.value;
+      }
+      el("pa-panel-login").hidden   = true;
+      el("pa-panel-forgot").hidden  = false;
+      /* hide tab bar while in forgot flow */
+      var seg = document.querySelector(".seg");
+      if (seg) seg.hidden = true;
+    });
+
+    /* back link */
+    var backBtn = el("pa-back-to-login");
+    if (backBtn) {
+      backBtn.addEventListener("click", function () {
+        setError("pa-forgot-notice", "");
+        setError("pa-forgot-email-err", "");
+        el("pa-panel-forgot").hidden = true;
+        el("pa-panel-login").hidden  = false;
+        var seg = document.querySelector(".seg");
+        if (seg) seg.hidden = false;
+      });
+    }
+
+    /* send reset-link button */
+    var btn = el("pa-forgot-btn");
+    if (!btn) return;
+    btn.addEventListener("click", function () {
+      var email = (el("pa-forgot-email").value || "").trim();
+      setError("pa-forgot-email-err", "");
+      setError("pa-forgot-notice", "");
+
       if (!email || !email.includes("@")) {
-        setError("pa-login-email-err", "Ange din e-postadress ovan för att återställa lösenordet.");
+        setError("pa-forgot-email-err", "Ange en giltig e-postadress.");
         return;
       }
-      if (!PA.Auth.ready()) {
-        setError("pa-login-notice", "Lösenordsåterställning kräver att Supabase är konfigurerad.");
-        return;
-      }
-      PA.sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + "/portal.html" })
-        .then(function () {
-          setError("pa-login-notice", "En återställningslänk har skickats till " + escHtml(email) + ".");
-          el("pa-login-notice").style.color = "var(--green, #1a8c4e)";
-        })
-        .catch(function (err) {
-          setError("pa-login-notice", err && err.message ? translateAuthError(err.message) : "Kunde inte skicka återställningslänk.");
+
+      setLoading(btn, true);
+
+      var doRequest = function () {
+        return PA.sb.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + "/logga-in.html"
         });
+      };
+
+      var showConfirm = function () {
+        setLoading(btn, false);
+        var notice = el("pa-forgot-notice");
+        if (notice) {
+          notice.textContent = "Om kontot finns har vi skickat en återställningslänk till din e-post.";
+          notice.style.background = "var(--success-bg,#f0faf4)";
+          notice.style.color      = "var(--green,#1a8c4e)";
+          notice.style.borderColor = "var(--green,#1a8c4e)";
+          notice.hidden = false;
+        }
+        btn.disabled = true;
+      };
+
+      if (!PA.Auth.ready()) {
+        /* no Supabase — still show the safe confirmation message */
+        showConfirm();
+        return;
+      }
+
+      doRequest().then(function () {
+        showConfirm();
+      }).catch(function (err) {
+        setLoading(btn, false);
+        /* network/real errors get shown; account-not-found style errors use generic message */
+        var msg = err && err.message ? err.message : "";
+        var isNetworkErr = msg && !msg.toLowerCase().includes("not found") && !msg.toLowerCase().includes("no user");
+        if (isNetworkErr) {
+          setError("pa-forgot-notice", translateAuthError(msg));
+        } else {
+          showConfirm();
+        }
+      });
+    });
+  }
+
+  function wireRecovery() {
+    if (!PA.Auth.ready()) return;
+
+    /* Check URL hash for type=recovery (Supabase puts it there on redirect) */
+    var hash = window.location.hash || "";
+    var isRecovery = hash.includes("type=recovery");
+
+    /* Also listen for onAuthStateChange PASSWORD_RECOVERY event */
+    PA.sb.auth.onAuthStateChange(function (event) {
+      if (event === "PASSWORD_RECOVERY") {
+        showRecoveryPanel();
+      }
+    });
+
+    if (isRecovery) {
+      showRecoveryPanel();
+    }
+  }
+
+  function showRecoveryPanel() {
+    /* Hide everything else, show only the recovery panel */
+    ["pa-panel-login", "pa-panel-register", "pa-panel-forgot", "pa-panel-success"].forEach(function (id) {
+      var node = el(id);
+      if (node) node.hidden = true;
+    });
+    var seg = document.querySelector(".seg");
+    if (seg) seg.hidden = true;
+
+    var panel = el("pa-panel-recovery");
+    if (panel) panel.hidden = false;
+
+    wireRecoveryForm();
+  }
+
+  function wireRecoveryForm() {
+    var btn = el("pa-recovery-btn");
+    if (!btn || btn._wired) return;
+    btn._wired = true;
+
+    btn.addEventListener("click", function () {
+      var pw  = (el("pa-recovery-pw").value  || "");
+      var pw2 = (el("pa-recovery-pw2").value || "");
+      var valid = true;
+
+      setError("pa-recovery-pw-err",  "");
+      setError("pa-recovery-pw2-err", "");
+      setError("pa-recovery-notice",  "");
+
+      if (pw.length < 8) { setError("pa-recovery-pw-err", "Lösenordet måste vara minst 8 tecken."); valid = false; }
+      if (pw !== pw2)    { setError("pa-recovery-pw2-err", "Lösenorden matchar inte."); valid = false; }
+      if (!valid) return;
+
+      setLoading(btn, true);
+
+      PA.sb.auth.updateUser({ password: pw }).then(function () {
+        setLoading(btn, false);
+        btn.hidden = true;
+        el("pa-recovery-pw").closest(".field") && (el("pa-recovery-pw").closest(".field").hidden = true);
+        el("pa-recovery-pw2").closest(".field") && (el("pa-recovery-pw2").closest(".field").hidden = true);
+        var successDiv = el("pa-recovery-success");
+        if (successDiv) successDiv.hidden = false;
+      }).catch(function (err) {
+        setLoading(btn, false);
+        var msg = err && err.message ? translateAuthError(err.message) : "Det gick inte att uppdatera lösenordet.";
+        setError("pa-recovery-notice", msg);
+      });
     });
   }
 
@@ -389,11 +521,22 @@
       '</section>';
   }
 
+  function roleBadgeHtml(roleKey) {
+    var map = {
+      admin:      ["badge--bordeaux", "Admin"],
+      instructor: ["badge--info",     "Instruktör"],
+      company:    ["badge--amber",    "Företagskund"],
+    };
+    var pair = map[roleKey] || ["badge--green", "Kund"];
+    return '<span class="badge ' + pair[0] + '" style="font-size:12px;padding:3px 10px">' + pair[1] + '</span>';
+  }
+
   function renderPortal(root, user, profile) {
     var name     = profile.name || profile.email || "";
     var email    = profile.email || user.email || "";
     var phone    = profile.phone || "";
-    var role     = profile.role === "admin" ? "Administratör" : profile.role === "company" ? "Företagskund" : "Privatkund";
+    var roleKey  = (profile.role || "customer").toLowerCase();
+    var role     = roleKey === "admin" ? "Administratör" : roleKey === "company" ? "Företagskund" : roleKey === "instructor" ? "Instruktör" : "Privatkund";
     var ini      = initials(name);
 
     root.innerHTML =
@@ -406,7 +549,7 @@
             '<div class="flex center gap-12 mb-16" style="padding:6px 8px">' +
               '<div class="feature__ic" style="background:var(--cream-300);color:var(--ink)">' + ini + '</div>' +
               '<div><b style="font-size:14.5px">' + escHtml(name) + '</b>' +
-              '<div class="muted" style="font-size:12.5px">' + escHtml(role) + '</div></div>' +
+              '<div style="margin-top:4px">' + roleBadgeHtml(roleKey) + '</div></div>' +
             '</div>' +
             '<nav style="display:grid;gap:2px">' +
               '<a class="on" href="#oversikt">📊 Översikt</a>' +
@@ -448,17 +591,54 @@
             '<div id="pa-orders-loading" class="pa-loading-row">Laddar beställningar…</div>' +
           '</div></div>' +
 
+          /* admin card — only for admins */
+          (roleKey === "admin" ?
+            '<div class="card mb-24" style="border:2px solid var(--bordeaux-700,#6b1f3a);background:var(--bordeaux-50,#fdf5f7)">' +
+              '<div class="card__body" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">' +
+                '<div>' +
+                  '<b style="font-size:1rem;display:block;margin-bottom:4px">Adminpanelen</b>' +
+                  '<p class="muted" style="font-size:13.5px;margin:0">Hantera kurser, deltagare och betalningar.</p>' +
+                '</div>' +
+                '<a class="btn btn--primary" href="admin.html" style="white-space:nowrap">Öppna adminpanelen →</a>' +
+              '</div>' +
+            '</div>'
+          : "") +
+
           /* profile section */
           '<h2 class="h3 mb-16" id="profil" style="font-size:1.2rem">Min profil</h2>' +
           '<div class="card mb-32"><div class="card__body">' +
-            '<table class="table" style="font-size:15px">' +
-              '<tbody>' +
-                '<tr><td style="font-weight:600;width:140px">Namn</td><td>' + escHtml(name || "–") + '</td></tr>' +
-                '<tr><td style="font-weight:600">E-post</td><td>' + escHtml(email || "–") + '</td></tr>' +
-                '<tr><td style="font-weight:600">Telefon</td><td>' + escHtml(phone || "–") + '</td></tr>' +
-                '<tr><td style="font-weight:600">Roll</td><td>' + escHtml(role) + '</td></tr>' +
-              '</tbody>' +
-            '</table>' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px">' +
+              '<div>' + roleBadgeHtml(roleKey) + '</div>' +
+              '<button class="btn btn--sm btn--light" id="pa-profile-edit-btn">Redigera</button>' +
+            '</div>' +
+            /* read-only view */
+            '<div id="pa-profile-view">' +
+              '<table class="table" style="font-size:15px">' +
+                '<tbody>' +
+                  '<tr><td style="font-weight:600;width:140px">Namn</td><td id="pa-profile-name-display">' + escHtml(name || "–") + '</td></tr>' +
+                  '<tr><td style="font-weight:600">E-post</td><td>' + escHtml(email || "–") + '</td></tr>' +
+                  '<tr><td style="font-weight:600">Telefon</td><td id="pa-profile-phone-display">' + escHtml(phone || "–") + '</td></tr>' +
+                  '<tr><td style="font-weight:600">Roll</td><td>' + escHtml(role) + '</td></tr>' +
+                '</tbody>' +
+              '</table>' +
+            '</div>' +
+            /* inline edit form (hidden initially) */
+            '<div id="pa-profile-form" hidden>' +
+              '<div id="pa-profile-form-notice" class="pa-notice" hidden></div>' +
+              '<div class="field"><label for="pa-profile-name-input">Namn</label>' +
+                '<input class="input" id="pa-profile-name-input" type="text" autocomplete="name" value="' + escHtml(name) + '">' +
+                '<span id="pa-profile-name-err" class="pa-field-err" hidden></span>' +
+              '</div>' +
+              '<div class="field"><label for="pa-profile-phone-input">Telefonnummer</label>' +
+                '<input class="input" id="pa-profile-phone-input" type="tel" autocomplete="tel" value="' + escHtml(phone) + '">' +
+                '<span id="pa-profile-phone-err" class="pa-field-err" hidden></span>' +
+              '</div>' +
+              '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">' +
+                '<button class="btn btn--primary" id="pa-profile-save-btn">Spara</button>' +
+                '<button class="btn btn--ghost" id="pa-profile-cancel-btn">Avbryt</button>' +
+                '<span id="pa-profile-saved-msg" style="color:var(--green,#1a8c4e);font-weight:600;font-size:14px" hidden>Sparat ✓</span>' +
+              '</div>' +
+            '</div>' +
           '</div></div>' +
 
         '</div>' /* end main */+
@@ -492,9 +672,81 @@
       });
     });
 
+    /* profile editing */
+    wireProfileEdit(user);
+
     /* load real data */
     loadBookings();
     loadOrders();
+  }
+
+  function wireProfileEdit(user) {
+    var editBtn   = el("pa-profile-edit-btn");
+    var cancelBtn = el("pa-profile-cancel-btn");
+    var saveBtn   = el("pa-profile-save-btn");
+    if (!editBtn) return;
+
+    editBtn.addEventListener("click", function () {
+      el("pa-profile-view").hidden = true;
+      el("pa-profile-form").hidden = false;
+      editBtn.hidden = true;
+      /* clear stale feedback */
+      setError("pa-profile-form-notice", "");
+      setError("pa-profile-name-err", "");
+      setError("pa-profile-phone-err", "");
+      var saved = el("pa-profile-saved-msg");
+      if (saved) saved.hidden = true;
+    });
+
+    cancelBtn.addEventListener("click", function () {
+      el("pa-profile-form").hidden = true;
+      el("pa-profile-view").hidden = false;
+      editBtn.hidden = false;
+    });
+
+    saveBtn.addEventListener("click", function () {
+      var newName  = (el("pa-profile-name-input").value  || "").trim();
+      var newPhone = (el("pa-profile-phone-input").value || "").trim();
+      var valid = true;
+
+      setError("pa-profile-name-err",    "");
+      setError("pa-profile-phone-err",   "");
+      setError("pa-profile-form-notice", "");
+      var saved = el("pa-profile-saved-msg");
+      if (saved) saved.hidden = true;
+
+      if (!newName) { setError("pa-profile-name-err", "Ange ditt namn."); valid = false; }
+      if (!valid) return;
+
+      setLoading(saveBtn, true);
+      if (cancelBtn) cancelBtn.disabled = true;
+
+      var profileUpdate = PA.sb
+        .from("profiles")
+        .update({ name: newName, phone: newPhone })
+        .eq("id", user.id);
+
+      var authUpdate = PA.sb.auth.updateUser({ data: { name: newName, phone: newPhone } });
+
+      Promise.all([profileUpdate, authUpdate]).then(function (results) {
+        var profileResult = results[0];
+        if (profileResult.error) throw profileResult.error;
+        /* update displayed values in the read-only view */
+        var nameDisplay = el("pa-profile-name-display");
+        if (nameDisplay) nameDisplay.textContent = newName || "–";
+        var phoneDisplay = el("pa-profile-phone-display");
+        if (phoneDisplay) phoneDisplay.textContent = newPhone || "–";
+
+        setLoading(saveBtn, false);
+        if (cancelBtn) cancelBtn.disabled = false;
+        if (saved) saved.hidden = false;
+      }).catch(function (err) {
+        setLoading(saveBtn, false);
+        if (cancelBtn) cancelBtn.disabled = false;
+        var msg = err && err.message ? err.message : "Det gick inte att spara ändringarna.";
+        setError("pa-profile-form-notice", msg);
+      });
+    });
   }
 
   function loadBookings() {
