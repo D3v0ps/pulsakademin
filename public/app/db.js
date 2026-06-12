@@ -132,40 +132,52 @@
     return [];
   }
 
-  /* ---------------- WRITES (require backend) ---------------- */
-  async function createQuote(payload) { need(); const { data, error } = await sb().from("quote_requests").insert(payload).select().single(); if (error) throw error; return data; }
-  async function sendContact(payload) { need(); const { data, error } = await sb().from("contact_messages").insert(payload).select().single(); if (error) throw error; return data; }
+  /* ---------------- WRITES (require backend) ----------------
+     Guests may INSERT (RLS) but cannot read leads back, so these inserts NEVER
+     chain .select() (return=minimal) and we generate ids client-side. */
+  function uuid() {
+    if (self.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      var r = (Math.random() * 16) | 0; return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+    });
+  }
+  const isUuid = (v) => typeof v === "string" && /^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(v);
+  async function createQuote(payload) { need(); const id = uuid(); const { error } = await sb().from("quote_requests").insert({ id, ...payload }); if (error) throw error; return { id, reference: id.slice(0, 8).toUpperCase() }; }
+  async function sendContact(payload) { need(); const { error } = await sb().from("contact_messages").insert(payload); if (error) throw error; return { ok: true }; }
   async function createBooking({ instance_id, type, contact, participants }) {
     need();
     const { data: user } = await sb().auth.getUser();
-    const { data: booking, error } = await sb().from("bookings").insert({
-      course_instance_id: instance_id, booking_type: type || "private", status: "confirmed",
+    const id = uuid();
+    const { error } = await sb().from("bookings").insert({
+      id, course_instance_id: isUuid(instance_id) ? instance_id : null, booking_type: type || "private", status: "confirmed",
       contact_name: contact?.name, contact_email: contact?.email, contact_phone: contact?.phone,
       company_name: contact?.company || null, org_number: contact?.org || null, user_id: user?.user?.id || null,
-    }).select().single();
+    });
     if (error) throw error;
     if (participants?.length) {
-      const rows = participants.map((p) => ({ booking_id: booking.id, first_name: p.first, last_name: p.last, email: p.email }));
+      const rows = participants.map((p) => ({ booking_id: id, first_name: p.first, last_name: p.last, email: p.email }));
       await sb().from("participants").insert(rows);
     }
-    return booking;
+    return { id, reference: id.slice(0, 8).toUpperCase() };
   }
   async function createOrder({ items, customer, totals }) {
     need();
     const { data: user } = await sb().auth.getUser();
-    const { data: order, error } = await sb().from("orders").insert({
-      order_number: "PA-" + Date.now().toString(36).toUpperCase(), status: "received", payment_method: customer?.payment || "invoice",
+    const id = uuid();
+    const order_number = "PA-" + Date.now().toString(36).toUpperCase();
+    const { error } = await sb().from("orders").insert({
+      id, order_number, status: "received", payment_method: customer?.payment || "invoice",
       total_incl_vat: totals?.inclVat, total_excl_vat: totals?.exclVat, vat: totals?.vat,
       customer_name: customer?.name, customer_email: customer?.email, customer_phone: customer?.phone,
       company_name: customer?.company || null, org_number: customer?.org || null,
       shipping_address: customer?.address || null, user_id: user?.user?.id || null,
-    }).select().single();
+    });
     if (error) throw error;
     if (items?.length) {
-      const rows = items.map((i) => ({ order_id: order.id, product_name: i.name, sku: i.sku || null, qty: i.qty, unit_price_incl_vat: num(i.priceInclVat) }));
+      const rows = items.map((i) => ({ order_id: id, product_name: i.name, sku: i.sku || null, qty: i.qty, unit_price_incl_vat: num(i.priceInclVat) }));
       await sb().from("order_items").insert(rows);
     }
-    return order;
+    return { id, order_number };
   }
 
   /* ---------------- ADMIN (RLS restricts to admin role) ---------------- */
