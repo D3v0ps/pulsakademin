@@ -91,76 +91,112 @@
     course_instances: { label: "Kurstillfällen", icon: "📅", table: "course_instances" },
     products: { label: "Produkter", icon: "📦", table: "products" },
     site_content: { label: "Innehåll (texter)", icon: "📄", table: "site_content" },
+    articles: { label: "Artiklar", icon: "📰", table: "articles" },
+    users: { label: "Användare", icon: "👥", table: "profiles" },
   };
 
   /* ══════════════════════════════════════════════════════════
-     BOOKINGS — read list + inline status update
+     BOOKINGS — read list + inline status update + detail expander
   ══════════════════════════════════════════════════════════ */
   function renderBookings(rows, container) {
     if (!rows.length) return emptyState("Inga bokningar hittades.");
     const statuses = ["confirmed","pending","cancelled","completed"];
     const html = `<div style="overflow-x:auto"><table class="table">
-      <thead><tr><th>ID</th><th>Kund</th><th>E-post</th><th>Typ</th><th>Status</th><th>Skapad</th></tr></thead>
-      <tbody>${rows.map(r => `<tr data-id="${esc(r.id)}">
-        <td><span class="muted" style="font-size:12px;font-family:var(--font-mono)">${esc(String(r.id).slice(0,8))}…</span></td>
-        <td><b>${esc(r.contact_name || "–")}</b><div class="muted" style="font-size:12px">${esc(r.contact_email || "")}</div></td>
-        <td>${esc(r.contact_email || "–")}</td>
-        <td>${esc(r.booking_type || "–")}</td>
-        <td>
-          <select class="status-sel" data-table="bookings" data-id="${esc(r.id)}" data-field="status">
-            ${statuses.map(s => `<option value="${s}"${r.status===s?" selected":""}>${s}</option>`).join("")}
-          </select>
-          <span class="inline-saved" style="display:none"></span>
-        </td>
-        <td>${fmtDate(r.created_at)}</td>
-      </tr>`).join("")}</tbody>
+      <thead><tr><th>ID</th><th>Kund</th><th>Typ</th><th>Kurstillfälle</th><th>Status</th><th>Skapad</th><th></th></tr></thead>
+      <tbody>${rows.map(r => `
+        <tr data-id="${esc(r.id)}" class="booking-main-row">
+          <td><span class="muted" style="font-size:12px;font-family:var(--font-mono)">${esc(String(r.id).slice(0,8))}…</span></td>
+          <td><b>${esc(r.contact_name || "–")}</b><div class="muted" style="font-size:12px">${esc(r.contact_email || "")}</div></td>
+          <td>${esc(r.booking_type || "–")}</td>
+          <td>${esc((r.course_instances && r.course_instances.courses && r.course_instances.courses.title) ? r.course_instances.courses.title + " – " + r.course_instances.city : r.course_instance_id ? String(r.course_instance_id).slice(0,8)+"…" : "–")}</td>
+          <td>
+            <select class="status-sel" data-table="bookings" data-id="${esc(r.id)}" data-field="status">
+              ${statuses.map(s => `<option value="${s}"${r.status===s?" selected":""}>${s}</option>`).join("")}
+            </select>
+            <span class="status-msg"></span>
+          </td>
+          <td>${fmtDate(r.created_at)}</td>
+          <td><button class="btn--show booking-show-btn" data-id="${esc(r.id)}">Visa</button></td>
+        </tr>
+        <tr class="detail-row booking-detail-row" id="booking-detail-${esc(r.id)}" style="display:none">
+          <td colspan="7"><div class="detail-panel" id="booking-detail-content-${esc(r.id)}"><em class="muted">Laddar…</em></div></td>
+        </tr>`).join("")}
+      </tbody>
     </table></div>`;
     return html;
   }
 
   /* ══════════════════════════════════════════════════════════
-     ORDERS — read list + inline status update
+     ORDERS — read list + inline status update + detail expander
   ══════════════════════════════════════════════════════════ */
   function renderOrders(rows) {
     if (!rows.length) return emptyState("Inga ordrar hittades.");
     const statuses = ["received","processing","shipped","completed","cancelled"];
     return `<div style="overflow-x:auto"><table class="table">
-      <thead><tr><th>Ordernr</th><th>Kund</th><th>Totalt</th><th>Status</th><th>Skapad</th></tr></thead>
-      <tbody>${rows.map(r => `<tr data-id="${esc(r.id)}">
-        <td><b style="font-family:var(--font-mono);font-size:13px">${esc(r.order_number || "–")}</b></td>
-        <td>${esc(r.customer_name || "–")}<div class="muted" style="font-size:12px">${esc(r.customer_email||"")}</div></td>
-        <td>${fmtMoney(r.total_incl_vat)}</td>
-        <td>
-          <select class="status-sel" data-table="orders" data-id="${esc(r.id)}" data-field="status">
-            ${statuses.map(s => `<option value="${s}"${r.status===s?" selected":""}>${s}</option>`).join("")}
-          </select>
-          <span class="status-msg"></span>
-        </td>
-        <td>${fmtDate(r.created_at)}</td>
-      </tr>`).join("")}</tbody>
+      <thead><tr><th>Ordernr</th><th>Kund</th><th>Totalt</th><th>Status</th><th>Skapad</th><th></th></tr></thead>
+      <tbody>${rows.map(r => `
+        <tr data-id="${esc(r.id)}" class="order-main-row">
+          <td><b style="font-family:var(--font-mono);font-size:13px">${esc(r.order_number || "–")}</b></td>
+          <td>${esc(r.customer_name || "–")}<div class="muted" style="font-size:12px">${esc(r.customer_email||"")}</div></td>
+          <td>${fmtMoney(r.total_incl_vat)}</td>
+          <td>
+            <select class="status-sel" data-table="orders" data-id="${esc(r.id)}" data-field="status">
+              ${statuses.map(s => `<option value="${s}"${r.status===s?" selected":""}>${s}</option>`).join("")}
+            </select>
+            <span class="status-msg"></span>
+          </td>
+          <td>${fmtDate(r.created_at)}</td>
+          <td><button class="btn--show order-show-btn" data-id="${esc(r.id)}">Visa</button></td>
+        </tr>
+        <tr class="detail-row order-detail-row" id="order-detail-${esc(r.id)}" style="display:none">
+          <td colspan="6"><div class="detail-panel" id="order-detail-content-${esc(r.id)}"><em class="muted">Laddar…</em></div></td>
+        </tr>`).join("")}
+      </tbody>
     </table></div>`;
   }
 
   /* ══════════════════════════════════════════════════════════
-     QUOTE REQUESTS — read list + inline status update
+     QUOTE REQUESTS — read list + inline status update + detail expander
   ══════════════════════════════════════════════════════════ */
   function renderQuoteRequests(rows) {
     if (!rows.length) return emptyState("Inga offertförfrågningar hittades.");
     const statuses = ["new","contacted","quoted","won","lost"];
     return `<div style="overflow-x:auto"><table class="table">
-      <thead><tr><th>Kontakt</th><th>Företag</th><th>Kurs</th><th>Status</th><th>Skapad</th></tr></thead>
-      <tbody>${rows.map(r => `<tr data-id="${esc(r.id)}">
-        <td><b>${esc(r.contact_name || "–")}</b><div class="muted" style="font-size:12px">${esc(r.contact_email||"")}</div></td>
-        <td>${esc(r.company_name || r.organization || "–")}</td>
-        <td>${esc(r.course_title || r.course_interest || r.course || "–")}</td>
-        <td>
-          <select class="status-sel" data-table="quote_requests" data-id="${esc(r.id)}" data-field="status">
-            ${statuses.map(s => `<option value="${s}"${r.status===s?" selected":""}>${s}</option>`).join("")}
-          </select>
-          <span class="status-msg"></span>
-        </td>
-        <td>${fmtDate(r.created_at)}</td>
-      </tr>`).join("")}</tbody>
+      <thead><tr><th>Kontakt</th><th>Företag</th><th>Kurs</th><th>Status</th><th>Skapad</th><th></th></tr></thead>
+      <tbody>${rows.map(r => `
+        <tr data-id="${esc(r.id)}" class="qr-main-row">
+          <td><b>${esc(r.contact_name || "–")}</b><div class="muted" style="font-size:12px">${esc(r.contact_email||"")}</div></td>
+          <td>${esc(r.company_name || r.organization || "–")}</td>
+          <td>${esc(r.course_title || r.course_interest || r.course || "–")}</td>
+          <td>
+            <select class="status-sel" data-table="quote_requests" data-id="${esc(r.id)}" data-field="status">
+              ${statuses.map(s => `<option value="${s}"${r.status===s?" selected":""}>${s}</option>`).join("")}
+            </select>
+            <span class="status-msg"></span>
+          </td>
+          <td>${fmtDate(r.created_at)}</td>
+          <td><button class="btn--show qr-show-btn" data-id="${esc(r.id)}">Visa</button></td>
+        </tr>
+        <tr class="detail-row qr-detail-row" id="qr-detail-${esc(r.id)}" style="display:none">
+          <td colspan="6">
+            <div class="detail-panel">
+              <div class="detail-grid">
+                <div><dt>Företag</dt><dd>${esc(r.company_name||"–")}</dd></div>
+                <div><dt>Org.nr</dt><dd>${esc(r.org_number||"–")}</dd></div>
+                <div><dt>Kontaktperson</dt><dd>${esc(r.contact_name||"–")}</dd></div>
+                <div><dt>E-post</dt><dd>${esc(r.email||r.contact_email||"–")}</dd></div>
+                <div><dt>Telefon</dt><dd>${esc(r.phone||"–")}</dd></div>
+                <div><dt>Kurs</dt><dd>${esc(r.course_title||r.course_interest||r.course||"–")}</dd></div>
+                <div><dt>Antal deltagare</dt><dd>${esc(r.participant_count!=null?String(r.participant_count):"–")}</dd></div>
+                <div><dt>Stad</dt><dd>${esc(r.city||"–")}</dd></div>
+                <div><dt>Önskat datum</dt><dd>${esc(r.preferred_date||"–")}</dd></div>
+                <div><dt>Platsönskemål</dt><dd>${esc(r.location_pref||"–")}</dd></div>
+              </div>
+              ${r.message ? `<h4>Meddelande</h4><div class="detail-msg">${esc(r.message)}</div>` : ""}
+            </div>
+          </td>
+        </tr>`).join("")}
+      </tbody>
     </table></div>`;
   }
 

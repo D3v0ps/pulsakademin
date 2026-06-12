@@ -27,7 +27,7 @@
           <p class="lead" data-cms="webbshop.hero.lead">Marknadens ledande hjärtstartare, tillbehör och paketlösningar – med rådgivning, service och faktura för företag.</p>
           <div class="flex gap-12 wrap mt-32"><a class="btn btn--primary btn--lg" href="hjartstartare.html" data-cms="webbshop.hero.btn-kop">Köp hjärtstartare</a><a class="btn btn--light btn--lg" href="kontakt.html" data-cms="webbshop.hero.btn-hjalp">Få hjälp att välja</a></div>
         </div>
-        <div class="ph ph--4x3" style="border-radius:var(--r-xl);background-color:rgba(255,255,255,.05)"><span>Bild: Hjärtstartare i skåp på vägg</span></div>
+        <div class="ph ph--4x3" style="border-radius:var(--r-xl);background-color:rgba(255,255,255,.05)"><img class="ph-photo" src="img/sections/aed-vagg.jpg" alt="Hjärtstartare i skåp på vägg" style="width:100%;height:100%;object-fit:cover;border-radius:var(--r-xl)"></div>
       </div>
     </div>
   </section>
@@ -37,12 +37,12 @@
     <div class="container">
       <div class="sec-head"><div class="sec-head__txt"><span class="eyebrow" data-cms="webbshop.categories.eyebrow">Sortiment</span><h2 class="h2" style="margin-top:14px" data-cms="webbshop.categories.title">Handla per kategori</h2></div></div>
       <div class="grid cols-4">
-        <a class="card catcard card--hover" href="hjartstartare.html"><div class="ph"><span>Hjärtstartare</span></div><div class="lbl"><b>Hjärtstartare</b><span>20+ →</span></div></a>
-        <a class="card catcard card--hover" href="hjartstartare.html"><div class="ph"><span>Batterier</span></div><div class="lbl"><b>Batterier</b><span>→</span></div></a>
-        <a class="card catcard card--hover" href="hjartstartare.html"><div class="ph"><span>Elektroder</span></div><div class="lbl"><b>Elektroder</b><span>→</span></div></a>
-        <a class="card catcard card--hover" href="hjartstartare.html"><div class="ph"><span>Skåp & fästen</span></div><div class="lbl"><b>Skåp & fästen</b><span>→</span></div></a>
-        <a class="card catcard card--hover" href="hjartstartare.html"><div class="ph"><span>Väskor</span></div><div class="lbl"><b>Väskor</b><span>→</span></div></a>
-        <a class="card catcard card--hover" href="hjartstartare.html"><div class="ph"><span>Paketlösningar</span></div><div class="lbl"><b>Paketlösningar</b><span>→</span></div></a>
+        <a class="card catcard card--hover" href="hjartstartare.html?cat=hjartstartare"><div class="ph"><span>Hjärtstartare</span></div><div class="lbl"><b>Hjärtstartare</b><span class="js-catcount" data-cat="hjartstartare">→</span></div></a>
+        <a class="card catcard card--hover" href="hjartstartare.html?cat=batterier"><div class="ph"><span>Batterier</span></div><div class="lbl"><b>Batterier</b><span class="js-catcount" data-cat="batterier">→</span></div></a>
+        <a class="card catcard card--hover" href="hjartstartare.html?cat=elektroder"><div class="ph"><span>Elektroder</span></div><div class="lbl"><b>Elektroder</b><span class="js-catcount" data-cat="elektroder">→</span></div></a>
+        <a class="card catcard card--hover" href="hjartstartare.html?cat=skap"><div class="ph"><span>Skåp & fästen</span></div><div class="lbl"><b>Skåp & fästen</b><span class="js-catcount" data-cat="skap">→</span></div></a>
+        <a class="card catcard card--hover" href="hjartstartare.html?cat=vaskor"><div class="ph"><span>Väskor</span></div><div class="lbl"><b>Väskor</b><span class="js-catcount" data-cat="vaskor">→</span></div></a>
+        <a class="card catcard card--hover" href="hjartstartare.html?cat=paket"><div class="ph"><span>Paketlösningar</span></div><div class="lbl"><b>Paketlösningar</b><span class="js-catcount" data-cat="paket">→</span></div></a>
         <a class="card catcard card--hover" href="service.html"><div class="ph"><span>Service</span></div><div class="lbl"><b>Service & underhåll</b><span>→</span></div></a>
         <a class="card catcard card--hover" href="hyr.html"><div class="ph"><span>Hyra</span></div><div class="lbl"><b>Hyr hjärtstartare</b><span>→</span></div></a>
       </div>
@@ -113,6 +113,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', function(){
     PA.shop.initWebbshop();
+    PA.shop.initWebbshopCounts();
   });
 </script>
 </body>

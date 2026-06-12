@@ -40,6 +40,11 @@
     color:var(--muted);
   }
 
+  /* category chips */
+  #cat-chips{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px; }
+  #cat-chips a.chip{ text-decoration:none; color:var(--ink); }
+  #cat-chips a.chip.active{ background:var(--bordeaux-700); color:#fff; border-color:var(--bordeaux-700); }
+
   /* search input inside filter */
   #prod-search{
     width:100%;padding:9px 12px;
@@ -56,7 +61,7 @@
 <main>
   <section class="pagehead bg-cream2" data-screen-label="Hjärtstartare – Sidhuvud">
     <div class="container">
-      <nav class="crumbs mb-24"><a href="index.html">Hem</a><span class="sep">/</span><a href="webbshop.html">Webbshop</a><span class="sep">/</span><span>Hjärtstartare</span></nav>
+      <nav class="crumbs mb-24"><a href="index.html">Hem</a><span class="sep">/</span><a href="webbshop.html">Webbshop</a><span class="sep">/</span><span id="crumb-cat">Hjärtstartare</span></nav>
       <div class="split" style="align-items:end">
         <div>
           <span class="eyebrow" data-cms="hjartstartare.hero.eyebrow">Hjärtstartare (AED)</span>
@@ -81,12 +86,14 @@
 
           <div class="fgroup">
             <h5>Varumärke</h5>
-            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Smarty Saver"> Smarty Saver</label>
-            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="DefiSign"> DefiSign</label>
-            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Philips"> Philips</label>
-            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Primedic"> Primedic</label>
-            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="CU Medical"> CU Medical</label>
-            <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Mindray"> Mindray</label>
+            <div id="brand-filter-list">
+              <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Smarty Saver"> Smarty Saver</label>
+              <label class="fopt"><input type="checkbox" class="js-brand-chk" value="DefiSign"> DefiSign</label>
+              <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Philips"> Philips</label>
+              <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Primedic"> Primedic</label>
+              <label class="fopt"><input type="checkbox" class="js-brand-chk" value="CU Medical"> CU Medical</label>
+              <label class="fopt"><input type="checkbox" class="js-brand-chk" value="Mindray"> Mindray</label>
+            </div>
           </div>
 
           <div class="fgroup" style="border:0">
@@ -101,6 +108,8 @@
 
       <!-- grid -->
       <div>
+        <!-- category quick-chips -->
+        <div id="cat-chips" style="display:none"></div>
         <div class="flex between center mb-24 wrap gap-12">
           <span class="muted" style="font-size:14px"><b id="pcount">–</b> produkter</span>
           <select class="select" style="width:auto">
