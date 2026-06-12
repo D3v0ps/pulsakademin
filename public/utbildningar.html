@@ -25,11 +25,11 @@
       <nav class="crumbs"><a href="index.html">Hem</a><span class="sep">/</span><span>Utbildningar</span></nav>
       <div class="split" style="align-items:end">
         <div>
-          <span class="eyebrow">Utbildningskatalog</span>
-          <h1 class="h1" style="margin:14px 0 16px">Hitta rätt utbildning</h1>
-          <p class="lead measure">Praktiska, certifierande kurser för privatpersoner, företag, skolor, föreningar och vårdpersonal – öppna tillfällen eller på plats hos er.</p>
+          <span class="eyebrow" data-cms="utbildningar.hero.eyebrow">Utbildningskatalog</span>
+          <h1 class="h1" style="margin:14px 0 16px" data-cms="utbildningar.hero.title">Hitta rätt utbildning</h1>
+          <p class="lead measure" data-cms="utbildningar.hero.lead">Praktiska, certifierande kurser för privatpersoner, företag, skolor, föreningar och vårdpersonal – öppna tillfällen eller på plats hos er.</p>
         </div>
-        <div class="flex gap-12 wrap"><a class="btn btn--bordeaux" href="boka.html">Kommande tillfällen</a><a class="btn btn--outline" href="offert.html">Begär offert</a></div>
+        <div class="flex gap-12 wrap"><a class="btn btn--bordeaux" href="boka.html" data-cms="utbildningar.hero.btn-tillfallen">Kommande tillfällen</a><a class="btn btn--outline" href="offert.html" data-cms="utbildningar.hero.btn-offert">Begär offert</a></div>
       </div>
     </div>
   </section>
@@ -55,11 +55,11 @@
   <section class="section bg-bordeaux" data-screen-label="Utbildningar – CTA företag">
     <div class="container split center">
       <div>
-        <span class="eyebrow">Utbilda flera samtidigt</span>
-        <h2 class="h2" style="margin:14px 0 14px;color:var(--cream)">Skräddarsydd utbildning för er grupp</h2>
-        <p class="lead">Vi anpassar innehåll, plats och tid efter er verksamhet. Fast offert, samlad deltagarlista och kompetensbevis.</p>
+        <span class="eyebrow" data-cms="utbildningar.cta.eyebrow">Utbilda flera samtidigt</span>
+        <h2 class="h2" style="margin:14px 0 14px;color:var(--cream)" data-cms="utbildningar.cta.title">Skräddarsydd utbildning för er grupp</h2>
+        <p class="lead" data-cms="utbildningar.cta.lead">Vi anpassar innehåll, plats och tid efter er verksamhet. Fast offert, samlad deltagarlista och kompetensbevis.</p>
       </div>
-      <div class="flex gap-12 wrap" style="justify-content:flex-end"><a class="btn btn--primary btn--lg" href="offert.html">Begär offert</a><a class="btn btn--light btn--lg" href="foretag.html">För företag</a></div>
+      <div class="flex gap-12 wrap" style="justify-content:flex-end"><a class="btn btn--primary btn--lg" href="offert.html" data-cms="utbildningar.cta.btn-offert">Begär offert</a><a class="btn btn--light btn--lg" href="foretag.html" data-cms="utbildningar.cta.btn-foretag">För företag</a></div>
     </div>
   </section>
 </main>
@@ -69,6 +69,7 @@
 <script src="app/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app/supabase.js"></script>
+<script src="app/cms.js"></script>
 <script src="app/db.js"></script>
 <script src="site.js"></script>
 <script src="data.js"></script>

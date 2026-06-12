@@ -29,7 +29,7 @@
 <div id="site-header"></div>
 
 <main>
-  <section class="pagehead"><div class="container"><nav class="crumbs mb-16"><a href="index.html">Hem</a><span class="sep">/</span><span>Kundvagn</span></nav><h1 class="h1">Din kundvagn</h1></div></section>
+  <section class="pagehead"><div class="container"><nav class="crumbs mb-16"><a href="index.html">Hem</a><span class="sep">/</span><span>Kundvagn</span></nav><h1 class="h1" data-cms="kundvagn.hero.h1">Din kundvagn</h1></div></section>
 
   <section class="section" style="padding-top:8px" data-screen-label="Kundvagn">
     <div class="container cartlayout" id="cartRoot">
@@ -40,9 +40,9 @@
         <div id="cartEmpty" style="display:none">
           <div class="card"><div class="card__body" style="text-align:center;padding:56px 24px">
             <div style="font-size:3.5rem;margin-bottom:16px">&#128722;</div>
-            <h2 class="h3 mb-16">Din kundvagn är tom</h2>
-            <p class="muted" style="max-width:44ch;margin:0 auto 24px">Hitta hjärtstartare, elektroder och utbildningspaket i vår webbshop.</p>
-            <a class="btn btn--primary" href="webbshop.html">Gå till webbshopen</a>
+            <h2 class="h3 mb-16" data-cms="kundvagn.empty.h2">Din kundvagn är tom</h2>
+            <p class="muted" style="max-width:44ch;margin:0 auto 24px" data-cms="kundvagn.empty.lead">Hitta hjärtstartare, elektroder och utbildningspaket i vår webbshop.</p>
+            <a class="btn btn--primary" href="webbshop.html" data-cms="kundvagn.empty.cta">Gå till webbshopen</a>
           </div></div>
         </div>
 
@@ -54,7 +54,7 @@
         <a class="tlink mt-24" href="webbshop.html" style="display:inline-flex">&#8592; Fortsätt handla</a>
 
         <!-- Recommended products -->
-        <h2 class="h3 mt-48 mb-16">Rekommenderade tillbehör</h2>
+        <h2 class="h3 mt-48 mb-16" data-cms="kundvagn.rec.h2">Rekommenderade tillbehör</h2>
         <div class="grid cols-3" id="recGrid"></div>
       </div>
 
@@ -70,9 +70,9 @@
           <div class="field mt-16" style="margin-bottom:8px"><div class="flex gap-8"><input class="input" placeholder="Rabattkod"><button class="btn btn--outline">Använd</button></div></div>
           <hr class="rule" style="margin:16px 0">
           <div class="flex between center mb-16"><b style="font-size:1.05rem">Totalt</b><span class="price-from" style="font-size:1.8rem" id="summaryTotal">–</span></div>
-          <a class="btn btn--primary btn--block btn--lg" href="kassa.html">Gå till kassan</a>
-          <a class="btn btn--outline btn--block" href="offert.html" style="margin-top:10px">Begär offert (företag)</a>
-          <p class="muted tac" style="font-size:13px;margin-top:14px">&#128274; Säker betalning · Swish · Klarna · Kort · Faktura</p>
+          <a class="btn btn--primary btn--block btn--lg" href="kassa.html" data-cms="kundvagn.summary.cta-checkout">Gå till kassan</a>
+          <a class="btn btn--outline btn--block" href="offert.html" style="margin-top:10px" data-cms="kundvagn.summary.cta-offert">Begär offert (företag)</a>
+          <p class="muted tac" style="font-size:13px;margin-top:14px" data-cms="kundvagn.summary.trust">&#128274; Säker betalning · Swish · Klarna · Kort · Faktura</p>
         </div></div>
       </aside>
 
@@ -86,6 +86,7 @@
 <script src="app/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app/supabase.js"></script>
+<script src="app/cms.js"></script>
 <script src="app/cart.js"></script>
 <script src="app/db.js"></script>
 <script src="app/features/checkout.js"></script>

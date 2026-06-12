@@ -37,6 +37,32 @@
   .admin-user__meta strong{ font-size:14px; }
   .admin-user__meta span{ color:var(--muted); }
   #admin-logout{ font-size:13px; padding:6px 14px; }
+
+  /* ── edit / inline form styles ─────────────────────────── */
+  .abar{ display:flex; justify-content:flex-end; margin-bottom:14px; }
+  .abar .btn{ font-size:13px; padding:7px 16px; }
+  .btn--edit{ font-size:12px; padding:4px 10px; background:var(--cream-300,#f0ebe4); color:var(--ink); border:1px solid var(--line); border-radius:var(--r-sm); cursor:pointer; font-weight:500; }
+  .btn--edit:hover{ background:var(--cream-400,#e8e1d8); }
+  .btn--danger{ font-size:12px; padding:4px 10px; background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; border-radius:var(--r-sm); cursor:pointer; font-weight:500; }
+  .btn--danger:hover{ background:#fee2e2; }
+  .btn--save{ font-size:12px; padding:4px 12px; background:var(--bordeaux-700,#7b2d42); color:#fff; border:none; border-radius:var(--r-sm); cursor:pointer; font-weight:600; }
+  .btn--save:hover{ opacity:.9; }
+  .btn--cancel-edit{ font-size:12px; padding:4px 10px; background:transparent; color:var(--muted); border:1px solid var(--line); border-radius:var(--r-sm); cursor:pointer; }
+  .inline-form{ background:var(--cream-100,#fdfaf7); border:1px solid var(--line); border-radius:var(--r-sm); padding:16px 18px; margin:4px 0 8px; display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px 16px; }
+  .inline-form.wide{ grid-template-columns:1fr 1fr; }
+  .inline-form label{ font-size:12px; font-weight:600; color:var(--muted); display:block; margin-bottom:3px; }
+  .inline-form input, .inline-form textarea, .inline-form select{ width:100%; font-size:13px; padding:6px 9px; border:1px solid var(--line); border-radius:var(--r-sm); background:#fff; font-family:inherit; color:var(--ink); box-sizing:border-box; }
+  .inline-form textarea{ resize:vertical; min-height:70px; }
+  .inline-form .span2{ grid-column:span 2; }
+  .inline-form .form-actions{ grid-column:1/-1; display:flex; align-items:center; gap:10px; margin-top:4px; }
+  .inline-saved{ font-size:12px; color:var(--success,#15803d); font-weight:600; }
+  .inline-err{ font-size:12px; color:var(--danger,#b91c1c); font-weight:600; }
+  .status-sel{ font-size:12px; padding:4px 8px; border:1px solid var(--line); border-radius:var(--r-sm); background:#fff; font-family:inherit; cursor:pointer; }
+  .new-row-section{ margin-top:20px; border-top:2px dashed var(--line); padding-top:16px; }
+  .new-row-toggle{ font-size:13px; padding:7px 16px; }
+  .info-card{ background:var(--cream-100,#fdfaf7); border:1px solid var(--line); border-radius:var(--r-sm); padding:16px 20px; margin-bottom:20px; font-size:14px; line-height:1.6; }
+  .info-card a{ color:var(--bordeaux-700,#7b2d42); font-weight:600; }
+  .quick-links{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
 </style>
 </head>
 <body>
@@ -56,6 +82,7 @@
       <h6>Övrigt</h6>
       <a href="#" data-view="bookings">🗓️ Bokningar</a>
       <a href="#" data-view="contact_messages">✉️ Kontaktmeddelanden</a>
+      <a href="#" data-view="site_content">📄 Innehåll</a>
     </nav>
   </aside>
 

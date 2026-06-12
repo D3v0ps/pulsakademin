@@ -12,9 +12,9 @@
 
 <main>
   <section class="pagehead bg-cream2"><div class="container"><nav class="crumbs mb-16"><a href="index.html">Hem</a><span class="sep">/</span><span>Kunskapsbank</span></nav>
-    <span class="eyebrow">Kunskapsbank</span>
-    <h1 class="h1" style="margin:14px 0 16px">Lär dig mer om livräddning</h1>
-    <p class="lead measure">Guider, artiklar och checklistor om HLR, hjärtstartare och första hjälpen – skrivet av våra instruktörer.</p>
+    <span class="eyebrow" data-cms="kunskapsbank.hero.eyebrow">Kunskapsbank</span>
+    <h1 class="h1" style="margin:14px 0 16px" data-cms="kunskapsbank.hero.h1">Lär dig mer om livräddning</h1>
+    <p class="lead measure" data-cms="kunskapsbank.hero.lead">Guider, artiklar och checklistor om HLR, hjärtstartare och första hjälpen – skrivet av våra instruktörer.</p>
     <div class="pillrow mt-24"><button class="chip chip--active">Alla</button><button class="chip">HLR</button><button class="chip">Hjärtstartare</button><button class="chip">Första hjälpen</button><button class="chip">Arbetsplats</button><button class="chip">Kompetensbevis</button></div>
   </div></section>
 
@@ -38,7 +38,7 @@
 
   <section class="section--tight bg-bordeaux" data-screen-label="Kunskapsbank – Nyhetsbrev">
     <div class="container split center">
-      <div><h2 class="h2" style="color:var(--cream)">Få nya guider i inkorgen</h2><p class="lead mt-8">Praktiska tips om livräddning och arbetsplatssäkerhet – några gånger om året.</p></div>
+      <div><h2 class="h2" style="color:var(--cream)" data-cms="kunskapsbank.nyhetsbrev.h2">Få nya guider i inkorgen</h2><p class="lead mt-8" data-cms="kunskapsbank.nyhetsbrev.lead">Praktiska tips om livräddning och arbetsplatssäkerhet – några gånger om året.</p></div>
       <form class="flex gap-8" onsubmit="return false" style="max-width:360px"><input class="input" placeholder="Din e-postadress"><button class="btn btn--primary">Anmäl</button></form>
     </div>
   </section>
@@ -48,6 +48,7 @@
 <script src="app/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app/supabase.js"></script>
+<script src="app/cms.js"></script>
 <script src="app/db.js"></script>
 <script src="site.js"></script>
 <script src="app/features/content.js"></script>
