@@ -1,0 +1,47 @@
+# Deploy public/ to Vercel on every push (production target for pulsakademin.se).
+# Skips cleanly until the secrets exist:
+#   VERCEL_TOKEN       — vercel.com → Account Settings → Tokens
+#   VERCEL_ORG_ID      — from the project's settings (or `vercel link`)
+#   VERCEL_PROJECT_ID  — same place
+# The one.com workflow keeps deploying the demo subdomain in parallel.
+name: Deploy to Vercel
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, claude/peaceful-cannon-h2R5N]
+
+concurrency:
+  group: deploy-vercel
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  vercel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check secrets
+        id: cfg
+        env:
+          T: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -z "$T" ]; then
+            echo "::warning::VERCEL_TOKEN not set — skipping Vercel deploy."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout
+        if: steps.cfg.outputs.ready == 'true'
+        uses: actions/checkout@v4
+
+      - name: Deploy (production)
+        if: steps.cfg.outputs.ready == 'true'
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: npx vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"
