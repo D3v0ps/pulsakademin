@@ -1,14 +1,10 @@
 /* PulsAkademin — backend configuration.
- *
  * The anon key is PUBLIC by design (it ships to the browser); Row-Level
- * Security in Supabase is what protects the data. Safe to commit.
- *
- * TO GO LIVE: create a free project at supabase.com, run supabase/schema.sql
- * in its SQL editor, then paste the two values below (Project Settings → API)
- * and redeploy. Until then the site renders from the demo data in data.js.
+ * Security in Supabase protects the data. Connected to the "Pulsakademin"
+ * Supabase project. Schema: supabase/schema.sql.
  */
 window.PA_CONFIG = {
-  SUPABASE_URL: "",       // e.g. https://xxxxxxxx.supabase.co
-  SUPABASE_ANON_KEY: "",  // the "anon / public" key
+  SUPABASE_URL: "https://dfzwuehpwtfstdkuusoc.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmend1ZWhwd3Rmc3Rka3V1c29jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1ODU2MzIsImV4cCI6MjA5NjE2MTYzMn0.sm3QTOiIvl1zLsXFsE6q77h4DVlvn2klDFhSA4vOJwU",
 };
 window.PA_BACKEND_READY = !!(window.PA_CONFIG.SUPABASE_URL && window.PA_CONFIG.SUPABASE_ANON_KEY);
