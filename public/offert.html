@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Begär offert – företagsutbildning &amp; hjärtstartare | PulsAkademin</title>
 <meta name="description" content="Begär en kostnadsfri offert för HLR-utbildning, första hjälpen eller hjärtstartare. Vi återkommer oftast inom ett par timmar.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="PulsAkademin">
+<meta property="og:title" content="Begär offert – företagsutbildning &amp; hjärtstartare | PulsAkademin">
+<meta property="og:description" content="Begär en kostnadsfri offert för HLR-utbildning, första hjälpen eller hjärtstartare. Vi återkommer oftast inom ett par timmar.">
+<meta property="og:image" content="https://www.pulsakademin.se/img/sections/hero-hlr.jpg">
+<meta property="og:locale" content="sv_SE">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="styles.css">
 <style>
   .offert{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:48px; align-items:start; }
@@ -167,6 +174,61 @@
   var form = document.getElementById('offert-form');
   if (form && window.PA && PA.quote) {
     PA.quote.init(form, {});
+  }
+})();
+</script>
+<script>
+/* Preselect course from ?course=<slug> in URL */
+(function () {
+  var courseSlug = '';
+  try {
+    courseSlug = new URLSearchParams(window.location.search).get('course') || '';
+  } catch (e) {
+    var m = window.location.search.match(/[?&]course=([^&]+)/);
+    courseSlug = m ? decodeURIComponent(m[1]) : '';
+  }
+  if (!courseSlug) return;
+
+  function preselectByTitle(selectEl, title) {
+    if (!selectEl || !title) return;
+    var norm = title.toLowerCase().trim();
+    var opts = selectEl.querySelectorAll('option');
+    for (var i = 0; i < opts.length; i++) {
+      if (opts[i].textContent.trim().toLowerCase() === norm) {
+        selectEl.value = opts[i].value;
+        return;
+      }
+    }
+    /* select may not yet be populated — watch for options being added */
+    var obs = new MutationObserver(function () {
+      var opts2 = selectEl.querySelectorAll('option');
+      for (var j = 0; j < opts2.length; j++) {
+        if (opts2[j].textContent.trim().toLowerCase() === norm) {
+          selectEl.value = opts2[j].value;
+          obs.disconnect();
+          return;
+        }
+      }
+    });
+    obs.observe(selectEl, { childList: true });
+  }
+
+  function run() {
+    if (!window.PA || !PA.db) return;
+    var selectEl = document.getElementById('q-course');
+    if (!selectEl) return;
+    PA.db.listCourses().then(function (courses) {
+      var match = courses.find(function (c) { return c.slug === courseSlug; });
+      if (match) {
+        preselectByTitle(selectEl, match.title);
+      }
+    }).catch(function () { /* fallback — ignore */ });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run);
+  } else {
+    run();
   }
 })();
 </script>

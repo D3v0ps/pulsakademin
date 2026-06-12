@@ -13,7 +13,7 @@
   }
 
   function courseHref(c) {
-    return c.slug === "hlr-vuxen" ? "kurs-hlr-vuxen.html" : "utbildningar.html";
+    return c.slug === 'hlr-vuxen' ? 'kurs-hlr-vuxen.html' : 'kurs.html?slug=' + c.slug;
   }
 
   function renderCourses(courses) {
