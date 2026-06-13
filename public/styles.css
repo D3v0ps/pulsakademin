@@ -439,3 +439,23 @@ h1,h2,h3,h4,h5 { font-family: var(--font-display); font-weight: 700; line-height
 .ph:has(> img.ph-photo) { background: none; padding: 0; }
 .ph:has(> img.ph-photo)::after { display: none; }
 .ph > img.ph-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+/* ===== Mobile polish (added in mobile audit) ===== */
+@media (max-width: 640px) {
+  /* Declutter the topbar on phones: keep the tappable phone number,
+     drop the opening hours + email (both still in the footer). */
+  .topbar .tb-left .tb-item:first-child { display: none; }
+  .topbar .tb-left a[href^="mailto"] { display: none; }
+  .topbar .container { min-height: 38px; gap: 10px; font-size: 13px; }
+  .topbar .tb-right { gap: 14px; }
+  /* a touch more breathing room under sticky/cookie UI */
+  .mobile-action { padding: 10px var(--gut); }
+}
+@media (max-width: 480px) {
+  .display { font-size: clamp(2.1rem, 9vw, 3rem); }
+  .topbar .tb-right a { font-size: 12.5px; }
+  .chip { min-height: 38px; }
+  .btn--sm { padding: 11px 16px; }
+  /* keep section rhythm tighter so pages aren't endless on small screens */
+  .section { padding-block: clamp(40px, 9vw, 72px); }
+}
